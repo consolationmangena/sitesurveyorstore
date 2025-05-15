@@ -4,7 +4,7 @@ import { supabase } from './supabase'
 
 export const signUp = async (email, password, username, fullName) => {
   try {
-    // First, sign up the user with Supabase Auth
+    // Sign up the user directly without email verification
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
@@ -19,17 +19,13 @@ export const signUp = async (email, password, username, fullName) => {
     })
 
     if (authError) {
-      console.error('Signup auth error:', authError)
+      console.error('Signup error:', authError)
       return { user: null, error: authError }
     }
 
-    // The profile should be created automatically by the database trigger
-    // But let's add a small delay and check if it was created
+    // Create the user profile immediately
     if (authData.user) {
-      // Wait a moment for the trigger to execute
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      
-      // Check if profile exists, if not create it manually
+      // Create profile immediately without waiting
       const { data: existingProfile, error: profileCheckError } = await supabase
         .from('profiles')
         .select('id')
@@ -186,17 +182,7 @@ export const updateProfile = async (userId, updates) => {
   }
 }
 
-export const resetPassword = async (email) => {
-  try {
-    const { error } = await supabase.auth.resetPasswordForEmail(email, {
-      redirectTo: `${window.location.origin}/reset-password`
-    })
-
-    return { error }
-  } catch (error) {
-    return { error }
-  }
-}
+// Removed email verification related code
 
 // ==================== AUTH STATE MANAGEMENT ====================
 
