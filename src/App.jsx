@@ -1,7 +1,14 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { AuthProvider } from './contexts/AuthContext'
+import { AdminProvider } from './contexts/AdminContext'
+import { Toaster } from './components/ui/sonner'
+
+// Layout Components
 import Header from './components/Header'
 import Footer from './components/Footer'
+
+// Pages
 import Index from './pages/Index'
 import About from './pages/About'
 import AppStore from './pages/AppStore'
@@ -21,9 +28,8 @@ import RequestsManager from './pages/admin/RequestsManager'
 import UsersManager from './pages/admin/UsersManager'
 import AnalyticsManager from './pages/admin/AnalyticsManager'
 
-import { Toaster } from './components/ui/sonner'
-import { AuthProvider } from './contexts/AuthContext'
-import { AdminProvider } from './contexts/AdminContext'
+// Auth Pages
+import EmailCallback from './pages/auth/EmailCallback'
 
 function App() {
   // No need for different basename on Netlify
@@ -44,6 +50,9 @@ function App() {
               <Route path="/admin/requests" element={<RequestsManager />} />
               <Route path="/admin/users" element={<UsersManager />} />
               <Route path="/admin/analytics" element={<AnalyticsManager />} />
+              
+              {/* Auth Routes - No Header/Footer */}
+              <Route path="/auth/callback" element={<EmailCallback />} />
               
               {/* Public Routes - With Header/Footer */}
               <Route path="/*" element={

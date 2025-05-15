@@ -4,7 +4,7 @@ import { supabase } from './supabase'
 
 export const signUp = async (email, password, username, fullName) => {
   try {
-    // Sign up the user directly without email verification
+    // Sign up the user with email verification
     const { data: authData, error: authError } = await supabase.auth.signUp({
       email,
       password,
@@ -13,7 +13,7 @@ export const signUp = async (email, password, username, fullName) => {
           username: username || '',
           full_name: fullName || ''
         },
-        emailRedirectTo: undefined,
+        emailRedirectTo: `${window.location.origin}/auth/callback`,
         shouldCreateUser: true
       }
     })
@@ -23,9 +23,10 @@ export const signUp = async (email, password, username, fullName) => {
       return { user: null, error: authError }
     }
 
-    // Create the user profile immediately
+    // Create the user profile and wait for email verification
     if (authData.user) {
-      // Create profile immediately without waiting
+      // Create profile and inform user about email verification
+      console.log('Verification email sent to:', email)
       const { data: existingProfile, error: profileCheckError } = await supabase
         .from('profiles')
         .select('id')
@@ -85,6 +86,10 @@ export const signIn = async (email, password) => {
       let userMessage = error.message
       if (error.message.includes('Invalid login credentials')) {
         userMessage = 'Invalid email or password. Please check your credentials and try again.'
+      } else if (error.message.includes('Email not confirmed')) {
+        userMessage = 'Please check your email and click the confirmation link before signing in.'
+      } else if (error.message.includes('Too many requests')) {
+        userMessage = 'Too many sign-in attempts. Please wait a moment and try again.'
       }
       
       return { 
@@ -180,7 +185,17 @@ export const updateProfile = async (userId, updates) => {
   }
 }
 
-// Removed email verification related code
+export const resetPassword = async (email) => {
+  try {
+    const { error } = await supabase.auth.resetPasswordForEmail(email, {
+      redirectTo: `${window.location.origin}/reset-password`
+    })
+
+    return { error }
+  } catch (error) {
+    return { error }
+  }
+}
 
 // ==================== AUTH STATE MANAGEMENT ====================
 

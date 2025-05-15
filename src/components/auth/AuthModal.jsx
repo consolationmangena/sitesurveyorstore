@@ -47,9 +47,37 @@ export default function AuthModal({ isOpen, onClose }) {
       
       if (error) {
         console.error('Sign in error:', error)
-        toast.error('Sign in failed', {
-          description: error.message || 'Please check your credentials and try again.'
-        })
+        
+        // Enhanced error handling for email verification
+        if (error.message.includes('Email not confirmed')) {
+          toast.error('Email not verified', {
+            description: 'Please check your email and click the verification link to activate your account. Need a new link?',
+            action: {
+              label: 'Resend',
+              onClick: async () => {
+                try {
+                  const { error: resendError } = await supabase.auth.resend({
+                    type: 'signup',
+                    email: formData.email.trim()
+                  })
+                  
+                  if (resendError) throw resendError
+                  
+                  toast.success('Verification email sent', {
+                    description: 'Please check your inbox and spam folder'
+                  })
+                } catch (err) {
+                  console.error('Error resending verification:', err)
+                  toast.error('Failed to resend verification email')
+                }
+              }
+            }
+          })
+        } else {
+          toast.error('Sign in failed', {
+            description: error.message || 'Please check your credentials and try again.'
+          })
+        }
         return
       }
 
