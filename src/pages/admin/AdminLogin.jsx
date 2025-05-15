@@ -93,7 +93,7 @@ export default function AdminLogin() {
                   <Input
                     id="email"
                     type="email"
-                    placeholder="admin@sitesurveyor.store"
+                    placeholder="admin@sitesurveyor.co.zw"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     className="h-12 border-2 border-slate-200 focus:border-blue-500 rounded-xl pl-10"

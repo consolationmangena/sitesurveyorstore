@@ -30,7 +30,7 @@ export default function AdminDashboard() {
 
   // Check if user is admin
   React.useEffect(() => {
-    const adminEmails = ['admin@sitesurveyor.store']
+    const adminEmails = ['admin@sitesurveyor.co.zw']
     
     if (!user || !adminEmails.includes(user.email?.toLowerCase())) {
       navigate('/admin/login')

@@ -16,7 +16,7 @@ export const AdminProvider = ({ children }) => {
 
   const isAdmin = () => {
     const adminEmails = [
-      'admin@sitesurveyor.store'
+      'admin@sitesurveyor.co.zw'
     ]
     return user && adminEmails.includes(user.email?.toLowerCase())
   }

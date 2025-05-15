@@ -1,6 +1,6 @@
 // Admin email configuration for SiteSurveyor
 export const ADMIN_EMAILS = [
-  'admin@sitesurveyor.store'
+  'admin@sitesurveyor.co.zw'
 ]
 
 export const isAdminUser = (email) => {
@@ -12,7 +12,7 @@ export const getAdminRole = (email) => {
   if (!isAdminUser(email)) return null
   
   const emailMap = {
-    'admin@sitesurveyor.store': 'Super Admin'
+    'admin@sitesurveyor.co.zw': 'Super Admin'
   }
   
   return emailMap[email.toLowerCase()] || 'Admin'
@@ -20,6 +20,6 @@ export const getAdminRole = (email) => {
 
 // Admin credentials for reference
 export const ADMIN_CREDENTIALS = {
-  email: 'admin@sitesurveyor.store',
+  email: 'admin@sitesurveyor.co.zw',
   // Password: consolation09. (set during account creation)
 }
