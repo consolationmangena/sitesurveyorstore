@@ -46,8 +46,6 @@ try {
 }
 
 export const supabase = supabaseInstance;
-  }
-})
 
 // Test connection function
 export const testConnection = async () => {
