@@ -27,35 +27,31 @@ function App() {
     <AuthProvider>
       <Router>
         <div className="min-h-screen bg-gray-50 flex flex-col">
-          <Routes>
-            {/* Auth Routes - No Header/Footer */}
-            <Route path="/auth/callback" element={<EmailCallback />} />
-            
-            {/* Public Routes - With Header/Footer */}
-            <Route element={
-              <>
-                <Header title="SiteSurveyor" subtitle="Professional Geomatics Solutions" />
-                <main className="flex-grow">
-                  <Routes>
-                    <Route path="/" element={<Index />} />
-                    <Route path="/about" element={<About />} />
-                    <Route path="/appstore" element={<AppStore />} />
-                    <Route path="/app/:id" element={<AppDetail />} />
-                    <Route path="/blog" element={<Blog />} />
-                    <Route path="/blog/:slug" element={<BlogPost />} />
-                    <Route path="/request-solution" element={<RequestSolution />} />
-                    <Route path="/profile" element={
-                      <PrivateRoute>
-                        <ProfilePage />
-                      </PrivateRoute>
-                    } />
-                    <Route path="*" element={<NotFound />} />
-                  </Routes>
-                </main>
-                <Footer />
-              </>
-            } />
-          </Routes>
+          <Header title="SiteSurveyor" subtitle="Professional Geomatics Solutions" />
+          <main className="flex-grow">
+            <Routes>
+              {/* Auth Routes */}
+              <Route path="/auth/callback" element={<EmailCallback />} />
+              
+              {/* Protected Routes */}
+              <Route path="/profile" element={
+                <PrivateRoute>
+                  <ProfilePage />
+                </PrivateRoute>
+              } />
+
+              {/* Public Routes */}
+              <Route path="/" element={<Index />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/appstore" element={<AppStore />} />
+              <Route path="/app/:id" element={<AppDetail />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
+              <Route path="/request-solution" element={<RequestSolution />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </main>
+          <Footer />
           <Toaster />
         </div>
       </Router>
