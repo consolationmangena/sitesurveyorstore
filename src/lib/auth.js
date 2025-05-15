@@ -85,8 +85,6 @@ export const signIn = async (email, password) => {
       let userMessage = error.message
       if (error.message.includes('Invalid login credentials')) {
         userMessage = 'Invalid email or password. Please check your credentials and try again.'
-      } else if (error.message.includes('Too many requests')) {
-        userMessage = 'Too many sign-in attempts. Please wait a moment and try again.'
       }
       
       return { 
