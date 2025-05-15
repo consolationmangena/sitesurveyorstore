@@ -17,6 +17,7 @@ import Blog from './pages/Blog'
 import BlogPost from './pages/BlogPost'
 import RequestSolution from './pages/RequestSolution'
 import NotFound from './pages/NotFound'
+import ProfilePage from './pages/ProfilePage'
 
 // Admin Pages
 import AdminLogin from './pages/admin/AdminLogin'
@@ -30,6 +31,7 @@ import AnalyticsManager from './pages/admin/AnalyticsManager'
 
 // Auth Pages
 import EmailCallback from './pages/auth/EmailCallback'
+import PrivateRoute from './components/PrivateRoute'
 
 function App() {
   // No need for different basename on Netlify
@@ -68,6 +70,11 @@ function App() {
                       <Route path="/blog/:slug" element={<BlogPost />} />
                       <Route path="/request-solution" element={<RequestSolution />} />
                       <Route path="*" element={<NotFound />} />
+                      <Route path="/profile" element={
+                        <PrivateRoute>
+                          <ProfilePage />
+                        </PrivateRoute>
+                      } />
                     </Routes>
                   </main>
                   <Footer />

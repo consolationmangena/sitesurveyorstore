@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useEffect, useState } from 'react'
-import { getCurrentUser, onAuthStateChange, getProfile } from '@/lib/auth'
+import { auth, getCurrentUser, onAuthStateChange, getProfile, updateUserProfile } from '@/lib/auth'
 
 const AuthContext = createContext({})
 
@@ -45,11 +45,31 @@ export const AuthProvider = ({ children }) => {
     return () => subscription.unsubscribe()
   }, [])
 
+  const signOut = async () => {
+    try {
+      await auth.signOut();
+      setUser(null);
+    } catch (error) {
+      throw error;
+    }
+  };
+
+  const updateProfile = async (profileData) => {
+    try {
+      await updateUserProfile(user, profileData);
+      setUser({ ...user, ...profileData });
+    } catch (error) {
+      throw error;
+    }
+  };
+
   const value = {
     user,
     profile,
     loading,
-    setProfile
+    setProfile,
+    signOut,
+    updateProfile
   }
 
   return (
