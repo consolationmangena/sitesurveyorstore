@@ -16,14 +16,18 @@ export const AuthProvider = ({ children }) => {
   const [profile, setProfile] = useState(null)
   const [loading, setLoading] = useState(true)
 
+  const refreshProfile = async (userId) => {
+    if (!userId) return;
+    const { profile: newProfile } = await getProfile(userId)
+    setProfile(newProfile)
+  }
+
   useEffect(() => {
     // Get initial user
     getCurrentUser().then(({ user }) => {
       setUser(user)
       if (user) {
-        getProfile(user.id).then(({ profile }) => {
-          setProfile(profile)
-        })
+        refreshProfile(user.id)
       }
       setLoading(false)
     })
@@ -33,8 +37,7 @@ export const AuthProvider = ({ children }) => {
       setUser(session?.user ?? null)
       
       if (session?.user) {
-        const { profile } = await getProfile(session.user.id)
-        setProfile(profile)
+        await refreshProfile(session.user.id)
       } else {
         setProfile(null)
       }
@@ -49,16 +52,22 @@ export const AuthProvider = ({ children }) => {
     try {
       await auth.signOut();
       setUser(null);
+      setProfile(null);
     } catch (error) {
       throw error;
     }
   };
 
   const updateProfile = async (profileData) => {
+    if (!user) throw new Error('No user logged in');
+    
     try {
-      await updateUserProfile(user, profileData);
-      setUser({ ...user, ...profileData });
+      const { profile: updatedProfile, error } = await updateUserProfile(user.id, profileData);
+      if (error) throw error;
+      setProfile(updatedProfile);
+      return updatedProfile;
     } catch (error) {
+      console.error('Error updating profile:', error);
       throw error;
     }
   };
@@ -67,9 +76,9 @@ export const AuthProvider = ({ children }) => {
     user,
     profile,
     loading,
-    setProfile,
     signOut,
-    updateProfile
+    updateProfile,
+    refreshProfile
   }
 
   return (

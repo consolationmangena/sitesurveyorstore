@@ -1,6 +1,6 @@
-import { Search, Database, Menu, User, LogOut } from "lucide-react";
+import { Search, Database, Menu, User, LogOut, Upload } from "lucide-react";
 import { useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import { 
@@ -16,12 +16,14 @@ import AuthModal from "./auth/AuthModal";
 import { useAuth } from "@/contexts/AuthContext";
 import { signOut } from "@/lib/auth";
 import { toast } from "sonner";
+import { supabase } from "@/lib/supabase";
 
 export default function Header({ title, subtitle, showSearch = false, onSearch }) {
   const [searchTerm, setSearchTerm] = useState("");
   const [showAuthModal, setShowAuthModal] = useState(false);
   const location = useLocation();
-  const { user, profile, loading } = useAuth();
+  const navigate = useNavigate();
+  const { user, profile, loading, updateProfile } = useAuth();
 
   const isActive = (path) => location.pathname === path;
 
@@ -39,6 +41,44 @@ export default function Header({ title, subtitle, showSearch = false, onSearch }
       toast.success('Signed out successfully');
     } catch (error) {
       toast.error('Error signing out');
+    }
+  };
+
+  const handleProfilePictureUpload = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return;
+
+    // Only accept images under 5MB
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error('Image too large', { description: 'Please choose an image under 5MB' });
+      return;
+    }
+
+    try {
+      // Create a unique file name
+      const fileExt = file.name.split('.').pop();
+      const fileName = `${Math.random().toString(36).substring(2)}.${fileExt}`;
+      const filePath = `profiles/${user.id}/${fileName}`;
+
+      // Upload to storage bucket
+      const { data: uploadData, error: uploadError } = await supabase.storage
+        .from('avatars')
+        .upload(filePath, file);
+
+      if (uploadError) throw uploadError;
+
+      // Get the public URL
+      const { data: { publicUrl } } = supabase.storage
+        .from('avatars')
+        .getPublicUrl(filePath);
+
+      // Update profile with new avatar URL
+      await updateProfile({ avatar_url: publicUrl });
+
+      toast.success('Profile picture updated!');
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      toast.error('Failed to update profile picture');
     }
   };
 
@@ -78,6 +118,19 @@ export default function Header({ title, subtitle, showSearch = false, onSearch }
     }
     return 'U';
   };
+
+  const ProfileAvatar = ({ size = "default" }) => (
+    <Button 
+      variant="ghost" 
+      className={`relative rounded-full ${size === "small" ? "h-8 w-8" : "h-10 w-10"}`}
+      onClick={() => user ? navigate('/profile') : setShowAuthModal(true)}
+    >
+      <Avatar className={size === "small" ? "h-8 w-8" : "h-10 w-10"}>
+        <AvatarImage src={profile?.avatar_url} alt={profile?.username || user?.email || 'User'} />
+        <AvatarFallback>{user ? getUserInitials() : 'G'}</AvatarFallback>
+      </Avatar>
+    </Button>
+  );
 
   return (
     <>
@@ -127,20 +180,15 @@ export default function Header({ title, subtitle, showSearch = false, onSearch }
                 </div>
               </nav>
 
-              {/* Auth Section */}
-              {!loading && (
-                <div className="flex items-center space-x-2">
-                  {user ? (
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
-                          <Avatar className="h-8 w-8">
-                            <AvatarImage src={profile?.avatar_url} alt={profile?.username || user.email} />
-                            <AvatarFallback>{getUserInitials()}</AvatarFallback>
-                          </Avatar>
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent className="w-56" align="end" forceMount>
+              {/* Profile Section - Always Visible */}
+              <div className="flex items-center space-x-2">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <ProfileAvatar size="small" />
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56" align="end" forceMount>
+                    {user ? (
+                      <>
                         <div className="flex items-center justify-start gap-2 p-2">
                           <div className="flex flex-col space-y-1 leading-none">
                             {profile?.full_name && (
@@ -152,23 +200,34 @@ export default function Header({ title, subtitle, showSearch = false, onSearch }
                           </div>
                         </div>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => navigate('/profile')}>
                           <User className="mr-2 h-4 w-4" />
                           <span>Profile</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem className="relative">
+                          <Upload className="mr-2 h-4 w-4" />
+                          <span>Update Picture</span>
+                          <input
+                            type="file"
+                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                            accept="image/*"
+                            onChange={handleProfilePictureUpload}
+                          />
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={handleSignOut}>
                           <LogOut className="mr-2 h-4 w-4" />
                           <span>Sign out</span>
                         </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  ) : (
-                    <Button onClick={() => setShowAuthModal(true)} size="sm">
-                      Sign In
-                    </Button>
-                  )}
-                </div>
-              )}
+                      </>
+                    ) : (
+                      <DropdownMenuItem onClick={() => setShowAuthModal(true)}>
+                        <User className="mr-2 h-4 w-4" />
+                        <span>Sign In</span>
+                      </DropdownMenuItem>
+                    )}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
 
               {/* Mobile Menu */}
               <Sheet>

@@ -167,7 +167,7 @@ export const getProfile = async (userId) => {
   }
 }
 
-export const updateProfile = async (userId, updates) => {
+export const updateUserProfile = async (userId, updates) => {
   try {
     const { data, error } = await supabase
       .from('profiles')
@@ -179,9 +179,11 @@ export const updateProfile = async (userId, updates) => {
       .select()
       .single()
 
-    return { profile: data, error }
+    if (error) throw error;
+    return { profile: data, error: null };
   } catch (error) {
-    return { profile: null, error }
+    console.error('Profile update error:', error);
+    return { profile: null, error };
   }
 }
 
@@ -194,6 +196,20 @@ export const resetPassword = async (email) => {
     return { error }
   } catch (error) {
     return { error }
+  }
+}
+
+export const getSignedUrl = async (filePath) => {
+  try {
+    const { data, error } = await supabase.storage
+      .from('avatars')
+      .createSignedUrl(filePath, 3600) // 1 hour expiry
+
+    if (error) throw error;
+    return { url: data.signedUrl, error: null };
+  } catch (error) {
+    console.error('Signed URL error:', error);
+    return { url: null, error };
   }
 }
 
