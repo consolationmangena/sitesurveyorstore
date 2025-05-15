@@ -1,13 +1,11 @@
 import React, { useState } from 'react'
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog'
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { toast } from 'sonner'
 import { signIn, signUp } from '@/lib/auth'
-import { Eye, EyeOff, Mail, User, Lock, UserPlus, LogIn, Shield, AlertCircle } from 'lucide-react'
-import { ADMIN_EMAILS } from '@/lib/adminEmails'
+import { Eye, EyeOff, Mail, User, Lock, UserPlus, LogIn } from 'lucide-react'
 
 export default function AuthModal({ isOpen, onClose }) {
   const [loading, setLoading] = useState(false)
@@ -27,10 +25,6 @@ export default function AuthModal({ isOpen, onClose }) {
     }))
   }
 
-  const isAdminEmail = (email) => {
-    return ADMIN_EMAILS.includes(email.toLowerCase())
-  }
-
   const handleSignIn = async (e) => {
     e.preventDefault()
     setLoading(true)
@@ -47,50 +41,16 @@ export default function AuthModal({ isOpen, onClose }) {
       
       if (error) {
         console.error('Sign in error:', error)
-        
-        // Enhanced error handling for email verification
-        if (error.message.includes('Email not confirmed')) {
-          toast.error('Email not verified', {
-            description: 'Please check your email and click the verification link to activate your account. Need a new link?',
-            action: {
-              label: 'Resend',
-              onClick: async () => {
-                try {
-                  const { error: resendError } = await supabase.auth.resend({
-                    type: 'signup',
-                    email: formData.email.trim()
-                  })
-                  
-                  if (resendError) throw resendError
-                  
-                  toast.success('Verification email sent', {
-                    description: 'Please check your inbox and spam folder'
-                  })
-                } catch (err) {
-                  console.error('Error resending verification:', err)
-                  toast.error('Failed to resend verification email')
-                }
-              }
-            }
-          })
-        } else {
-          toast.error('Sign in failed', {
-            description: error.message || 'Please check your credentials and try again.'
-          })
-        }
+        toast.error('Sign in failed', {
+          description: error.message || 'Please check your credentials and try again.'
+        })
         return
       }
 
       if (user) {
-        if (isAdminEmail(formData.email)) {
-          toast.success('Welcome Admin!', {
-            description: 'You have admin privileges. Access the admin panel at /admin/login'
-          })
-        } else {
-          toast.success('Welcome back!', {
-            description: 'You have successfully signed in.'
-          })
-        }
+        toast.success('Welcome back!', {
+          description: 'You have successfully signed in.'
+        })
         
         onClose()
         setFormData({
@@ -151,15 +111,9 @@ export default function AuthModal({ isOpen, onClose }) {
       }
 
       if (user) {
-        if (isAdminEmail(formData.email)) {
-          toast.success('Admin account created successfully!', {
-            description: 'You now have admin privileges. Access the admin panel at /admin/login'
-          })
-        } else {
-          toast.success('Account created successfully!', {
-            description: 'Welcome to SiteSurveyor! You can now access all features.'
-          })
-        }
+        toast.success('Account created successfully!', {
+          description: 'Welcome to SiteSurveyor! You can now access all features.'
+        })
         
         onClose()
         setFormData({
@@ -187,215 +141,92 @@ export default function AuthModal({ isOpen, onClose }) {
           <DialogTitle className="text-center text-2xl font-bold">
             Welcome to SiteSurveyor
           </DialogTitle>
+          <DialogDescription className="text-center text-sm text-muted-foreground">
+            {`Please enter your email and password to ${showPassword ? 'sign in' : 'create an account'}.`}
+          </DialogDescription>
         </DialogHeader>
 
-        <Tabs defaultValue="signin" className="w-full">
-          <TabsList className="grid w-full grid-cols-2">
-            <TabsTrigger value="signin" className="flex items-center gap-2">
-              <LogIn className="w-4 h-4" />
-              Sign In
-            </TabsTrigger>
-            <TabsTrigger value="signup" className="flex items-center gap-2">
-              <UserPlus className="w-4 h-4" />
-              Sign Up
-            </TabsTrigger>
-          </TabsList>
+        <form onSubmit={handleSignIn} className="space-y-4">
+          <div className="space-y-2">
+            <Label htmlFor="email">Email</Label>
+            <div className="relative">
+              <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Input
+                id="email"
+                name="email"
+                type="email"
+                placeholder="Enter your email"
+                value={formData.email}
+                onChange={handleInputChange}
+                className="pl-10"
+                required
+                autoComplete="email"
+              />
+            </div>
+          </div>
 
-          <TabsContent value="signin" className="space-y-4">
-            <form onSubmit={handleSignIn} className="space-y-4">
-              <div className="space-y-2">
-                <Label htmlFor="signin-email">Email</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="signin-email"
-                    name="email"
-                    type="email"
-                    placeholder="Enter your email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="pl-10"
-                    required
-                    autoComplete="email"
-                  />
-                  {isAdminEmail(formData.email) && (
-                    <Shield className="absolute right-3 top-3 h-4 w-4 text-blue-600" />
-                  )}
-                </div>
-                {isAdminEmail(formData.email) && (
-                  <p className="text-xs text-blue-600 font-medium">
-                    ✓ Admin email detected - you'll have admin privileges
-                  </p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="signin-password">Password</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="signin-password"
-                    name="password"
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="Enter your password"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    className="pl-10 pr-10"
-                    required
-                    autoComplete="current-password"
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4 text-muted-foreground" />
-                    ) : (
-                      <Eye className="h-4 w-4 text-muted-foreground" />
-                    )}
-                  </Button>
-                </div>
-              </div>
-
-              {/* Demo credentials notice */}
-              
-
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? (
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    Signing in...
-                  </div>
+          <div className="space-y-2">
+            <Label htmlFor="password">Password</Label>
+            <div className="relative">
+              <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+              <Input
+                id="password"
+                name="password"
+                type={showPassword ? 'text' : 'password'}
+                placeholder="Enter your password"
+                value={formData.password}
+                onChange={handleInputChange}
+                className="pl-10 pr-10"
+                required
+                autoComplete="current-password"
+              />
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                {showPassword ? (
+                  <EyeOff className="h-4 w-4 text-muted-foreground" />
                 ) : (
-                  'Sign In'
+                  <Eye className="h-4 w-4 text-muted-foreground" />
                 )}
               </Button>
-            </form>
-          </TabsContent>
+            </div>
+          </div>
 
-          <TabsContent value="signup" className="space-y-4">
-            <form onSubmit={handleSignUp} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="signup-username">Username</Label>
-                  <div className="relative">
-                    <User className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      id="signup-username"
-                      name="username"
-                      type="text"
-                      placeholder="Username (optional)"
-                      value={formData.username}
-                      onChange={handleInputChange}
-                      className="pl-10"
-                    />
-                  </div>
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="signup-fullname">Full Name</Label>
-                  <Input
-                    id="signup-fullname"
-                    name="fullName"
-                    type="text"
-                    placeholder="Full Name (optional)"
-                    value={formData.fullName}
-                    onChange={handleInputChange}
-                  />
-                </div>
+          <Button type="submit" className="w-full" disabled={loading}>
+            {loading ? (
+              <div className="flex items-center gap-2">
+                <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                Signing in...
               </div>
+            ) : (
+              'Sign In'
+            )}
+          </Button>
 
-              <div className="space-y-2">
-                <Label htmlFor="signup-email">Email</Label>
-                <div className="relative">
-                  <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="signup-email"
-                    name="email"
-                    type="email"
-                    placeholder="Enter your email"
-                    value={formData.email}
-                    onChange={handleInputChange}
-                    className="pl-10"
-                    required
-                    autoComplete="email"
-                  />
-                  {isAdminEmail(formData.email) && (
-                    <Shield className="absolute right-3 top-3 h-4 w-4 text-blue-600" />
-                  )}
-                </div>
-                {isAdminEmail(formData.email) && (
-                  <p className="text-xs text-blue-600 font-medium">
-                    ✓ Admin email detected - you'll have admin privileges
-                  </p>
-                )}
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="signup-password">Password</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="signup-password"
-                    name="password"
-                    type={showPassword ? 'text' : 'password'}
-                    placeholder="Create password (min 6 characters)"
-                    value={formData.password}
-                    onChange={handleInputChange}
-                    className="pl-10 pr-10"
-                    required
-                    autoComplete="new-password"
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="sm"
-                    className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
-                    onClick={() => setShowPassword(!showPassword)}
-                  >
-                    {showPassword ? (
-                      <EyeOff className="h-4 w-4 text-muted-foreground" />
-                    ) : (
-                      <Eye className="h-4 w-4 text-muted-foreground" />
-                    )}
-                  </Button>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="signup-confirm-password">Confirm Password</Label>
-                <div className="relative">
-                  <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
-                  <Input
-                    id="signup-confirm-password"
-                    name="confirmPassword"
-                    type="password"
-                    placeholder="Confirm password"
-                    value={formData.confirmPassword}
-                    onChange={handleInputChange}
-                    className="pl-10"
-                    required
-                    autoComplete="new-password"
-                  />
-                </div>
-              </div>
-
-              <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? (
-                  <div className="flex items-center gap-2">
-                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
-                    Creating account...
-                  </div>
-                ) : (
-                  'Create Account'
-                )}
-              </Button>
-            </form>
-          </TabsContent>
-        </Tabs>
+          <div className="flex flex-col gap-2">
+            <Button
+              type="button"
+              variant="ghost"
+              onClick={() => {
+                setFormData({
+                  email: '',
+                  password: '',
+                  username: '',
+                  fullName: '',
+                  confirmPassword: ''
+                })
+                setShowPassword(false)
+                onClose()
+              }}
+            >
+              Need an account? Sign up
+            </Button>
+          </div>
+        </form>
       </DialogContent>
     </Dialog>
   )
