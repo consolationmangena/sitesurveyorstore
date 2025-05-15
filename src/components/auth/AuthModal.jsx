@@ -233,16 +233,7 @@ export default function AuthModal({ isOpen, onClose }) {
               </div>
 
               {/* Demo credentials notice */}
-              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
-                <div className="flex items-start gap-2">
-                  <AlertCircle className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
-                  <div className="text-xs text-blue-800">
-                    <p className="font-semibold mb-1">Demo Credentials:</p>
-                    <p><strong>Admin:</strong> admin@sitesurveyor.store / consolation09.</p>
-                    <p><strong>User:</strong> Create a new account or use any valid email</p>
-                  </div>
-                </div>
-              </div>
+              
 
               <Button type="submit" className="w-full" disabled={loading}>
                 {loading ? (

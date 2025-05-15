@@ -81,13 +81,7 @@ export default function AdminLogin() {
           </CardHeader>
 
           <CardContent>
-            <Alert className="mb-6 border-blue-200 bg-blue-50">
-              <Shield className="h-4 w-4 text-blue-600" />
-              <AlertDescription className="text-blue-800">
-                <strong>Admin Email:</strong> <span className="font-mono text-blue-700">admin@sitesurveyor.store</span><br />
-                <strong>Password:</strong> <span className="font-mono text-blue-700">consolation09.</span>
-              </AlertDescription>
-            </Alert>
+
 
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="space-y-2">
