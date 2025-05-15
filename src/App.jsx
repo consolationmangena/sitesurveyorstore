@@ -32,7 +32,7 @@ function App() {
             <Route path="/auth/callback" element={<EmailCallback />} />
             
             {/* Public Routes - With Header/Footer */}
-            <Route path="/*" element={
+            <Route element={
               <>
                 <Header title="SiteSurveyor" subtitle="Professional Geomatics Solutions" />
                 <main className="flex-grow">
@@ -44,12 +44,12 @@ function App() {
                     <Route path="/blog" element={<Blog />} />
                     <Route path="/blog/:slug" element={<BlogPost />} />
                     <Route path="/request-solution" element={<RequestSolution />} />
-                    <Route path="*" element={<NotFound />} />
                     <Route path="/profile" element={
                       <PrivateRoute>
                         <ProfilePage />
                       </PrivateRoute>
                     } />
+                    <Route path="*" element={<NotFound />} />
                   </Routes>
                 </main>
                 <Footer />
