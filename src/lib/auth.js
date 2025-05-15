@@ -12,7 +12,9 @@ export const signUp = async (email, password, username, fullName) => {
         data: {
           username: username || '',
           full_name: fullName || ''
-        }
+        },
+        emailRedirectTo: undefined,
+        shouldCreateUser: true
       }
     })
 
@@ -87,8 +89,6 @@ export const signIn = async (email, password) => {
       let userMessage = error.message
       if (error.message.includes('Invalid login credentials')) {
         userMessage = 'Invalid email or password. Please check your credentials and try again.'
-      } else if (error.message.includes('Email not confirmed')) {
-        userMessage = 'Please check your email and click the confirmation link before signing in.'
       } else if (error.message.includes('Too many requests')) {
         userMessage = 'Too many sign-in attempts. Please wait a moment and try again.'
       }
