@@ -1,5 +1,23 @@
 import { supabase } from './supabase'
 
+// Cache storage
+const cache = {
+  features: null,
+  benefits: null,
+  featuredApps: null,
+  lastFetch: {
+    features: 0,
+    benefits: 0,
+    featuredApps: 0
+  }
+};
+
+const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
+
+const isCacheValid = (key) => {
+  return cache[key] && (Date.now() - cache.lastFetch[key] < CACHE_DURATION);
+};
+
 // ==================== APPLICATIONS ====================
 
 export const getApplications = async (filters = {}) => {
@@ -86,6 +104,11 @@ export const trackAppDownload = async (appId, userEmail = null) => {
 
 export const getFeaturedApplications = async () => {
   try {
+    // Check cache first
+    if (isCacheValid('featuredApps')) {
+      return { applications: cache.featuredApps, error: null };
+    }
+
     const { data, error } = await supabase
       .from('applications')
       .select(`
@@ -109,22 +132,26 @@ export const getFeaturedApplications = async () => {
       .eq('is_featured', true)
       .eq('is_active', true)
       .order('updated_at', { ascending: false })
+      .limit(6); // Limit to 6 featured apps for better performance
 
     if (error) {
-      console.error('Error fetching featured applications:', error)
-      return { applications: [], error }
+      console.error('Error fetching featured applications:', error);
+      return { applications: [], error };
     }
 
-    return { 
-      applications: data.map(app => ({
-        ...app,
-        category: app.categories?.name || 'Uncategorized'
-      })), 
-      error: null 
-    }
+    const applications = data.map(app => ({
+      ...app,
+      category: app.categories?.name || 'Uncategorized'
+    }));
+
+    // Update cache
+    cache.featuredApps = applications;
+    cache.lastFetch.featuredApps = Date.now();
+
+    return { applications, error: null };
   } catch (error) {
-    console.error('Error in getFeaturedApplications:', error)
-    return { applications: [], error }
+    console.error('Error in getFeaturedApplications:', error);
+    return { applications: [], error };
   }
 }
 
@@ -291,36 +318,51 @@ export const getBlogStats = async () => {
 
 export const getFrontendStats = async () => {
   try {
-    // Fetch all data in parallel for better performance
+    // Check cache for static content
+    const needFeatures = !isCacheValid('features');
+    const needBenefits = !isCacheValid('benefits');
+
+    // Fetch only what we need
+    const queries = [getAppStats()];
+
+    if (needFeatures) {
+      queries.push(
+        supabase
+          .from('frontend_features')
+          .select('*')
+          .eq('is_active', true)
+          .order('sort_order')
+      );
+    }
+
+    if (needBenefits) {
+      queries.push(
+        supabase
+          .from('frontend_benefits')
+          .select('*')
+          .eq('is_active', true)
+          .order('sort_order')
+      );
+    }
+
     const [
       appStats,
-      { data: downloads },
-      { data: countries },
-      { data: features },
-      { data: benefits }
-    ] = await Promise.all([
-      getAppStats(),
-      supabase
-        .from('app_downloads')
-        .select('id')
-        .eq('downloaded_at', new Date().toISOString().split('T')[0]),
-      supabase
-        .from('profiles')
-        .select('location')
-        .not('location', 'is', null),
-      supabase
-        .from('frontend_features')
-        .select('*')
-        .eq('is_active', true)
-        .order('sort_order'),
-      supabase
-        .from('frontend_benefits')
-        .select('*')
-        .eq('is_active', true)
-        .order('sort_order')
-    ]);
+      ...rest
+    ] = await Promise.all(queries);
 
-    const distinctCountries = new Set(countries?.map(p => p.location.trim()) || []);
+    // Update caches if needed
+    if (needFeatures && rest[0]) {
+      cache.features = rest[0].data;
+      cache.lastFetch.features = Date.now();
+    }
+
+    if (needBenefits && rest[1]) {
+      cache.benefits = rest[1].data;
+      cache.lastFetch.benefits = Date.now();
+    }
+
+    // Get country count from a separate function to avoid blocking
+    const countryCount = await getCountryCount();
 
     return {
       stats: [
@@ -344,16 +386,32 @@ export const getFrontendStats = async () => {
         },
         { 
           label: "Countries Served", 
-          value: `${distinctCountries.size}+`, 
+          value: `${countryCount}+`, 
           color: "text-orange-600", 
           icon: "Globe" 
         }
       ],
-      features: features || [],
-      benefits: benefits || []
+      features: cache.features || [],
+      benefits: cache.benefits || []
     };
   } catch (error) {
     console.error('Error getting frontend stats:', error);
     return null;
+  }
+};
+
+// Helper function to get country count without blocking main data load
+const getCountryCount = async () => {
+  try {
+    const { data: countries } = await supabase
+      .from('profiles')
+      .select('location')
+      .not('location', 'is', null);
+
+    const distinctCountries = new Set(countries?.map(p => p.location.trim()) || []);
+    return distinctCountries.size;
+  } catch (error) {
+    console.error('Error getting country count:', error);
+    return 0;
   }
 };

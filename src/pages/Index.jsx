@@ -18,35 +18,79 @@ const iconMap = {
 export default function Index() {
   const [featuredApps, setFeaturedApps] = useState([]);
   const [frontendContent, setFrontendContent] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loadingApps, setLoadingApps] = useState(true);
+  const [loadingContent, setLoadingContent] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const loadContent = async () => {
+    // Load featured apps
+    const loadApps = async () => {
       try {
-        const [appsResult, statsResult] = await Promise.all([
-          getFeaturedApplications(),
-          getFrontendStats()
-        ]);
-
+        const appsResult = await getFeaturedApplications();
         if (appsResult.error) throw appsResult.error;
         setFeaturedApps(appsResult.applications);
-        setFrontendContent(statsResult);
       } catch (err) {
-        console.error('Error loading page content:', err);
-        setError('Failed to load page content');
+        console.error('Error loading featured apps:', err);
+        setError('Failed to load featured applications');
       } finally {
-        setLoading(false);
+        setLoadingApps(false);
       }
     };
 
+    // Load frontend content
+    const loadContent = async () => {
+      try {
+        const statsResult = await getFrontendStats();
+        setFrontendContent(statsResult);
+      } catch (err) {
+        console.error('Error loading frontend content:', err);
+        setError('Failed to load page content');
+      } finally {
+        setLoadingContent(false);
+      }
+    };
+
+    // Load both in parallel
+    loadApps();
     loadContent();
   }, []);
 
-  if (loading) {
+  const isLoading = loadingApps && loadingContent;
+
+  if (error) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <Loader2 className="w-8 h-8 animate-spin text-blue-600" />
+      <div className="min-h-screen bg-white flex items-center justify-center text-red-600">
+        {error}
+      </div>
+    );
+  }
+
+  // Show skeleton loading state instead of full-page loader
+  if (isLoading) {
+    return (
+      <div className="min-h-screen bg-white">
+        {/* Hero Section Skeleton */}
+        <div className="h-96 bg-gray-100 animate-pulse" />
+        
+        {/* Featured Apps Skeleton */}
+        <section className="py-16 px-4 md:px-8 max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="h-64 bg-gray-100 rounded-lg animate-pulse" />
+            ))}
+          </div>
+        </section>
+
+        {/* Features Skeleton */}
+        <section className="py-16 px-4 md:px-8 bg-gray-50">
+          <div className="max-w-7xl mx-auto">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="h-48 bg-gray-100 rounded-lg animate-pulse" />
+              ))}
+            </div>
+          </div>
+        </section>
       </div>
     );
   }
