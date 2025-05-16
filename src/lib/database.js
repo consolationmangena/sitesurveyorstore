@@ -84,6 +84,50 @@ export const trackAppDownload = async (appId, userEmail = null) => {
   return { data, error }
 }
 
+export const getFeaturedApplications = async () => {
+  try {
+    const { data, error } = await supabase
+      .from('applications')
+      .select(`
+        id,
+        name,
+        description,
+        icon,
+        tags,
+        download_count,
+        updated_at,
+        app_type,
+        price,
+        trial_available,
+        trial_days,
+        repo_url,
+        homepage_url,
+        categories (
+          name
+        )
+      `)
+      .eq('is_featured', true)
+      .eq('is_active', true)
+      .order('updated_at', { ascending: false })
+
+    if (error) {
+      console.error('Error fetching featured applications:', error)
+      return { applications: [], error }
+    }
+
+    return { 
+      applications: data.map(app => ({
+        ...app,
+        category: app.categories?.name || 'Uncategorized'
+      })), 
+      error: null 
+    }
+  } catch (error) {
+    console.error('Error in getFeaturedApplications:', error)
+    return { applications: [], error }
+  }
+}
+
 // ==================== CATEGORIES ====================
 
 export const getCategories = async () => {
@@ -242,3 +286,74 @@ export const getBlogStats = async () => {
 
   return { data: stats, error: null }
 }
+
+// ==================== FRONTEND CONTENT ====================
+
+export const getFrontendStats = async () => {
+  try {
+    // Fetch all data in parallel for better performance
+    const [
+      appStats,
+      { data: downloads },
+      { data: countries },
+      { data: features },
+      { data: benefits }
+    ] = await Promise.all([
+      getAppStats(),
+      supabase
+        .from('app_downloads')
+        .select('id')
+        .eq('downloaded_at', new Date().toISOString().split('T')[0]),
+      supabase
+        .from('profiles')
+        .select('location')
+        .not('location', 'is', null),
+      supabase
+        .from('frontend_features')
+        .select('*')
+        .eq('is_active', true)
+        .order('sort_order'),
+      supabase
+        .from('frontend_benefits')
+        .select('*')
+        .eq('is_active', true)
+        .order('sort_order')
+    ]);
+
+    const distinctCountries = new Set(countries?.map(p => p.location.trim()) || []);
+
+    return {
+      stats: [
+        { 
+          label: "Open Source Tools", 
+          value: `${appStats.data?.openSource || 0}+`, 
+          color: "text-emerald-600", 
+          icon: "Code" 
+        },
+        { 
+          label: "Professional Apps", 
+          value: `${appStats.data?.pro || 0}+`, 
+          color: "text-blue-600", 
+          icon: "Crown" 
+        },
+        { 
+          label: "Total Downloads", 
+          value: `${Math.floor((appStats.data?.totalDownloads || 0) / 1000)}K+`, 
+          color: "text-purple-600", 
+          icon: "TrendingUp" 
+        },
+        { 
+          label: "Countries Served", 
+          value: `${distinctCountries.size}+`, 
+          color: "text-orange-600", 
+          icon: "Globe" 
+        }
+      ],
+      features: features || [],
+      benefits: benefits || []
+    };
+  } catch (error) {
+    console.error('Error getting frontend stats:', error);
+    return null;
+  }
+};
