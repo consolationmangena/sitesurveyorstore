@@ -21,12 +21,14 @@ export default function RequestSolutionPage() {
           </div>
           
           <div className="mb-8">
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-200 mb-6">
-              <h3 className="text-xl font-black text-blue-800 mb-3">🌍 Share Your Challenge</h3>
-              <p className="text-base font-medium text-slate-700 leading-relaxed">
-                Are you a geomatician or surveyor who faced a challenge in the field, lab, or office? 
-                Share your real-world problem, and help us build open-source solutions for Africa and beyond!
-              </p>
+            <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-200/50 mb-6 shadow-lg hover:shadow-xl transition-all duration-300">
+              <div className="relative">
+                <h3 className="text-xl font-black text-blue-800 mb-3">🌍 Share Your Challenge</h3>
+                <p className="text-base font-medium text-slate-700 leading-relaxed">
+                  Are you a geomatician or surveyor who faced a challenge in the field, lab, or office? 
+                  Share your real-world problem, and help us build open-source solutions for Africa and beyond!
+                </p>
+              </div>
             </div>
             
             <div className="grid md:grid-cols-2 gap-4 mb-6">

@@ -30,8 +30,8 @@ export default function About() {
                 <h3 className="text-xl font-black text-blue-800 mb-3">🌍 Local Solutions</h3>
                 <p className="text-base font-medium text-slate-700">Free and open alternatives to expensive, closed mapping tools.</p>
               </div>
-              <div className="bg-gradient-to-br from-green-50 to-blue-50 rounded-2xl p-6 border border-green-200">
-                <h3 className="text-xl font-black text-green-800 mb-3">⚡ Field & Office</h3>
+              <div className="bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-200/50 shadow-lg hover:shadow-xl transition-all duration-300">
+                <h3 className="text-xl font-black text-blue-800 mb-3">⚡ Field & Office</h3>
                 <p className="text-base font-medium text-slate-700">Modern applications for working with spatial data, all MIT licensed.</p>
               </div>
               <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl p-6 border border-indigo-200">

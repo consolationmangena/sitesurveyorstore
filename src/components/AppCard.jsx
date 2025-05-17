@@ -128,8 +128,8 @@ export default function AppCard({ app, viewMode = "grid" }) {
       <div className="p-6">
         {/* Header */}
         <div className="flex items-center gap-4 mb-4">
-          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-            <span className="text-xl text-white">
+          <div className="w-12 h-12 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center shadow-lg group-hover:scale-110 transition-all duration-300">
+            <span className="text-xl text-white transform group-hover:scale-110 transition-transform duration-300">
               {getIconEmoji(app.icon)}
             </span>
           </div>
@@ -206,7 +206,7 @@ export default function AppCard({ app, viewMode = "grid" }) {
         <div className="flex gap-2">
           <Button
             onClick={handleDownload}
-            className="flex-1 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-full hover:scale-105 transition-all"
+            className="flex-1 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white rounded-full hover:scale-105 transition-all duration-300 shadow-md hover:shadow-xl"
           >
             <Download className="w-4 h-4 mr-2" />
             Get App
