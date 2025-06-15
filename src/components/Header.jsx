@@ -1,7 +1,14 @@
 
-import { Search, Database, Globe } from "lucide-react";
+import { Search, Database } from "lucide-react";
 
 export default function Header({ title, subtitle, showSearch = false }) {
+  const navLinks = [
+    { href: "/", label: "Home" },
+    { href: "/appstore", label: "App Store" },
+    { href: "/about", label: "About" },
+    { href: "/request-solution", label: "Request" }
+  ];
+
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-lg shadow-lg border-b border-slate-200/50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -42,30 +49,15 @@ export default function Header({ title, subtitle, showSearch = false }) {
 
           <div className="flex items-center gap-4">
             <nav className="hidden sm:flex items-center gap-2">
-              <a
-                href="/"
-                className="px-4 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
-              >
-                Home
-              </a>
-              <a
-                href="/appstore"
-                className="px-4 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
-              >
-                App Store
-              </a>
-              <a
-                href="/about"
-                className="px-4 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
-              >
-                About
-              </a>
-              <a
-                href="/request-solution"
-                className="px-4 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
-              >
-                Request
-              </a>
+              {navLinks.map((link) => (
+                <a
+                  key={link.href}
+                  href={link.href}
+                  className="px-4 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
+                >
+                  {link.label}
+                </a>
+              ))}
             </nav>
             
             <div className="hidden lg:flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-slate-200 rounded-full text-sm font-medium">
@@ -91,30 +83,15 @@ export default function Header({ title, subtitle, showSearch = false }) {
             </div>
           )}
           <nav className="flex items-center justify-center gap-4 sm:hidden">
-            <a
-              href="/"
-              className="px-4 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
-            >
-              Home
-            </a>
-            <a
-              href="/appstore"
-              className="px-4 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
-            >
-              App Store
-            </a>
-            <a
-              href="/about"
-              className="px-4 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
-            >
-              About
-            </a>
-            <a
-              href="/request-solution"
-              className="px-4 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
-            >
-              Request
-            </a>
+            {navLinks.map((link) => (
+              <a
+                key={link.href}
+                href={link.href}
+                className="px-4 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
+              >
+                {link.label}
+              </a>
+            ))}
           </nav>
         </div>
       </div>
