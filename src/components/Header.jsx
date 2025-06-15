@@ -1,4 +1,3 @@
-
 import { Search, Database } from "lucide-react";
 import { useState } from "react";
 
@@ -60,17 +59,6 @@ export default function Header({ title, subtitle, showSearch = false, onSearch }
           )}
 
           <div className="flex items-center gap-4">
-            <nav className="hidden sm:flex items-center gap-2">
-              {navLinks.map((link) => (
-                <a
-                  key={link.href}
-                  href={link.href}
-                  className="px-4 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all hover:scale-105"
-                >
-                  {link.label}
-                </a>
-              ))}
-            </nav>
             
             <div className="hidden lg:flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-slate-200 rounded-full text-sm font-medium animate-pulse">
               <Database className="w-4 h-4 text-blue-600" />
@@ -81,7 +69,7 @@ export default function Header({ title, subtitle, showSearch = false, onSearch }
           </div>
         </div>
 
-        {/* Mobile Navigation */}
+        {/* Mobile Search */}
         <div className="md:hidden mt-4 space-y-3">
           {showSearch && (
             <div className="relative">
@@ -96,17 +84,6 @@ export default function Header({ title, subtitle, showSearch = false, onSearch }
               />
             </div>
           )}
-          <nav className="flex items-center justify-center gap-4 sm:hidden">
-            {navLinks.map((link) => (
-              <a
-                key={link.href}
-                href={link.href}
-                className="px-4 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all hover:scale-105"
-              >
-                {link.label}
-              </a>
-            ))}
-          </nav>
         </div>
       </div>
     </header>
