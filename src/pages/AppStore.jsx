@@ -1,41 +1,29 @@
 
 import { useState, useEffect } from "react";
-import { useQuery } from "@tanstack/react-query";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AppGrid from "@/components/AppGrid";
-import { supabase } from "@/integrations/supabase/client";
 import { Search, Filter, Grid, List, Star, Download, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import appsData from "@/data/apps.json";
 
 export default function AppStore() {
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [viewMode, setViewMode] = useState("grid");
   const [sortBy, setSortBy] = useState("name");
+  const [apps, setApps] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
 
-  // Fetch apps from Supabase
-  const { data: apps = [], isLoading, error } = useQuery({
-    queryKey: ['apps'],
-    queryFn: async () => {
-      console.log('Fetching apps from Supabase...');
-      const { data, error } = await supabase
-        .from('apps')
-        .select('*')
-        .eq('is_active', true)
-        .order('created_at', { ascending: false });
-      
-      if (error) {
-        console.error('Error fetching apps:', error);
-        throw error;
-      }
-      
-      console.log('Apps fetched successfully:', data);
-      return data || [];
-    },
-  });
+  // Load apps from JSON file
+  useEffect(() => {
+    console.log('Loading apps from JSON file...');
+    setApps(appsData.apps);
+    setIsLoading(false);
+    console.log('Apps loaded successfully:', appsData.apps);
+  }, []);
 
   // Get unique categories for filter
   const categories = [...new Set(apps.map(app => app.category).filter(Boolean))];
@@ -61,10 +49,6 @@ export default function AppStore() {
           return 0;
       }
     });
-
-  if (error) {
-    console.error('Query error:', error);
-  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
@@ -159,18 +143,8 @@ export default function AppStore() {
           </div>
         )}
 
-        {/* Error State */}
-        {error && (
-          <div className="text-center py-12">
-            <div className="bg-red-50 border border-red-200 rounded-2xl p-8 max-w-md mx-auto">
-              <p className="text-red-600 font-medium">Failed to load apps</p>
-              <p className="text-red-500 text-sm mt-2">Please try refreshing the page</p>
-            </div>
-          </div>
-        )}
-
         {/* Results Summary */}
-        {!isLoading && !error && (
+        {!isLoading && (
           <div className="mb-6">
             <p className="text-slate-600 font-medium">
               Showing {filteredApps.length} of {apps.length} apps
@@ -181,12 +155,12 @@ export default function AppStore() {
         )}
 
         {/* Apps Grid/List */}
-        {!isLoading && !error && (
+        {!isLoading && (
           <AppGrid apps={filteredApps} viewMode={viewMode} />
         )}
 
         {/* No Results */}
-        {!isLoading && !error && filteredApps.length === 0 && apps.length > 0 && (
+        {!isLoading && filteredApps.length === 0 && apps.length > 0 && (
           <div className="text-center py-12">
             <div className="bg-slate-50 border border-slate-200 rounded-2xl p-8 max-w-md mx-auto">
               <Search className="w-12 h-12 text-slate-400 mx-auto mb-4" />
@@ -197,7 +171,7 @@ export default function AppStore() {
         )}
 
         {/* Stats Section */}
-        {!isLoading && !error && apps.length > 0 && (
+        {!isLoading && apps.length > 0 && (
           <div className="mt-16 grid md:grid-cols-3 gap-6">
             <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-slate-200 p-6 text-center">
               <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-4">
