@@ -1,8 +1,10 @@
 // Enhanced Landing page for SiteSurveyor with modern design
 
 import AppGrid from "@/components/AppGrid";
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Users, Database, Book, Search, Globe, MapPin, Zap, Github } from "lucide-react";
+import { ArrowRight, Users, Database, Book, MapPin, Zap, Github } from "lucide-react";
 
 const FEATURE_APPS = [
   {
@@ -73,111 +75,7 @@ const CATEGORIES = [
 const Index = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      {/* Modern header with glassmorphism effect */}
-      <header className="sticky top-0 z-50 bg-white/90 backdrop-blur-lg shadow-lg border-b border-slate-200/50">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between">
-            {/* Enhanced logo and brand section */}
-            <div className="flex items-center gap-4">
-              <div className="relative group">
-                <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl blur opacity-30 group-hover:opacity-60 transition duration-300"></div>
-                <img
-                  src="https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?w=80&h=80&fit=crop&crop=center"
-                  alt="SiteSurveyor Logo"
-                  className="relative w-12 h-12 rounded-xl shadow-lg object-cover border-2 border-white"
-                />
-              </div>
-              <div className="flex flex-col">
-                <h1 className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent">
-                  SiteSurveyor
-                </h1>
-                <p className="text-sm text-slate-600 font-medium">
-                  Geomatics Store
-                </p>
-              </div>
-            </div>
-
-            {/* Enhanced search bar */}
-            <form className="hidden md:flex flex-1 mx-8 max-w-lg relative">
-              <div className="relative w-full">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5" />
-                <input
-                  className="w-full rounded-full bg-white/80 backdrop-blur-sm border border-slate-200 pl-12 pr-6 py-3 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:text-slate-500"
-                  type="search"
-                  placeholder="Search apps and tools..."
-                  aria-label="Search for apps"
-                  disabled
-                />
-              </div>
-            </form>
-
-            {/* Enhanced navigation */}
-            <div className="flex items-center gap-4">
-              <nav className="hidden sm:flex items-center gap-2">
-                <a
-                  href="/appstore"
-                  className="px-4 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
-                >
-                  App Store
-                </a>
-                <a
-                  href="/about"
-                  className="px-4 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
-                >
-                  About
-                </a>
-                <a
-                  href="/request-solution"
-                  className="px-4 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
-                >
-                  Request
-                </a>
-              </nav>
-              
-              <div className="hidden lg:flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-slate-200 rounded-full text-sm font-medium">
-                <Database className="w-4 h-4 text-blue-600" />
-                <span className="text-blue-600">Open Source</span>
-                <span className="text-slate-400">•</span>
-                <span className="text-blue-600">MIT Licensed</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Mobile search and nav */}
-          <div className="md:hidden mt-4 space-y-3">
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5" />
-              <input
-                className="w-full rounded-full bg-white/80 backdrop-blur-sm border border-slate-200 pl-12 pr-6 py-3 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:text-slate-500"
-                type="search"
-                placeholder="Search apps and tools..."
-                aria-label="Search for apps"
-                disabled
-              />
-            </div>
-            <nav className="flex items-center justify-center gap-4 sm:hidden">
-              <a
-                href="/appstore"
-                className="px-4 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
-              >
-                App Store
-              </a>
-              <a
-                href="/about"
-                className="px-4 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
-              >
-                About
-              </a>
-              <a
-                href="/request-solution"
-                className="px-4 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
-              >
-                Request
-              </a>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <Header title="SiteSurveyor" subtitle="Geomatics Store" showSearch={true} />
 
       {/* Enhanced categories filter */}
       <nav className="border-b border-slate-200/50 bg-white/50 backdrop-blur-sm">
@@ -207,7 +105,6 @@ const Index = () => {
           <div className="space-y-8 animate-fade-in">
             <div className="space-y-6">
               <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-white/80 backdrop-blur-sm border border-blue-200">
-                <Globe className="w-4 h-4 text-blue-600" />
                 <span className="text-sm font-medium text-blue-600">Built for Africa & Beyond</span>
               </div>
               
@@ -317,27 +214,7 @@ const Index = () => {
         </div>
       </section>
 
-      {/* Enhanced footer */}
-      <footer className="border-t border-slate-200/50 bg-white/50 backdrop-blur-sm">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-          <div className="text-center space-y-4">
-            <div className="flex items-center justify-center gap-2">
-              <span className="text-sm text-slate-600">
-                © {new Date().getFullYear()} SiteSurveyor – Africa's Open-Source Geomatics Appstore
-              </span>
-            </div>
-            <div className="flex items-center justify-center gap-4 text-sm">
-              <a href="https://github.com/consolationmangena/sitesurveyor" target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-500 transition-colors">
-                GitHub
-              </a>
-              <span className="text-slate-400">•</span>
-              <span className="text-slate-600">MIT License</span>
-              <span className="text-slate-400">•</span>
-              <span className="text-slate-600">Open Source</span>
-            </div>
-          </div>
-        </div>
-      </footer>
+      <Footer />
     </div>
   );
 };

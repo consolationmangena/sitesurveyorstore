@@ -1,37 +1,12 @@
 
+import Header from "@/components/Header";
+import Footer from "@/components/Footer";
 import RequestSolutionForm from "@/components/RequestSolutionForm";
 
 export default function RequestSolutionPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      {/* Header */}
-      <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-lg shadow-lg border-b border-slate-200/50">
-        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-          <div className="flex items-center justify-between">
-            <a href="/" className="flex items-center gap-4">
-              <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg">
-                <span className="text-white text-xl font-black">S</span>
-              </div>
-              <div>
-                <h1 className="text-2xl font-black text-slate-800">Request Solution</h1>
-                <p className="text-sm font-semibold text-slate-600">Share Your Challenge</p>
-              </div>
-            </a>
-            
-            <nav className="hidden md:flex items-center gap-6">
-              <a href="/" className="text-lg font-semibold text-slate-700 hover:text-blue-600 transition-colors">
-                Home
-              </a>
-              <a href="/appstore" className="text-lg font-semibold text-slate-700 hover:text-blue-600 transition-colors">
-                App Store
-              </a>
-              <a href="/about" className="text-lg font-semibold text-slate-700 hover:text-blue-600 transition-colors">
-                About
-              </a>
-            </nav>
-          </div>
-        </div>
-      </header>
+      <Header title="Request Solution" subtitle="Share Your Challenge" />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="max-w-2xl mx-auto bg-white/90 backdrop-blur-sm shadow-2xl rounded-2xl p-8 border-2 border-slate-200">
@@ -75,6 +50,8 @@ export default function RequestSolutionPage() {
           </div>
         </div>
       </div>
+
+      <Footer />
     </div>
   );
 }
