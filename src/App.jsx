@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -9,6 +8,7 @@ import NotFound from "./pages/NotFound";
 import About from "./pages/About";
 import RequestSolutionPage from "./pages/RequestSolution";
 import AppStore from "./pages/AppStore";
+import AppDetailPage from "./pages/AppDetail";
 
 const queryClient = new QueryClient();
 
@@ -23,6 +23,7 @@ const App = () => (
           <Route path="/appstore" element={<AppStore />} />
           <Route path="/about" element={<About />} />
           <Route path="/request-solution" element={<RequestSolutionPage />} />
+          <Route path="/app/:id" element={<AppDetailPage />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
