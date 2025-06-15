@@ -1,9 +1,9 @@
 
-// Landing page for SiteSurveyor Open-Source Geomatics Appstore in Play Store style
+// Enhanced Landing page for SiteSurveyor with modern design
 
 import AppGrid from "@/components/AppGrid";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Users, Database, Book, Search } from "lucide-react";
+import { ArrowRight, Users, Database, Book, Search, Globe, MapPin, Zap } from "lucide-react";
 
 const FEATURE_APPS = [
   {
@@ -73,37 +73,37 @@ const CATEGORIES = [
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-green-50 via-accent/40 to-primary/10 w-full">
-      {/* Enhanced header with better logo and styling */}
-      <header className="sticky top-0 z-20 bg-gradient-to-r from-emerald-600 via-green-600 to-teal-600 shadow-2xl">
-        <div className="px-4 sm:px-6 lg:px-8 py-4">
-          <div className="flex items-center justify-between max-w-7xl mx-auto">
-            {/* Logo and brand section */}
-            <div className="flex items-center gap-3 min-w-0">
-              <div className="relative">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-green-50 to-emerald-50">
+      {/* Modern header with glassmorphism effect */}
+      <header className="sticky top-0 z-50 glass-effect shadow-xl border-b border-green-200/50">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex items-center justify-between">
+            {/* Enhanced logo and brand section */}
+            <div className="flex items-center gap-4">
+              <div className="relative group">
+                <div className="absolute -inset-1 bg-gradient-to-r from-primary to-accent rounded-2xl blur opacity-30 group-hover:opacity-60 transition duration-300"></div>
                 <img
                   src="https://images.unsplash.com/photo-1569336415962-a4bd9f69cd83?w=80&h=80&fit=crop&crop=center"
                   alt="SiteSurveyor Logo"
-                  className="w-12 h-12 rounded-2xl shadow-lg border-2 border-white/30 object-cover"
+                  className="relative w-12 h-12 rounded-xl shadow-lg object-cover border-2 border-white"
                 />
-                <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-emerald-400 rounded-full border-2 border-white"></div>
               </div>
-              <div className="flex flex-col min-w-0">
-                <h1 className="text-xl sm:text-2xl lg:text-3xl text-white font-black tracking-tight drop-shadow-lg">
+              <div className="flex flex-col">
+                <h1 className="text-2xl sm:text-3xl font-black gradient-text">
                   SiteSurveyor
                 </h1>
-                <p className="text-emerald-100 text-xs font-medium tracking-wide hidden sm:block">
+                <p className="text-sm text-muted-foreground font-medium">
                   Geomatics Store
                 </p>
               </div>
             </div>
 
-            {/* Search bar - hidden on small screens */}
-            <form className="hidden md:flex flex-1 mx-6 max-w-md relative">
+            {/* Enhanced search bar */}
+            <form className="hidden md:flex flex-1 mx-8 max-w-lg relative">
               <div className="relative w-full">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5" />
+                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" />
                 <input
-                  className="w-full rounded-full bg-white/95 backdrop-blur-sm pl-12 pr-4 py-3 text-base border border-white/20 shadow-lg focus:ring-2 ring-emerald-300 focus:bg-white transition-all placeholder:text-gray-500"
+                  className="w-full rounded-full glass-effect pl-12 pr-6 py-3 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all placeholder:text-muted-foreground"
                   type="search"
                   placeholder="Search apps and tools..."
                   aria-label="Search for apps"
@@ -112,142 +112,220 @@ const Index = () => {
               </div>
             </form>
 
-            {/* Navigation and info */}
-            <div className="flex items-center gap-2 lg:gap-4">
-              <nav className="flex items-center gap-1">
+            {/* Enhanced navigation */}
+            <div className="flex items-center gap-4">
+              <nav className="hidden sm:flex items-center gap-2">
                 <a
                   href="/about"
-                  className="text-white/90 hover:text-white font-semibold px-3 py-2 rounded-xl transition-all bg-white/10 hover:bg-white/20 backdrop-blur-sm text-sm"
+                  className="px-4 py-2 rounded-lg text-sm font-medium text-foreground hover:bg-primary/10 hover:text-primary transition-all"
                 >
                   About
                 </a>
                 <a
                   href="/request-solution"
-                  className="text-white/90 hover:text-white font-semibold px-3 py-2 rounded-xl transition-all bg-white/10 hover:bg-white/20 backdrop-blur-sm text-sm"
+                  className="px-4 py-2 rounded-lg text-sm font-medium text-foreground hover:bg-primary/10 hover:text-primary transition-all"
                 >
                   Request
                 </a>
               </nav>
               
-              <div className="hidden lg:flex items-center gap-2 px-4 py-2 bg-white/10 rounded-full text-white font-medium text-sm border border-white/20 backdrop-blur-sm">
-                <Database className="w-4 h-4 text-emerald-200" />
-                <span className="text-emerald-100">MIT Licensed</span>
-                <span className="text-white/60">•</span>
-                <span className="text-emerald-100">Open Source</span>
+              <div className="hidden lg:flex items-center gap-2 px-4 py-2 glass-effect rounded-full text-sm font-medium">
+                <Database className="w-4 h-4 text-primary" />
+                <span className="text-primary">Open Source</span>
+                <span className="text-muted-foreground">•</span>
+                <span className="text-primary">MIT Licensed</span>
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Mobile search bar */}
-        <div className="md:hidden px-4 pb-4">
-          <div className="relative">
-            <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-500 w-5 h-5" />
-            <input
-              className="w-full rounded-full bg-white/95 backdrop-blur-sm pl-12 pr-4 py-3 text-base border border-white/20 shadow-lg focus:ring-2 ring-emerald-300 focus:bg-white transition-all placeholder:text-gray-500"
-              type="search"
-              placeholder="Search apps and tools..."
-              aria-label="Search for apps"
-              disabled
-            />
+          {/* Mobile search and nav */}
+          <div className="md:hidden mt-4 space-y-3">
+            <div className="relative">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground w-5 h-5" />
+              <input
+                className="w-full rounded-full glass-effect pl-12 pr-6 py-3 text-sm focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all placeholder:text-muted-foreground"
+                type="search"
+                placeholder="Search apps and tools..."
+                aria-label="Search for apps"
+                disabled
+              />
+            </div>
+            <nav className="flex items-center justify-center gap-4 sm:hidden">
+              <a
+                href="/about"
+                className="px-4 py-2 rounded-lg text-sm font-medium text-foreground hover:bg-primary/10 hover:text-primary transition-all"
+              >
+                About
+              </a>
+              <a
+                href="/request-solution"
+                className="px-4 py-2 rounded-lg text-sm font-medium text-foreground hover:bg-primary/10 hover:text-primary transition-all"
+              >
+                Request
+              </a>
+            </nav>
           </div>
         </div>
       </header>
 
-      {/* Categories filter bar */}
-      <nav className="flex flex-wrap gap-2 px-6 py-4 bg-gradient-to-r from-green-100/70 to-accent/10 border-b border-green-200">
-        {CATEGORIES.map((cat, idx) => (
-          <button
-            key={cat}
-            className={`px-4 py-1.5 rounded-full font-medium text-sm transition shadow-sm border hover:bg-green-600/90 hover:text-white
-            ${
-              idx === 0
-                ? "bg-primary text-white border-primary"
-                : "bg-white/80 border-green-200 text-primary hover:border-primary"
-            }`}
-            disabled={idx === 0}
-          >
-            {cat}
-          </button>
-        ))}
+      {/* Enhanced categories filter */}
+      <nav className="border-b border-border/50 bg-white/50 backdrop-blur-sm">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
+          <div className="flex flex-wrap gap-2">
+            {CATEGORIES.map((cat, idx) => (
+              <button
+                key={cat}
+                className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                  idx === 0
+                    ? "bg-primary text-primary-foreground shadow-lg"
+                    : "glass-effect hover:bg-primary/10 hover:text-primary hover:shadow-md"
+                }`}
+                disabled={idx === 0}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        </div>
       </nav>
 
-      {/* Hero / vision */}
-      <section className="max-w-7xl mx-auto px-6 pt-7 pb-5 flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-16">
-        <div className="flex-1 mb-6 md:mb-0">
-          <div className="rounded-3xl overflow-hidden w-full bg-gradient-to-tr from-primary via-green-200 to-accent shadow-2xl p-7 border border-accent mb-8 min-h-32 flex items-center justify-center relative">
-            <Book className="w-16 h-16 text-accent-foreground opacity-80 absolute left-6 top-6" />
-            <Users className="w-16 h-16 text-accent-foreground opacity-60 absolute right-6 bottom-4" />
-            <span className="block text-xl font-bold z-10 text-background drop-shadow-lg animate-fade-in">
-              "Accessible, Innovative, Reliable — Built For Africa"
-            </span>
-          </div>
-        </div>
-        {/* Mission summary */}
-        <div className="flex-[2]">
-          <div className="space-y-4 animate-fade-in">
-            <h2 className="text-2xl md:text-3xl font-extrabold text-primary mb-1">Our Mission</h2>
-            <p className="text-base md:text-lg text-muted-foreground">
-              <span className="font-semibold text-foreground">SiteSurveyor</span> provides a free, modern toolkit for surveyors, GIS practitioners, and planners — making advanced mapping technology available to all across Africa.
-              <br />
-              <br />
-              Our open-source model means: <b>no expensive licenses, local empowerment, and reliable tools for the field & office.</b> <br />
-              Hosted on GitHub for open collaboration & transparency.
-              <br />
-              <span className="inline-block mt-3">
-                <a
-                  href="https://github.com/sitesurveyor"
-                  target="_blank"
-                  className="bg-gradient-to-r from-primary to-accent text-primary-foreground px-4 py-2 rounded-lg font-semibold shadow hover:from-primary/80 hover:to-accent/80 transition-all"
-                  rel="noopener noreferrer"
-                >
-                  Contribute on GitHub
+      {/* Hero section with modern design */}
+      <section className="container mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <div className="grid lg:grid-cols-2 gap-12 items-center">
+          {/* Hero content */}
+          <div className="space-y-8 animate-fade-in">
+            <div className="space-y-6">
+              <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full glass-effect border border-primary/20">
+                <Globe className="w-4 h-4 text-primary" />
+                <span className="text-sm font-medium text-primary">Built for Africa & Beyond</span>
+              </div>
+              
+              <h2 className="text-4xl sm:text-5xl lg:text-6xl font-black leading-tight">
+                <span className="gradient-text">Empowering</span><br />
+                Geomatics <br />
+                <span className="text-foreground">Professionals</span>
+              </h2>
+              
+              <p className="text-lg text-muted-foreground leading-relaxed max-w-xl">
+                Access free, modern toolkit for surveyors, GIS practitioners, and planners. 
+                No expensive licenses, just reliable open-source tools for field & office work.
+              </p>
+            </div>
+
+            <div className="flex flex-col sm:flex-row gap-4">
+              <Button size="lg" className="rounded-full px-8 shadow-lg hover:shadow-xl transition-shadow">
+                <ArrowRight className="w-5 h-5 mr-2" />
+                Explore Apps
+              </Button>
+              <Button variant="outline" size="lg" className="rounded-full px-8" asChild>
+                <a href="https://github.com/consolationmangena/sitesurveyor" target="_blank" rel="noopener noreferrer">
+                  <Github className="w-5 h-5 mr-2" />
+                  View on GitHub
                 </a>
-              </span>
-            </p>
+              </Button>
+            </div>
+
+            {/* Feature highlights */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-8">
+              <div className="flex items-center gap-3 p-4 rounded-xl glass-effect">
+                <MapPin className="w-8 h-8 text-primary flex-shrink-0" />
+                <div>
+                  <h4 className="font-semibold text-sm">Field Ready</h4>
+                  <p className="text-xs text-muted-foreground">Works offline & online</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 p-4 rounded-xl glass-effect">
+                <Zap className="w-8 h-8 text-primary flex-shrink-0" />
+                <div>
+                  <h4 className="font-semibold text-sm">Modern Tools</h4>
+                  <p className="text-xs text-muted-foreground">Latest technology</p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 p-4 rounded-xl glass-effect">
+                <Users className="w-8 h-8 text-primary flex-shrink-0" />
+                <div>
+                  <h4 className="font-semibold text-sm">Community</h4>
+                  <p className="text-xs text-muted-foreground">Open collaboration</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Hero visual */}
+          <div className="relative animate-fade-in">
+            <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-accent/20 rounded-3xl blur-3xl"></div>
+            <div className="relative glass-effect rounded-3xl p-8 shadow-2xl">
+              <div className="grid grid-cols-2 gap-4 mb-6">
+                <div className="aspect-square rounded-2xl bg-gradient-to-br from-primary to-accent p-6 flex items-center justify-center">
+                  <Book className="w-12 h-12 text-white" />
+                </div>
+                <div className="aspect-square rounded-2xl bg-gradient-to-br from-accent to-primary p-6 flex items-center justify-center">
+                  <Database className="w-12 h-12 text-white" />
+                </div>
+              </div>
+              <div className="text-center space-y-2">
+                <h3 className="text-2xl font-bold gradient-text">6+ Tools</h3>
+                <p className="text-muted-foreground">Ready to use, MIT licensed</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Apps Grid */}
-      <main className="max-w-7xl mx-auto px-6 pb-16">
-        <h2 className="text-xl md:text-2xl font-bold text-primary mb-4">Featured Apps</h2>
-        <AppGrid apps={FEATURE_APPS as any} />
+      {/* Apps Grid with enhanced styling */}
+      <main className="container mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        <div className="space-y-8">
+          <div className="text-center space-y-4">
+            <h2 className="text-3xl sm:text-4xl font-bold">Featured Applications</h2>
+            <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+              Discover our collection of professional-grade geomatics tools, all open-source and ready for production use.
+            </p>
+          </div>
+          <AppGrid apps={FEATURE_APPS as any} />
+        </div>
       </main>
 
-      {/* Contribute / About block */}
-      <section className="max-w-7xl mx-auto px-6 pb-10">
-        <div className="bg-gradient-to-br from-green-200/90 to-secondary/60 rounded-2xl shadow-xl border border-accent/40 p-8 flex flex-col md:flex-row items-center gap-7 animate-fade-in">
-          <div className="flex-1">
-            <h3 className="text-xl font-semibold text-primary mb-2">Want to build something for SiteSurveyor?</h3>
-            <p className="text-muted-foreground">
-              Developers, students, and professionals are welcome! See the <a href="https://github.com/sitesurveyor" target="_blank" className="underline hover:text-primary" rel="noopener noreferrer">GitHub</a>, join ongoing projects, or create your own open tools for Africa's geomatics future.
+      {/* Enhanced CTA section */}
+      <section className="container mx-auto px-4 sm:px-6 lg:px-8 pb-16">
+        <div className="relative overflow-hidden rounded-3xl bg-gradient-to-r from-primary to-accent p-12 text-center shadow-2xl">
+          <div className="absolute inset-0 bg-black/10"></div>
+          <div className="relative space-y-6">
+            <h3 className="text-3xl sm:text-4xl font-bold text-white">Join Our Community</h3>
+            <p className="text-xl text-white/90 max-w-2xl mx-auto">
+              Developers, students, and professionals are welcome! Help build the future of accessible geomatics tools.
             </p>
-          </div>
-          <div className="flex-shrink-0 flex flex-col md:items-end gap-2">
-            <a
-              href="https://github.com/sitesurveyor"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-lg font-semibold shadow-lg hover:from-primary hover:to-accent hover:text-primary-foreground transition-all"
-            >
-              <ArrowRight className="w-5 h-5" />
-              Join the Community
-            </a>
-            <span className="block text-xs mt-1 text-muted-foreground">
-              MIT License | Open Data | Built in Africa
-            </span>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button size="lg" variant="secondary" className="rounded-full px-8" asChild>
+                <a href="https://github.com/consolationmangena/sitesurveyor" target="_blank" rel="noopener noreferrer">
+                  <ArrowRight className="w-5 h-5 mr-2" />
+                  Contribute Now
+                </a>
+              </Button>
+            </div>
           </div>
         </div>
       </section>
 
-      <footer className="w-full bg-gradient-to-b from-background/90 to-secondary/30 border-t py-8 px-6 text-center animate-fade-in">
-        <span className="text-muted-foreground text-xs">
-          © {new Date().getFullYear()} SiteSurveyor – Africa's Open-Source Geomatics Appstore. | {""}
-          <a href="https://github.com/sitesurveyor" target="_blank" rel="noopener noreferrer" className="underline">
-            GitHub
-          </a>
-        </span>
+      {/* Enhanced footer */}
+      <footer className="border-t border-border/50 bg-white/50 backdrop-blur-sm">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="text-center space-y-4">
+            <div className="flex items-center justify-center gap-2">
+              <span className="text-sm text-muted-foreground">
+                © {new Date().getFullYear()} SiteSurveyor – Africa's Open-Source Geomatics Appstore
+              </span>
+            </div>
+            <div className="flex items-center justify-center gap-4 text-sm">
+              <a href="https://github.com/consolationmangena/sitesurveyor" target="_blank" rel="noopener noreferrer" className="text-primary hover:text-primary/80 transition-colors">
+                GitHub
+              </a>
+              <span className="text-muted-foreground">•</span>
+              <span className="text-muted-foreground">MIT License</span>
+              <span className="text-muted-foreground">•</span>
+              <span className="text-muted-foreground">Open Source</span>
+            </div>
+          </div>
+        </div>
       </footer>
     </div>
   );
