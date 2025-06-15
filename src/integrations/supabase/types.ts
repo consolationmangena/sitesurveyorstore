@@ -9,7 +9,75 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      apps: {
+        Row: {
+          author: string | null
+          category: string | null
+          created_at: string
+          description: string | null
+          documentation_url: string | null
+          download_count: number | null
+          homepage_url: string | null
+          icon: string | null
+          id: string
+          installation_notes: string | null
+          is_active: boolean | null
+          last_updated: string | null
+          license: string | null
+          name: string
+          repo_url: string
+          requirements: string | null
+          screenshots: string[] | null
+          tags: string[] | null
+          updated_at: string
+          version: string | null
+        }
+        Insert: {
+          author?: string | null
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          documentation_url?: string | null
+          download_count?: number | null
+          homepage_url?: string | null
+          icon?: string | null
+          id?: string
+          installation_notes?: string | null
+          is_active?: boolean | null
+          last_updated?: string | null
+          license?: string | null
+          name: string
+          repo_url: string
+          requirements?: string | null
+          screenshots?: string[] | null
+          tags?: string[] | null
+          updated_at?: string
+          version?: string | null
+        }
+        Update: {
+          author?: string | null
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          documentation_url?: string | null
+          download_count?: number | null
+          homepage_url?: string | null
+          icon?: string | null
+          id?: string
+          installation_notes?: string | null
+          is_active?: boolean | null
+          last_updated?: string | null
+          license?: string | null
+          name?: string
+          repo_url?: string
+          requirements?: string | null
+          screenshots?: string[] | null
+          tags?: string[] | null
+          updated_at?: string
+          version?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

@@ -1,274 +1,231 @@
 
-import { useState } from "react";
-import { Search, Filter, Star, Download, Github, ExternalLink } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { useState, useEffect } from "react";
+import { useQuery } from "@tanstack/react-query";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-
-const SAMPLE_APPS = [
-  {
-    id: "1",
-    name: "GeoMapper Pro",
-    description: "Professional mapping and surveying application for field work",
-    longDescription: "A comprehensive mapping solution designed for surveyors, engineers, and GIS professionals. Features real-time GPS tracking, offline map support, and advanced measurement tools.",
-    category: "Mapping",
-    rating: 4.8,
-    downloads: "12.5K",
-    version: "2.1.0",
-    developer: "SiteSurveyor Team",
-    screenshots: ["https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=400&h=300&fit=crop"],
-    features: ["Real-time GPS", "Offline Maps", "CAD Integration", "Export to Multiple Formats"],
-    repoUrl: "https://github.com/sitesurveyor/geomapper-pro",
-    demoUrl: "https://demo.geomapper.com",
-    icon: "🗺️",
-    tags: ["GPS", "Surveying", "CAD", "Professional"]
-  },
-  {
-    id: "2",
-    name: "DroneView Analytics",
-    description: "AI-powered drone image analysis and photogrammetry toolkit",
-    longDescription: "Advanced photogrammetry software that processes drone imagery to create accurate 3D models, orthomosaics, and detailed survey reports using machine learning algorithms.",
-    category: "Remote Sensing",
-    rating: 4.7,
-    downloads: "8.2K",
-    version: "1.8.3",
-    developer: "AeroTech Solutions",
-    screenshots: ["https://images.unsplash.com/photo-1473968512647-3e447244af8f?w=400&h=300&fit=crop"],
-    features: ["AI-Powered Analysis", "3D Modeling", "Orthomosaic Generation", "Volume Calculations"],
-    repoUrl: "https://github.com/sitesurveyor/droneview-analytics",
-    icon: "🚁",
-    tags: ["AI", "Drones", "3D Modeling", "Analysis"]
-  },
-  {
-    id: "3",
-    name: "FieldLogger Mobile",
-    description: "Comprehensive field data collection and management system",
-    longDescription: "Mobile-first application for collecting, organizing, and managing field data. Works seamlessly offline and syncs when connected to ensure no data loss during field operations.",
-    category: "Data Collection",
-    rating: 4.9,
-    downloads: "15.7K",
-    version: "3.2.1",
-    developer: "FieldTech Inc",
-    screenshots: ["https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=400&h=300&fit=crop"],
-    features: ["Offline Sync", "Photo Attachment", "GPS Coordinates", "Custom Forms"],
-    repoUrl: "https://github.com/sitesurveyor/fieldlogger-mobile",
-    demoUrl: "https://demo.fieldlogger.com",
-    icon: "📋",
-    tags: ["Mobile", "Offline", "Forms", "GPS"]
-  },
-  {
-    id: "4",
-    name: "SpatialDB Manager",
-    description: "Visual database management for geospatial datasets",
-    longDescription: "Intuitive database management tool specifically designed for geospatial data. Supports PostGIS, GeoPackage, and various spatial formats with advanced querying capabilities.",
-    category: "Database",
-    rating: 4.6,
-    downloads: "6.3K",
-    version: "1.5.2",
-    developer: "DataSpatial Corp",
-    screenshots: ["https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=400&h=300&fit=crop"],
-    features: ["PostGIS Support", "Visual Query Builder", "Data Import/Export", "Schema Management"],
-    repoUrl: "https://github.com/sitesurveyor/spatialdb-manager",
-    icon: "🗄️",
-    tags: ["Database", "PostGIS", "SQL", "Management"]
-  },
-  {
-    id: "5",
-    name: "LandParcel Designer",
-    description: "Interactive land parcel planning and visualization tool",
-    longDescription: "Professional tool for land developers and planners to design, visualize, and manage land parcels. Includes zoning compliance checks and automated area calculations.",
-    category: "Planning",
-    rating: 4.5,
-    downloads: "4.1K",
-    version: "2.0.0",
-    developer: "UrbanPlan Studio",
-    screenshots: ["https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=400&h=300&fit=crop"],
-    features: ["Zoning Compliance", "Area Calculations", "3D Visualization", "Regulatory Reports"],
-    repoUrl: "https://github.com/sitesurveyor/landparcel-designer",
-    demoUrl: "https://demo.landparcel.com",
-    icon: "🏘️",
-    tags: ["Planning", "Zoning", "3D", "Compliance"]
-  },
-  {
-    id: "6",
-    name: "TopoSurveyor",
-    description: "Advanced topographic surveying and contour generation",
-    longDescription: "Professional-grade topographic surveying software that generates accurate contour maps, cross-sections, and elevation profiles from survey data points.",
-    category: "Surveying",
-    rating: 4.8,
-    downloads: "9.8K",
-    version: "1.9.5",
-    developer: "TopoTech Solutions",
-    screenshots: ["https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400&h=300&fit=crop"],
-    features: ["Contour Generation", "Cross-Sections", "Elevation Profiles", "TIN Creation"],
-    repoUrl: "https://github.com/sitesurveyor/toposurveyor",
-    icon: "⛰️",
-    tags: ["Surveying", "Topography", "Contours", "TIN"]
-  }
-];
-
-const CATEGORIES = ["All", "Mapping", "Remote Sensing", "Data Collection", "Database", "Planning", "Surveying"];
+import AppGrid from "@/components/AppGrid";
+import { supabase } from "@/integrations/supabase/client";
+import { Search, Filter, Grid, List, Star, Download, Clock } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 export default function AppStore() {
   const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const [selectedCategory, setSelectedCategory] = useState("all");
+  const [viewMode, setViewMode] = useState("grid");
+  const [sortBy, setSortBy] = useState("name");
 
-  const filteredApps = SAMPLE_APPS.filter(app => {
-    const matchesSearch = app.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         app.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         app.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-    const matchesCategory = selectedCategory === "All" || app.category === selectedCategory;
-    return matchesSearch && matchesCategory;
+  // Fetch apps from Supabase
+  const { data: apps = [], isLoading, error } = useQuery({
+    queryKey: ['apps'],
+    queryFn: async () => {
+      console.log('Fetching apps from Supabase...');
+      const { data, error } = await supabase
+        .from('apps')
+        .select('*')
+        .eq('is_active', true)
+        .order('created_at', { ascending: false });
+      
+      if (error) {
+        console.error('Error fetching apps:', error);
+        throw error;
+      }
+      
+      console.log('Apps fetched successfully:', data);
+      return data || [];
+    },
   });
+
+  // Get unique categories for filter
+  const categories = [...new Set(apps.map(app => app.category).filter(Boolean))];
+
+  // Filter and sort apps
+  const filteredApps = apps
+    .filter(app => {
+      const matchesSearch = app.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           app.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                           app.tags?.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
+      const matchesCategory = selectedCategory === "all" || app.category === selectedCategory;
+      return matchesSearch && matchesCategory;
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case "name":
+          return a.name.localeCompare(b.name);
+        case "downloads":
+          return (b.download_count || 0) - (a.download_count || 0);
+        case "updated":
+          return new Date(b.updated_at) - new Date(a.updated_at);
+        default:
+          return 0;
+      }
+    });
+
+  if (error) {
+    console.error('Query error:', error);
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      <Header 
-        title="App Store" 
-        subtitle="Professional Geomatics Tools" 
-        showSearch={true} 
-      />
+      <Header title="SiteSurveyor" subtitle="Open-Source Geomatics Tools" showSearch={true} />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Search and Filter Bar */}
-        <div className="mb-8 space-y-4">
-          <div className="flex flex-col lg:flex-row gap-4">
-            <div className="flex-1 relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5" />
-              <input
-                type="text"
-                placeholder="Search apps, features, or tags..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-12 pr-6 py-4 text-lg font-medium rounded-2xl bg-white/90 backdrop-blur-sm border border-slate-200 shadow-lg focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:text-slate-500"
-              />
-            </div>
-            <div className="flex items-center gap-2">
-              <Filter className="w-5 h-5 text-slate-600" />
-              <span className="text-lg font-semibold text-slate-700">Filter:</span>
-            </div>
-          </div>
-          
-          <div className="flex flex-wrap gap-3">
-            {CATEGORIES.map((category) => (
-              <button
-                key={category}
-                onClick={() => setSelectedCategory(category)}
-                className={`px-6 py-3 rounded-full text-lg font-semibold transition-all ${
-                  selectedCategory === category
-                    ? "bg-blue-600 text-white shadow-lg"
-                    : "bg-white/80 backdrop-blur-sm border border-slate-200 text-slate-700 hover:bg-blue-50 hover:text-blue-600 hover:shadow-md"
-                }`}
-              >
-                {category}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Results Count */}
-        <div className="mb-6">
-          <p className="text-xl font-bold text-slate-800">
-            {filteredApps.length} {filteredApps.length === 1 ? 'App' : 'Apps'} Found
+        {/* Header Section */}
+        <div className="text-center mb-12">
+          <h1 className="text-4xl sm:text-5xl font-black bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-4">
+            App Store
+          </h1>
+          <p className="text-lg text-slate-600 font-medium max-w-2xl mx-auto">
+            Discover open-source geomatics applications built for professionals across Africa and beyond.
           </p>
         </div>
 
-        {/* Apps Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {filteredApps.map((app) => (
-            <Card key={app.id} className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 bg-white/90 backdrop-blur-sm border-2 border-slate-200 hover:border-blue-300">
-              <CardHeader className="pb-4">
-                <div className="flex items-start gap-4">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-3xl shadow-lg">
-                    {app.icon}
-                  </div>
-                  <div className="flex-1 min-w-0">
-                    <CardTitle className="text-xl font-black text-slate-800 group-hover:text-blue-600 transition-colors line-clamp-1">
-                      {app.name}
-                    </CardTitle>
-                    <CardDescription className="text-base font-medium text-slate-600 mt-1">
-                      v{app.version} • {app.developer}
-                    </CardDescription>
-                  </div>
-                </div>
-              </CardHeader>
-              
-              <CardContent className="space-y-4">
-                <p className="text-base font-medium text-slate-700 leading-relaxed line-clamp-3">
-                  {app.description}
-                </p>
-                
-                <div className="flex items-center gap-4 text-sm font-bold">
-                  <div className="flex items-center gap-1">
-                    <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
-                    <span className="text-slate-800">{app.rating}</span>
-                  </div>
-                  <div className="flex items-center gap-1">
-                    <Download className="w-4 h-4 text-blue-600" />
-                    <span className="text-slate-800">{app.downloads}</span>
-                  </div>
-                  <span className="px-3 py-1 rounded-full bg-blue-100 text-blue-800 text-xs font-bold">
-                    {app.category}
-                  </span>
-                </div>
-                
-                <div className="flex flex-wrap gap-2">
-                  {app.tags.slice(0, 3).map((tag) => (
-                    <span key={tag} className="px-3 py-1 rounded-full bg-slate-100 text-slate-700 text-sm font-semibold border border-slate-200">
-                      {tag}
-                    </span>
+        {/* Search and Filter Controls */}
+        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200 p-6 mb-8">
+          <div className="flex flex-col lg:flex-row gap-4 items-center">
+            {/* Search Input */}
+            <div className="relative flex-1 w-full lg:w-auto">
+              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5" />
+              <Input
+                className="pl-12 pr-6 py-3 text-base rounded-full border-slate-300 focus:border-blue-500 focus:ring-blue-500/20"
+                type="search"
+                placeholder="Search apps, descriptions, or tags..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
+
+            {/* Category Filter */}
+            <div className="flex gap-3 items-center">
+              <Filter className="w-5 h-5 text-slate-600" />
+              <Select value={selectedCategory} onValueChange={setSelectedCategory}>
+                <SelectTrigger className="w-48 rounded-full">
+                  <SelectValue placeholder="All Categories" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="all">All Categories</SelectItem>
+                  {categories.map(category => (
+                    <SelectItem key={category} value={category}>
+                      {category}
+                    </SelectItem>
                   ))}
-                  {app.tags.length > 3 && (
-                    <span className="px-3 py-1 rounded-full bg-slate-50 text-slate-500 text-sm font-semibold">
-                      +{app.tags.length - 3}
-                    </span>
-                  )}
-                </div>
-                
-                <div className="flex gap-2 pt-2">
-                  <Button asChild className="flex-1 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold">
-                    <a href={app.repoUrl} target="_blank" rel="noopener noreferrer">
-                      <Github className="w-4 h-4 mr-2" />
-                      View Code
-                    </a>
-                  </Button>
-                  {app.demoUrl && (
-                    <Button variant="outline" asChild className="rounded-full border-2 border-slate-300 hover:bg-slate-50 font-bold">
-                      <a href={app.demoUrl} target="_blank" rel="noopener noreferrer">
-                        <ExternalLink className="w-4 h-4" />
-                      </a>
-                    </Button>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
-          ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Sort By */}
+            <div className="flex gap-3 items-center">
+              <Clock className="w-5 h-5 text-slate-600" />
+              <Select value={sortBy} onValueChange={setSortBy}>
+                <SelectTrigger className="w-40 rounded-full">
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="name">Name</SelectItem>
+                  <SelectItem value="downloads">Downloads</SelectItem>
+                  <SelectItem value="updated">Last Updated</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* View Mode Toggle */}
+            <div className="flex gap-2">
+              <Button
+                variant={viewMode === "grid" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setViewMode("grid")}
+                className="rounded-full"
+              >
+                <Grid className="w-4 h-4" />
+              </Button>
+              <Button
+                variant={viewMode === "list" ? "default" : "outline"}
+                size="sm"
+                onClick={() => setViewMode("list")}
+                className="rounded-full"
+              >
+                <List className="w-4 h-4" />
+              </Button>
+            </div>
+          </div>
         </div>
 
-        {/* No Results */}
-        {filteredApps.length === 0 && (
-          <div className="text-center py-16">
-            <div className="w-24 h-24 rounded-full bg-slate-100 flex items-center justify-center mx-auto mb-6">
-              <Search className="w-12 h-12 text-slate-400" />
+        {/* Loading State */}
+        {isLoading && (
+          <div className="text-center py-12">
+            <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
+            <p className="mt-4 text-slate-600">Loading apps...</p>
+          </div>
+        )}
+
+        {/* Error State */}
+        {error && (
+          <div className="text-center py-12">
+            <div className="bg-red-50 border border-red-200 rounded-2xl p-8 max-w-md mx-auto">
+              <p className="text-red-600 font-medium">Failed to load apps</p>
+              <p className="text-red-500 text-sm mt-2">Please try refreshing the page</p>
             </div>
-            <h3 className="text-2xl font-bold text-slate-800 mb-2">No Apps Found</h3>
-            <p className="text-lg text-slate-600 mb-6">
-              Try adjusting your search terms or filters to find what you're looking for.
+          </div>
+        )}
+
+        {/* Results Summary */}
+        {!isLoading && !error && (
+          <div className="mb-6">
+            <p className="text-slate-600 font-medium">
+              Showing {filteredApps.length} of {apps.length} apps
+              {searchTerm && ` for "${searchTerm}"`}
+              {selectedCategory !== "all" && ` in ${selectedCategory}`}
             </p>
-            <Button 
-              onClick={() => {
-                setSearchTerm("");
-                setSelectedCategory("All");
-              }}
-              className="rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold px-8"
-            >
-              Clear Filters
-            </Button>
+          </div>
+        )}
+
+        {/* Apps Grid/List */}
+        {!isLoading && !error && (
+          <AppGrid apps={filteredApps} viewMode={viewMode} />
+        )}
+
+        {/* No Results */}
+        {!isLoading && !error && filteredApps.length === 0 && apps.length > 0 && (
+          <div className="text-center py-12">
+            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-8 max-w-md mx-auto">
+              <Search className="w-12 h-12 text-slate-400 mx-auto mb-4" />
+              <p className="text-slate-600 font-medium mb-2">No apps found</p>
+              <p className="text-slate-500 text-sm">Try adjusting your search or filter criteria</p>
+            </div>
+          </div>
+        )}
+
+        {/* Stats Section */}
+        {!isLoading && !error && apps.length > 0 && (
+          <div className="mt-16 grid md:grid-cols-3 gap-6">
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-slate-200 p-6 text-center">
+              <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-4">
+                <Grid className="w-6 h-6 text-blue-600" />
+              </div>
+              <h3 className="text-2xl font-black text-slate-800">{apps.length}</h3>
+              <p className="text-slate-600 font-medium">Available Apps</p>
+            </div>
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-slate-200 p-6 text-center">
+              <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
+                <Download className="w-6 h-6 text-green-600" />
+              </div>
+              <h3 className="text-2xl font-black text-slate-800">
+                {apps.reduce((sum, app) => sum + (app.download_count || 0), 0)}
+              </h3>
+              <p className="text-slate-600 font-medium">Total Downloads</p>
+            </div>
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-slate-200 p-6 text-center">
+              <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center mx-auto mb-4">
+                <Star className="w-6 h-6 text-indigo-600" />
+              </div>
+              <h3 className="text-2xl font-black text-slate-800">{categories.length}</h3>
+              <p className="text-slate-600 font-medium">Categories</p>
+            </div>
           </div>
         )}
       </div>
-
+      
       <Footer />
     </div>
   );
