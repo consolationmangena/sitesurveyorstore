@@ -21,6 +21,20 @@ export default function Header({ title, subtitle, showSearch = false, onSearch }
     { to: "/request-solution", label: "Request" }
   ];
 
+  const searchInput = (
+    <div className="relative w-full">
+      <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5" />
+      <input
+        className="w-full rounded-full bg-white/80 backdrop-blur-sm border border-slate-200 pl-12 pr-6 py-3 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:text-slate-500"
+        type="search"
+        placeholder="Search apps and tools..."
+        aria-label="Search for apps"
+        value={searchTerm}
+        onChange={handleSearch}
+      />
+    </div>
+  );
+
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-lg shadow-lg border-b border-slate-200/50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
@@ -46,17 +60,7 @@ export default function Header({ title, subtitle, showSearch = false, onSearch }
 
           {showSearch && (
             <div className="hidden md:flex flex-1 mx-8 max-w-lg">
-              <div className="relative w-full">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5" />
-                <input
-                  className="w-full rounded-full bg-white/80 backdrop-blur-sm border border-slate-200 pl-12 pr-6 py-3 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:text-slate-500"
-                  type="search"
-                  placeholder="Search apps and tools..."
-                  aria-label="Search for apps"
-                  value={searchTerm}
-                  onChange={handleSearch}
-                />
-              </div>
+              {searchInput}
             </div>
           )}
 
@@ -84,19 +88,7 @@ export default function Header({ title, subtitle, showSearch = false, onSearch }
 
         {/* Mobile Search and Navigation */}
         <div className="md:hidden mt-4 space-y-3">
-          {showSearch && (
-            <div className="relative">
-              <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5" />
-              <input
-                className="w-full rounded-full bg-white/80 backdrop-blur-sm border border-slate-200 pl-12 pr-6 py-3 text-sm focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-all placeholder:text-slate-500"
-                type="search"
-                placeholder="Search apps and tools..."
-                aria-label="Search for apps"
-                value={searchTerm}
-                onChange={handleSearch}
-              />
-            </div>
-          )}
+          {showSearch && searchInput}
           <nav className="flex items-center justify-center gap-4 sm:hidden">
             {navLinks.map((link) => (
               <Link
