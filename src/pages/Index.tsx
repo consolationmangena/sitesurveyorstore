@@ -58,17 +58,17 @@ const FEATURE_APPS = [
 
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-white to-secondary/60 animate-fade-in px-0">
+    <div className="min-h-screen bg-gradient-to-b from-primary/5 via-secondary/10 to-accent/30 animate-fade-in px-0">
       {/* Header */}
-      <header className="px-0 py-8 border-b border-border bg-card/90 shadow-md animate-fade-in">
+      <header className="px-0 py-8 border-b border-border bg-gradient-to-r from-primary/80 via-card/90 to-secondary/80 shadow-xl animate-fade-in">
         <div className="max-w-7xl mx-auto flex flex-col items-center gap-2">
-          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-primary mb-2 text-center">
+          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-primary drop-shadow-lg mb-2 text-center">
             SiteSurveyor Appstore
           </h1>
           <p className="text-lg md:text-xl text-muted-foreground text-center max-w-2xl">
             Africa’s open-source geomatics toolkit for mapping, survey, and remote sensing workflows.
           </p>
-          <span className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-secondary text-secondary-foreground rounded-lg text-base shadow border font-medium">
+          <span className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-gradient-to-r from-secondary/70 to-accent text-secondary-foreground rounded-lg text-base shadow border font-medium border-primary/40">
             <Database className="w-5 h-5 text-primary" />
             MIT Licensed &nbsp;|&nbsp; Community-Driven
           </span>
@@ -79,10 +79,10 @@ const Index = () => {
       <section className="max-w-7xl mx-auto px-6 pt-12 pb-10 flex flex-col md:flex-row items-center md:items-start gap-10 md:gap-16">
         {/* Hero visual (optional illustration) */}
         <div className="flex-1 mb-6 md:mb-0">
-          <div className="rounded-3xl overflow-hidden w-full bg-gradient-to-tr from-primary/80 to-secondary/70 shadow-lg p-4 border border-card mb-8 min-h-32 flex items-center justify-center relative">
-            <Book className="w-16 h-16 text-primary-foreground opacity-60 absolute left-4 top-4" />
-            <Users className="w-16 h-16 text-primary-foreground opacity-30 absolute right-4 bottom-4" />
-            <span className="block text-lg font-medium z-10 text-primary-foreground drop-shadow-md animate-fade-in">
+          <div className="rounded-3xl overflow-hidden w-full bg-gradient-to-tr from-primary via-secondary to-accent/60 shadow-2xl p-6 border border-accent mb-8 min-h-32 flex items-center justify-center relative">
+            <Book className="w-16 h-16 text-accent-foreground opacity-70 absolute left-4 top-4" />
+            <Users className="w-16 h-16 text-accent-foreground opacity-40 absolute right-4 bottom-4" />
+            <span className="block text-xl font-semibold z-10 text-background drop-shadow-lg animate-fade-in">
               “Accessible, Innovative, Reliable — Built For Africa”
             </span>
           </div>
@@ -102,7 +102,7 @@ const Index = () => {
                 <a
                   href="https://github.com/sitesurveyor"
                   target="_blank"
-                  className="bg-primary text-primary-foreground px-4 py-2 rounded-lg font-semibold shadow hover:bg-primary/90 transition-all"
+                  className="bg-gradient-to-r from-primary to-accent text-primary-foreground px-4 py-2 rounded-lg font-semibold shadow hover:from-primary/80 hover:to-accent/80 transition-all"
                   rel="noopener noreferrer"
                 >
                   Contribute on GitHub
@@ -116,12 +116,12 @@ const Index = () => {
       {/* Apps Grid */}
       <main className="max-w-7xl mx-auto px-6 pb-16">
         <h2 className="text-xl md:text-2xl font-bold text-primary mb-4">Browse Open Apps</h2>
-        <AppGrid apps={FEATURE_APPS} />
+        <AppGrid apps={FEATURE_APPS as any} />
       </main>
 
       {/* Contribute / About block */}
       <section className="max-w-7xl mx-auto px-6 pb-12">
-        <div className="bg-card/80 rounded-2xl shadow border p-8 flex flex-col md:flex-row items-center gap-6 animate-fade-in">
+        <div className="bg-gradient-to-br from-card/90 to-secondary/60 rounded-2xl shadow-xl border border-accent/40 p-8 flex flex-col md:flex-row items-center gap-6 animate-fade-in">
           <div className="flex-1">
             <h3 className="text-xl font-semibold text-primary mb-2">Want to build something for SiteSurveyor?</h3>
             <p className="text-muted-foreground">
@@ -133,7 +133,7 @@ const Index = () => {
               href="https://github.com/sitesurveyor"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-foreground text-background rounded-lg font-semibold shadow hover:bg-primary hover:text-primary-foreground transition-all"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-foreground to-primary text-background rounded-lg font-semibold shadow-lg hover:from-primary hover:to-accent hover:text-primary-foreground transition-all"
             >
               <ArrowRight className="w-5 h-5" />
               Join the Community
@@ -145,7 +145,7 @@ const Index = () => {
         </div>
       </section>
 
-      <footer className="w-full bg-background border-t py-8 px-6 text-center animate-fade-in">
+      <footer className="w-full bg-gradient-to-b from-background/90 to-secondary/30 border-t py-8 px-6 text-center animate-fade-in">
         <span className="text-muted-foreground text-xs">
           © {new Date().getFullYear()} SiteSurveyor – Africa’s Open-Source Geomatics Appstore. | {""}
           <a href="https://github.com/sitesurveyor" target="_blank" rel="noopener noreferrer" className="underline">
