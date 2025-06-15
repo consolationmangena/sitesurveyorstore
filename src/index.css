@@ -3,7 +3,7 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Enhanced design system with modern geomatics-inspired colors */
+/* Enhanced design system with professional blue color palette */
 
 @layer base {
   :root {
@@ -16,7 +16,7 @@
     --popover: 255 255 255;
     --popover-foreground: 15 23 42;
 
-    --primary: 34 197 94;
+    --primary: 37 99 235;
     --primary-foreground: 255 255 255;
 
     --secondary: 241 245 249;
@@ -25,7 +25,7 @@
     --muted: 248 250 252;
     --muted-foreground: 100 116 139;
 
-    --accent: 16 185 129;
+    --accent: 79 70 229;
     --accent-foreground: 255 255 255;
 
     --destructive: 239 68 68;
@@ -33,18 +33,18 @@
 
     --border: 226 232 240;
     --input: 226 232 240;
-    --ring: 34 197 94;
+    --ring: 37 99 235;
 
     --radius: 0.75rem;
 
     --sidebar-background: 255 255 255;
     --sidebar-foreground: 51 65 85;
-    --sidebar-primary: 34 197 94;
+    --sidebar-primary: 37 99 235;
     --sidebar-primary-foreground: 255 255 255;
     --sidebar-accent: 241 245 249;
     --sidebar-accent-foreground: 51 65 85;
     --sidebar-border: 226 232 240;
-    --sidebar-ring: 34 197 94;
+    --sidebar-ring: 37 99 235;
   }
 
   .dark {
@@ -57,7 +57,7 @@
     --popover: 15 23 42;
     --popover-foreground: 248 250 252;
 
-    --primary: 34 197 94;
+    --primary: 37 99 235;
     --primary-foreground: 15 23 42;
 
     --secondary: 30 41 59;
@@ -66,7 +66,7 @@
     --muted: 30 41 59;
     --muted-foreground: 148 163 184;
 
-    --accent: 16 185 129;
+    --accent: 79 70 229;
     --accent-foreground: 15 23 42;
 
     --destructive: 220 38 38;
@@ -74,16 +74,16 @@
 
     --border: 30 41 59;
     --input: 30 41 59;
-    --ring: 34 197 94;
+    --ring: 37 99 235;
 
     --sidebar-background: 15 23 42;
     --sidebar-foreground: 203 213 225;
-    --sidebar-primary: 34 197 94;
+    --sidebar-primary: 37 99 235;
     --sidebar-primary-foreground: 15 23 42;
     --sidebar-accent: 30 41 59;
     --sidebar-accent-foreground: 203 213 225;
     --sidebar-border: 30 41 59;
-    --sidebar-ring: 34 197 94;
+    --sidebar-ring: 37 99 235;
   }
 }
 
@@ -118,10 +118,10 @@
   }
 
   .glass-effect {
-    @apply bg-white/80 backdrop-blur-sm border border-white/20;
+    @apply bg-white/80 backdrop-blur-sm border border-slate-200;
   }
 
   .gradient-text {
-    @apply bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent;
+    @apply bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent;
   }
 }
