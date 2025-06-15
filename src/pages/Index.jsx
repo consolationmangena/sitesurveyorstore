@@ -150,7 +150,7 @@ export default function Index() {
 
 				{/* Features Section */}
 				<section className="py-24 sm:py-32 relative">
-					<div className="absolute inset-0 -z-10 bg-[radial-gradient(45rem_50rem_at_top,theme(colors.indigo.100),white)] opacity-20" />
+					<div className="absolute inset-0 -z-10 bg-white opacity-20" />
 					<div className="mx-auto max-w-7xl px-6 lg:px-8">
 						<div className="mx-auto max-w-2xl text-center">
 							<h2 className="text-4xl font-black tracking-tight text-slate-900 sm:text-6xl mb-4">
