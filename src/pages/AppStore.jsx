@@ -3,76 +3,89 @@ import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AppGrid from "@/components/AppGrid";
-import { Search, Filter, Grid, List, Star, Download, Clock } from "lucide-react";
+import { Search, Filter, Grid, List, Star, Download, Clock, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useAppSearch } from "@/hooks/useAppSearch";
 import appsData from "@/data/apps.json";
 
 export default function AppStore() {
-  const [searchTerm, setSearchTerm] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("all");
   const [viewMode, setViewMode] = useState("grid");
-  const [sortBy, setSortBy] = useState("name");
   const [apps, setApps] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [headerSearchTerm, setHeaderSearchTerm] = useState("");
+
+  const {
+    searchTerm,
+    setSearchTerm,
+    selectedCategory,
+    setSelectedCategory,
+    sortBy,
+    setSortBy,
+    categories,
+    filteredApps,
+    stats
+  } = useAppSearch(apps);
 
   // Load apps from JSON file
   useEffect(() => {
     console.log('Loading apps from JSON file...');
-    setApps(appsData.apps);
-    setIsLoading(false);
-    console.log('Apps loaded successfully:', appsData.apps);
+    setTimeout(() => {
+      setApps(appsData.apps);
+      setIsLoading(false);
+      console.log('Apps loaded successfully:', appsData.apps);
+    }, 500); // Add slight delay for loading effect
   }, []);
 
-  // Get unique categories for filter
-  const categories = [...new Set(apps.map(app => app.category).filter(Boolean))];
+  // Sync header search with local search
+  useEffect(() => {
+    setSearchTerm(headerSearchTerm);
+  }, [headerSearchTerm, setSearchTerm]);
 
-  // Filter and sort apps
-  const filteredApps = apps
-    .filter(app => {
-      const matchesSearch = app.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           app.description?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                           app.tags?.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-      const matchesCategory = selectedCategory === "all" || app.category === selectedCategory;
-      return matchesSearch && matchesCategory;
-    })
-    .sort((a, b) => {
-      switch (sortBy) {
-        case "name":
-          return a.name.localeCompare(b.name);
-        case "downloads":
-          return (b.download_count || 0) - (a.download_count || 0);
-        case "updated":
-          return new Date(b.updated_at) - new Date(a.updated_at);
-        default:
-          return 0;
-      }
-    });
+  // Handle search from header
+  const handleHeaderSearch = (term) => {
+    setHeaderSearchTerm(term);
+  };
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      <Header title="SiteSurveyor" subtitle="Open-Source Geomatics Tools" showSearch={true} />
+      <Header 
+        title="SiteSurveyor" 
+        subtitle="Open-Source Geomatics Tools" 
+        showSearch={true} 
+        onSearch={handleHeaderSearch} 
+      />
 
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header Section */}
+        {/* Header Section with Dynamic Counter */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl sm:text-5xl font-black bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-4">
+          <h1 className="text-4xl sm:text-5xl font-black bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-4 animate-fade-in">
             App Store
           </h1>
           <p className="text-lg text-slate-600 font-medium max-w-2xl mx-auto">
             Discover open-source geomatics applications built for professionals across Africa and beyond.
           </p>
+          {!isLoading && (
+            <div className="mt-4 flex items-center justify-center gap-4 text-sm text-slate-500">
+              <div className="flex items-center gap-1">
+                <TrendingUp className="w-4 h-4" />
+                <span>{stats.totalApps} Apps Available</span>
+              </div>
+              <span>•</span>
+              <span>{stats.totalDownloads.toLocaleString()} Total Downloads</span>
+            </div>
+          )}
         </div>
 
         {/* Search and Filter Controls */}
-        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200 p-6 mb-8">
+        <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-xl border border-slate-200 p-6 mb-8 hover:shadow-2xl transition-all duration-300">
           <div className="flex flex-col lg:flex-row gap-4 items-center">
             {/* Search Input */}
             <div className="relative flex-1 w-full lg:w-auto">
               <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5" />
               <Input
-                className="pl-12 pr-6 py-3 text-base rounded-full border-slate-300 focus:border-blue-500 focus:ring-blue-500/20"
+                className="pl-12 pr-6 py-3 text-base rounded-full border-slate-300 focus:border-blue-500 focus:ring-blue-500/20 transition-all"
                 type="search"
                 placeholder="Search apps, descriptions, or tags..."
                 value={searchTerm}
@@ -84,16 +97,19 @@ export default function AppStore() {
             <div className="flex gap-3 items-center">
               <Filter className="w-5 h-5 text-slate-600" />
               <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-                <SelectTrigger className="w-48 rounded-full">
+                <SelectTrigger className="w-48 rounded-full transition-all hover:shadow-md">
                   <SelectValue placeholder="All Categories" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="all">All Categories</SelectItem>
-                  {categories.map(category => (
-                    <SelectItem key={category} value={category}>
-                      {category}
-                    </SelectItem>
-                  ))}
+                  <SelectItem value="all">All Categories ({stats.totalApps})</SelectItem>
+                  {categories.map(category => {
+                    const count = apps.filter(app => app.category === category).length;
+                    return (
+                      <SelectItem key={category} value={category}>
+                        {category} ({count})
+                      </SelectItem>
+                    );
+                  })}
                 </SelectContent>
               </Select>
             </div>
@@ -102,13 +118,13 @@ export default function AppStore() {
             <div className="flex gap-3 items-center">
               <Clock className="w-5 h-5 text-slate-600" />
               <Select value={sortBy} onValueChange={setSortBy}>
-                <SelectTrigger className="w-40 rounded-full">
+                <SelectTrigger className="w-40 rounded-full transition-all hover:shadow-md">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="name">Name</SelectItem>
-                  <SelectItem value="downloads">Downloads</SelectItem>
-                  <SelectItem value="updated">Last Updated</SelectItem>
+                  <SelectItem value="name">Name A-Z</SelectItem>
+                  <SelectItem value="downloads">Most Downloaded</SelectItem>
+                  <SelectItem value="updated">Recently Updated</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -119,7 +135,7 @@ export default function AppStore() {
                 variant={viewMode === "grid" ? "default" : "outline"}
                 size="sm"
                 onClick={() => setViewMode("grid")}
-                className="rounded-full"
+                className="rounded-full hover:scale-105 transition-all"
               >
                 <Grid className="w-4 h-4" />
               </Button>
@@ -127,7 +143,7 @@ export default function AppStore() {
                 variant={viewMode === "list" ? "default" : "outline"}
                 size="sm"
                 onClick={() => setViewMode("list")}
-                className="rounded-full"
+                className="rounded-full hover:scale-105 transition-all"
               >
                 <List className="w-4 h-4" />
               </Button>
@@ -139,15 +155,15 @@ export default function AppStore() {
         {isLoading && (
           <div className="text-center py-12">
             <div className="inline-block animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600"></div>
-            <p className="mt-4 text-slate-600">Loading apps...</p>
+            <p className="mt-4 text-slate-600 animate-pulse">Loading apps...</p>
           </div>
         )}
 
-        {/* Results Summary */}
+        {/* Results Summary - Dynamic */}
         {!isLoading && (
-          <div className="mb-6">
+          <div className="mb-6 animate-fade-in">
             <p className="text-slate-600 font-medium">
-              Showing {filteredApps.length} of {apps.length} apps
+              Showing <span className="font-bold text-blue-600">{stats.filteredCount}</span> of <span className="font-bold">{stats.totalApps}</span> apps
               {searchTerm && ` for "${searchTerm}"`}
               {selectedCategory !== "all" && ` in ${selectedCategory}`}
             </p>
@@ -156,44 +172,56 @@ export default function AppStore() {
 
         {/* Apps Grid/List */}
         {!isLoading && (
-          <AppGrid apps={filteredApps} viewMode={viewMode} />
+          <div className="animate-fade-in">
+            <AppGrid apps={filteredApps} viewMode={viewMode} />
+          </div>
         )}
 
         {/* No Results */}
         {!isLoading && filteredApps.length === 0 && apps.length > 0 && (
-          <div className="text-center py-12">
-            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-8 max-w-md mx-auto">
+          <div className="text-center py-12 animate-scale-in">
+            <div className="bg-slate-50 border border-slate-200 rounded-2xl p-8 max-w-md mx-auto hover:shadow-lg transition-all">
               <Search className="w-12 h-12 text-slate-400 mx-auto mb-4" />
               <p className="text-slate-600 font-medium mb-2">No apps found</p>
               <p className="text-slate-500 text-sm">Try adjusting your search or filter criteria</p>
+              <Button 
+                onClick={() => {
+                  setSearchTerm("");
+                  setSelectedCategory("all");
+                }}
+                className="mt-4 rounded-full"
+                variant="outline"
+              >
+                Clear Filters
+              </Button>
             </div>
           </div>
         )}
 
-        {/* Stats Section */}
+        {/* Dynamic Stats Section */}
         {!isLoading && apps.length > 0 && (
-          <div className="mt-16 grid md:grid-cols-3 gap-6">
-            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-slate-200 p-6 text-center">
-              <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-4">
+          <div className="mt-16 grid md:grid-cols-3 gap-6 animate-fade-in">
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-slate-200 p-6 text-center hover:scale-105 transition-all duration-300 group">
+              <div className="w-12 h-12 rounded-full bg-blue-100 flex items-center justify-center mx-auto mb-4 group-hover:bg-blue-200 transition-colors">
                 <Grid className="w-6 h-6 text-blue-600" />
               </div>
-              <h3 className="text-2xl font-black text-slate-800">{apps.length}</h3>
+              <h3 className="text-2xl font-black text-slate-800 animate-pulse">{stats.totalApps}</h3>
               <p className="text-slate-600 font-medium">Available Apps</p>
             </div>
-            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-slate-200 p-6 text-center">
-              <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4">
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-slate-200 p-6 text-center hover:scale-105 transition-all duration-300 group">
+              <div className="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center mx-auto mb-4 group-hover:bg-green-200 transition-colors">
                 <Download className="w-6 h-6 text-green-600" />
               </div>
-              <h3 className="text-2xl font-black text-slate-800">
-                {apps.reduce((sum, app) => sum + (app.download_count || 0), 0)}
+              <h3 className="text-2xl font-black text-slate-800 animate-pulse">
+                {stats.totalDownloads.toLocaleString()}
               </h3>
               <p className="text-slate-600 font-medium">Total Downloads</p>
             </div>
-            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-slate-200 p-6 text-center">
-              <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center mx-auto mb-4">
+            <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-slate-200 p-6 text-center hover:scale-105 transition-all duration-300 group">
+              <div className="w-12 h-12 rounded-full bg-indigo-100 flex items-center justify-center mx-auto mb-4 group-hover:bg-indigo-200 transition-colors">
                 <Star className="w-6 h-6 text-indigo-600" />
               </div>
-              <h3 className="text-2xl font-black text-slate-800">{categories.length}</h3>
+              <h3 className="text-2xl font-black text-slate-800 animate-pulse">{stats.totalCategories}</h3>
               <p className="text-slate-600 font-medium">Categories</p>
             </div>
           </div>

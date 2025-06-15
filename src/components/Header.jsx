@@ -1,7 +1,18 @@
 
 import { Search, Database } from "lucide-react";
+import { useState } from "react";
 
-export default function Header({ title, subtitle, showSearch = false }) {
+export default function Header({ title, subtitle, showSearch = false, onSearch }) {
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleSearch = (e) => {
+    const value = e.target.value;
+    setSearchTerm(value);
+    if (onSearch) {
+      onSearch(value);
+    }
+  };
+
   const navLinks = [
     { href: "/", label: "Home" },
     { href: "/appstore", label: "App Store" },
@@ -41,7 +52,8 @@ export default function Header({ title, subtitle, showSearch = false }) {
                   type="search"
                   placeholder="Search apps and tools..."
                   aria-label="Search for apps"
-                  disabled
+                  value={searchTerm}
+                  onChange={handleSearch}
                 />
               </div>
             </form>
@@ -53,14 +65,14 @@ export default function Header({ title, subtitle, showSearch = false }) {
                 <a
                   key={link.href}
                   href={link.href}
-                  className="px-4 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
+                  className="px-4 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all hover:scale-105"
                 >
                   {link.label}
                 </a>
               ))}
             </nav>
             
-            <div className="hidden lg:flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-slate-200 rounded-full text-sm font-medium">
+            <div className="hidden lg:flex items-center gap-2 px-4 py-2 bg-white/80 backdrop-blur-sm border border-slate-200 rounded-full text-sm font-medium animate-pulse">
               <Database className="w-4 h-4 text-blue-600" />
               <span className="text-blue-600">Open Source</span>
               <span className="text-slate-400">•</span>
@@ -78,7 +90,8 @@ export default function Header({ title, subtitle, showSearch = false }) {
                 type="search"
                 placeholder="Search apps and tools..."
                 aria-label="Search for apps"
-                disabled
+                value={searchTerm}
+                onChange={handleSearch}
               />
             </div>
           )}
@@ -87,7 +100,7 @@ export default function Header({ title, subtitle, showSearch = false }) {
               <a
                 key={link.href}
                 href={link.href}
-                className="px-4 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
+                className="px-4 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all hover:scale-105"
               >
                 {link.label}
               </a>
