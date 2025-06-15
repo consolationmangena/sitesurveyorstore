@@ -75,11 +75,11 @@ const stats = [
 
 export default function Index() {
 	return (
-		<div className="min-h-screen bg-white">
+		<div className="min-h-screen">
 			<div className="absolute inset-0 -z-10 h-full w-full">
-				{/* Play Store inspired gradient */}
-				<div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-secondary/10 to-accent/10 opacity-80" />
-				<div className="absolute inset-0 bg-[radial-gradient(circle_at_top,theme(colors.primary/30),white)] opacity-80 pointer-events-none" />
+				{/* Play Store inspired gradient – UPDATED: removed yellow, used more green/blue and white */}
+				<div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-secondary/20 to-white opacity-95" />
+				<div className="absolute inset-0 bg-[radial-gradient(circle_at_top,theme(colors.primary/40),white_60%)] opacity-80 pointer-events-none" />
 			</div>
 			<div className="relative">
 				<Header
