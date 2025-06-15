@@ -1,18 +1,11 @@
 
 import { Search, Database, Globe } from "lucide-react";
 
-interface HeaderProps {
-  title: string;
-  subtitle: string;
-  showSearch?: boolean;
-}
-
-export default function Header({ title, subtitle, showSearch = false }: HeaderProps) {
+export default function Header({ title, subtitle, showSearch = false }) {
   return (
     <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-lg shadow-lg border-b border-slate-200/50">
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-4">
         <div className="flex items-center justify-between">
-          {/* Enhanced logo and brand section */}
           <div className="flex items-center gap-4">
             <div className="relative group">
               <div className="absolute -inset-1 bg-gradient-to-r from-blue-600 to-indigo-600 rounded-2xl blur opacity-30 group-hover:opacity-60 transition duration-300"></div>
@@ -32,7 +25,6 @@ export default function Header({ title, subtitle, showSearch = false }: HeaderPr
             </div>
           </div>
 
-          {/* Enhanced search bar */}
           {showSearch && (
             <form className="hidden md:flex flex-1 mx-8 max-w-lg relative">
               <div className="relative w-full">
@@ -48,7 +40,6 @@ export default function Header({ title, subtitle, showSearch = false }: HeaderPr
             </form>
           )}
 
-          {/* Enhanced navigation */}
           <div className="flex items-center gap-4">
             <nav className="hidden sm:flex items-center gap-2">
               <a
@@ -86,7 +77,6 @@ export default function Header({ title, subtitle, showSearch = false }: HeaderPr
           </div>
         </div>
 
-        {/* Mobile search and nav */}
         <div className="md:hidden mt-4 space-y-3">
           {showSearch && (
             <div className="relative">

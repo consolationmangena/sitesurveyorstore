@@ -1,14 +1,6 @@
 
 import { Book, Map, Camera, Database } from "lucide-react";
 
-interface AppCardProps {
-  name: string;
-  description: string;
-  repoUrl: string;
-  icon?: "map" | "camera" | "database" | "book";
-  tags?: string[];
-}
-
 const iconVariants = {
   map: Map,
   camera: Camera,
@@ -16,16 +8,14 @@ const iconVariants = {
   book: Book,
 };
 
-export function AppCard({ name, description, repoUrl, icon = "map", tags }: AppCardProps) {
+export function AppCard({ name, description, repoUrl, icon = "map", tags }) {
   const Icon = iconVariants[icon] || Map;
   
   return (
     <div className="group relative bg-white/90 backdrop-blur-sm border border-slate-200 shadow-lg rounded-2xl p-6 hover:shadow-2xl hover:border-blue-300 transition-all duration-300 hover:-translate-y-1">
-      {/* Gradient overlay on hover */}
       <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-indigo-500/5 rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
       
       <div className="relative space-y-4">
-        {/* Icon and header */}
         <div className="flex items-start gap-4">
           <div className="flex-shrink-0 w-14 h-14 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg group-hover:shadow-xl transition-shadow">
             <Icon size={28} className="text-white" />
@@ -54,12 +44,10 @@ export function AppCard({ name, description, repoUrl, icon = "map", tags }: AppC
           </div>
         </div>
 
-        {/* Description */}
         <p className="text-sm text-slate-600 leading-relaxed line-clamp-3">
           {description}
         </p>
 
-        {/* CTA Button */}
         <div className="pt-2">
           <a
             href={repoUrl}

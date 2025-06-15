@@ -5,21 +5,15 @@ import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 
-type FormValues = {
-  email: string;
-  problem: string;
-};
-
 export default function RequestSolutionForm() {
   const {
     register,
     handleSubmit,
     reset,
     formState: { isSubmitting },
-  } = useForm<FormValues>();
+  } = useForm();
 
-  const onSubmit = async (data: FormValues) => {
-    // For now just show a confirmation toast
+  const onSubmit = async (data) => {
     toast({
       title: "Thank you!",
       description:
