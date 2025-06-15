@@ -1,4 +1,3 @@
-
 import AppCard from "./AppCard";
 
 export default function AppGrid({ apps, viewMode = "grid" }) {
@@ -9,9 +8,10 @@ export default function AppGrid({ apps, viewMode = "grid" }) {
           {apps.map((app, i) => (
             <div
               key={app.id || app.name + i}
-              className="rounded-2xl bg-white shadow-lg hover:shadow-2xl transition-shadow duration-200 hover:scale-105 border border-transparent p-0"
+              className="rounded-2xl bg-card shadow-lg hover:shadow-2xl transition-shadow duration-200 hover:scale-105 border border-border p-0"
               style={{ minWidth: "320px", maxWidth: "380px", width: "100%" }}
             >
+              {/* Card uses card/background/border/accent coloring */}
               <AppCard app={app} viewMode={viewMode} />
             </div>
           ))}

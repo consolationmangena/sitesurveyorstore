@@ -75,10 +75,10 @@ const stats = [
 
 export default function Index() {
 	return (
-		<div className="min-h-screen bg-gradient-to-tl from-white via-secondary/5 to-primary/5">
+		<div className="min-h-screen bg-gradient-to-tl from-background via-secondary/5 to-primary/5">
 			<div className="absolute inset-0 -z-10 h-full w-full overflow-hidden">
-				{/* More subtle and clean background, no yellow, gentle blue/green/white */}
-				<div className="absolute inset-0 bg-gradient-to-br from-primary/10 via-secondary/10 to-white" />
+				{/* New, clean, bold background: from background to secondary, no yellow */}
+				<div className="absolute inset-0 bg-gradient-to-br from-background via-secondary/20 to-primary/30" />
 				<div className="absolute inset-0 bg-[radial-gradient(ellipse_at_40%_10%,theme(colors.primary/25),transparent_60%)] opacity-60 pointer-events-none" />
 			</div>
 			<div className="relative">
