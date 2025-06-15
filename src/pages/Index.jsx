@@ -77,8 +77,9 @@ export default function Index() {
 	return (
 		<div className="min-h-screen bg-white">
 			<div className="absolute inset-0 -z-10 h-full w-full">
-				<div className="absolute inset-0 bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 opacity-50" />
-				<div className="absolute inset-0 bg-[radial-gradient(circle_at_top,theme(colors.blue.100/50),transparent)] opacity-75" />
+				{/* Play Store inspired gradient */}
+				<div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-secondary/10 to-accent/10 opacity-80" />
+				<div className="absolute inset-0 bg-[radial-gradient(circle_at_top,theme(colors.primary/30),white)] opacity-80 pointer-events-none" />
 			</div>
 			<div className="relative">
 				<Header
@@ -89,15 +90,16 @@ export default function Index() {
 				{/* Hero Section */}
 				<section className="relative isolate pt-14">
 					<div className="absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80">
-						<div className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-blue-400 to-indigo-500 opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" style={{ clipPath: 'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)' }} />
+						{/* Play green/blue gradient accent */}
+						<div className="relative left-[calc(50%-11rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-primary to-secondary opacity-20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" style={{ clipPath: 'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)' }} />
 					</div>
 					<div className="py-24 sm:py-32 container mx-auto">
 						<div className="mx-auto max-w-7xl px-6 lg:px-8">
 							<div className="mx-auto max-w-4xl text-center">
-								<h1 className="text-4xl font-black sm:text-7xl bg-clip-text text-transparent bg-gradient-to-r from-slate-800/90 to-slate-900 mb-6">
+								<h1 className="text-4xl font-black sm:text-7xl bg-gradient-to-r from-primary to-secondary text-transparent bg-clip-text mb-6 transition-colors">
 									Revolutionizing African Geomatics
 								</h1>
-								<p className="text-lg md:text-xl text-slate-600 font-medium mx-auto mb-8 leading-relaxed max-w-2xl">
+								<p className="text-lg md:text-xl text-foreground font-medium mx-auto mb-8 leading-relaxed max-w-2xl">
 									Discover, contribute, and innovate with our growing
 									collection of open-source geomatics tools. Built by
 									African professionals, for the global community.
@@ -105,7 +107,7 @@ export default function Index() {
 								<div className="flex flex-col sm:flex-row gap-6 justify-center items-center">
 									<a
 										href="/appstore"
-										className="group inline-flex items-center gap-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all hover:scale-105"
+										className="group inline-flex items-center gap-3 bg-gradient-to-r from-primary to-secondary text-white px-8 py-4 rounded-2xl font-bold text-lg shadow-xl hover:shadow-2xl transition-all hover:scale-105"
 									>
 										Explore Apps
 										<ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
@@ -114,7 +116,7 @@ export default function Index() {
 										href="https://github.com/consolationmangena/sitesurveyor"
 										target="_blank"
 										rel="noopener noreferrer"
-										className="inline-flex items-center gap-3 bg-white text-slate-700 px-8 py-4 rounded-2xl font-bold text-lg border-2 border-slate-200 hover:border-blue-300 shadow-lg hover:shadow-xl transition-all hover:scale-105"
+										className="inline-flex items-center gap-3 bg-white text-foreground px-8 py-4 rounded-2xl font-bold text-lg border-2 border-secondary hover:border-accent shadow-lg hover:shadow-xl transition-all hover:scale-105"
 									>
 										<Code className="w-5 h-5" />
 										View Source
@@ -190,7 +192,7 @@ export default function Index() {
 				<section className="py-24 sm:py-32">
 					<div className="mx-auto max-w-7xl px-6 lg:px-8">
 						<div className="mx-auto max-w-2xl text-center lg:max-w-4xl">
-							<h2 className="text-4xl font-black tracking-tight text-slate-900 sm:text-6xl">
+							<h2 className="text-4xl font-black tracking-tight bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent sm:text-6xl transition-colors">
 								Featured Applications
 							</h2>
 							<p className="mt-6 text-lg leading-8 text-slate-600">
@@ -206,7 +208,7 @@ export default function Index() {
 						<div className="mt-16 flex justify-center">
 							<a
 								href="/appstore"
-								className="inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 px-10 py-4 text-base font-semibold text-white shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5"
+								className="inline-flex items-center gap-3 rounded-full bg-gradient-to-r from-primary to-secondary px-10 py-4 text-base font-semibold text-white shadow-lg hover:shadow-xl transition-all hover:-translate-y-0.5"
 							>
 								View All Apps
 								<ArrowRight className="w-5 h-5" />
@@ -218,7 +220,7 @@ export default function Index() {
 				{/* Community Section */}
 				<section className="py-24 sm:py-32 relative isolate">
 					<div className="absolute inset-0 -z-10 transform-gpu overflow-hidden blur-3xl" aria-hidden="true">
-						<div className="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-blue-400 to-indigo-500 opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"
+						<div className="relative left-[calc(50%+3rem)] aspect-[1155/678] w-[36.125rem] -translate-x-1/2 bg-gradient-to-tr from-primary to-secondary opacity-30 sm:left-[calc(50%+36rem)] sm:w-[72.1875rem]"
 							style={{ clipPath: 'polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)' }} />
 					</div>
 
