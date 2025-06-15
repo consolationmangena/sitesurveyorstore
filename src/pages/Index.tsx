@@ -115,6 +115,12 @@ const Index = () => {
             <div className="flex items-center gap-4">
               <nav className="hidden sm:flex items-center gap-2">
                 <a
+                  href="/appstore"
+                  className="px-4 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
+                >
+                  App Store
+                </a>
+                <a
                   href="/about"
                   className="px-4 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
                 >
@@ -150,6 +156,12 @@ const Index = () => {
               />
             </div>
             <nav className="flex items-center justify-center gap-4 sm:hidden">
+              <a
+                href="/appstore"
+                className="px-4 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
+              >
+                App Store
+              </a>
               <a
                 href="/about"
                 className="px-4 py-2 rounded-lg text-sm font-medium text-slate-700 hover:bg-blue-50 hover:text-blue-600 transition-all"
