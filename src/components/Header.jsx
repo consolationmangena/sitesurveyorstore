@@ -44,7 +44,7 @@ export default function Header({ title, subtitle, showSearch = false, onSearch }
           </div>
 
           {showSearch && (
-            <form className="hidden md:flex flex-1 mx-8 max-w-lg relative">
+            <div className="hidden md:flex flex-1 mx-8 max-w-lg">
               <div className="relative w-full">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-500 w-5 h-5" />
                 <input
@@ -56,7 +56,7 @@ export default function Header({ title, subtitle, showSearch = false, onSearch }
                   onChange={handleSearch}
                 />
               </div>
-            </form>
+            </div>
           )}
 
           <div className="flex items-center gap-4">
@@ -81,6 +81,7 @@ export default function Header({ title, subtitle, showSearch = false, onSearch }
           </div>
         </div>
 
+        {/* Mobile Navigation */}
         <div className="md:hidden mt-4 space-y-3">
           {showSearch && (
             <div className="relative">
