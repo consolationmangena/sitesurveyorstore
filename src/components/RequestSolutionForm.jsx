@@ -1,4 +1,3 @@
-
 import { useForm } from "react-hook-form";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
@@ -14,6 +13,21 @@ export default function RequestSolutionForm() {
   } = useForm();
 
   const onSubmit = async (data) => {
+    // Add timestamp to the request
+    const submission = { ...data, submitted_at: new Date().toISOString() };
+
+    // Retrieve existing requests from localStorage
+    let requests = [];
+    try {
+      requests = JSON.parse(localStorage.getItem("solutionRequests") || "[]");
+      if (!Array.isArray(requests)) requests = [];
+    } catch (e) {
+      requests = [];
+    }
+    // Add new submission to the array and save back
+    requests.push(submission);
+    localStorage.setItem("solutionRequests", JSON.stringify(requests));
+
     toast({
       title: "Thank you!",
       description:
