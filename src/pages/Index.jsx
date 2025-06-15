@@ -69,7 +69,7 @@ const stats = [
 
 export default function Index() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-blue-50">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <Header 
         title="SiteSurveyor" 
         subtitle="Africa's Open-Source Geomatics Appstore"
@@ -79,13 +79,10 @@ export default function Index() {
       <section className="relative overflow-hidden py-20 sm:py-32">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center max-w-4xl mx-auto">
-            <h1 className="text-5xl sm:text-6xl lg:text-7xl font-black text-slate-900 mb-8 leading-tight">
-              Revolutionizing
-              <span className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent block">
-                African Geomatics
-              </span>
+            <h1 className="text-4xl sm:text-5xl font-black bg-gradient-to-r from-blue-600 to-indigo-600 bg-clip-text text-transparent mb-4 animate-fade-in">
+              Revolutionizing African Geomatics
             </h1>
-            <p className="text-xl sm:text-2xl text-slate-600 font-medium mb-12 leading-relaxed max-w-3xl mx-auto">
+            <p className="text-lg text-slate-600 font-medium max-w-2xl mx-auto mb-8">
               Discover, contribute, and innovate with our growing collection of open-source geomatics tools. 
               Built by African professionals, for the global community.
             </p>
@@ -109,18 +106,14 @@ export default function Index() {
             </div>
           </div>
         </div>
-        
-        {/* Floating Elements */}
-        <div className="absolute top-20 left-10 w-20 h-20 bg-blue-200 rounded-full opacity-20 animate-pulse"></div>
-        <div className="absolute bottom-20 right-10 w-32 h-32 bg-indigo-200 rounded-full opacity-20 animate-pulse delay-1000"></div>
       </section>
 
       {/* Stats Section */}
-      <section className="py-16 bg-white/50 backdrop-blur-sm">
+      <section className="py-16">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {stats.map((stat, index) => (
-              <div key={index} className="text-center">
+              <div key={index} className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-slate-200 p-6 text-center hover:scale-105 transition-all duration-300">
                 <div className="text-3xl sm:text-4xl font-black text-blue-600 mb-2">
                   {stat.value}
                 </div>
@@ -140,7 +133,7 @@ export default function Index() {
             <h2 className="text-4xl sm:text-5xl font-black text-slate-900 mb-6">
               Why Choose SiteSurveyor?
             </h2>
-            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+            <p className="text-lg text-slate-600 font-medium max-w-2xl mx-auto">
               We're not just another app store. We're a movement to democratize geomatics technology across Africa.
             </p>
           </div>
@@ -148,7 +141,7 @@ export default function Index() {
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {features.map((feature, index) => (
               <div key={index} className="group">
-                <div className="bg-white rounded-3xl p-8 shadow-lg border border-slate-100 hover:shadow-xl transition-all hover:scale-105 h-full">
+                <div className="bg-white/90 backdrop-blur-sm rounded-2xl shadow-lg border border-slate-200 p-8 hover:shadow-xl transition-all hover:scale-105 h-full">
                   <div className="w-16 h-16 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform">
                     <feature.icon className="w-8 h-8 text-white" />
                   </div>
@@ -166,13 +159,13 @@ export default function Index() {
       </section>
 
       {/* Featured Apps Section */}
-      <section className="py-20 bg-gradient-to-r from-blue-50 to-indigo-50">
+      <section className="py-20">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl sm:text-5xl font-black text-slate-900 mb-6">
               Featured Applications
             </h2>
-            <p className="text-xl text-slate-600 max-w-2xl mx-auto">
+            <p className="text-lg text-slate-600 font-medium max-w-2xl mx-auto">
               Explore our most popular tools that are transforming how professionals work with spatial data.
             </p>
           </div>
@@ -199,7 +192,7 @@ export default function Index() {
               <h2 className="text-4xl sm:text-5xl font-black mb-6">
                 Join the Revolution
               </h2>
-              <p className="text-xl mb-8 max-w-2xl mx-auto opacity-90">
+              <p className="text-lg mb-8 max-w-2xl mx-auto opacity-90">
                 Have an idea for a geomatics tool? Found a problem that needs solving? 
                 Be part of building the future of African geomatics technology.
               </p>
