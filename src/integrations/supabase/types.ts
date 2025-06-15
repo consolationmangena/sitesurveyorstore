@@ -78,6 +78,27 @@ export type Database = {
         }
         Relationships: []
       }
+      solution_requests: {
+        Row: {
+          email: string | null
+          id: string
+          problem: string
+          submitted_at: string | null
+        }
+        Insert: {
+          email?: string | null
+          id?: string
+          problem: string
+          submitted_at?: string | null
+        }
+        Update: {
+          email?: string | null
+          id?: string
+          problem?: string
+          submitted_at?: string | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

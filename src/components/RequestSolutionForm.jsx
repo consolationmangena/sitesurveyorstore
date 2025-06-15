@@ -1,8 +1,10 @@
+
 import { useForm } from "react-hook-form";
 import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
+import { supabase } from "@/integrations/supabase/client";
 
 export default function RequestSolutionForm() {
   const {
@@ -13,20 +15,27 @@ export default function RequestSolutionForm() {
   } = useForm();
 
   const onSubmit = async (data) => {
-    // Add timestamp to the request
-    const submission = { ...data, submitted_at: new Date().toISOString() };
+    // Build the new solution request object
+    const submission = {
+      email: data.email || null,
+      problem: data.problem,
+      submitted_at: new Date().toISOString(),
+    };
 
-    // Retrieve existing requests from localStorage
-    let requests = [];
-    try {
-      requests = JSON.parse(localStorage.getItem("solutionRequests") || "[]");
-      if (!Array.isArray(requests)) requests = [];
-    } catch (e) {
-      requests = [];
+    // Insert solution request to Supabase
+    const { error } = await supabase
+      .from("solution_requests")
+      .insert([submission]);
+
+    if (error) {
+      console.error("Error saving request:", error);
+      toast({
+        title: "Error",
+        description: "There was a problem submitting your request. Please try again later.",
+        duration: 5000,
+      });
+      return;
     }
-    // Add new submission to the array and save back
-    requests.push(submission);
-    localStorage.setItem("solutionRequests", JSON.stringify(requests));
 
     toast({
       title: "Thank you!",
@@ -75,3 +84,4 @@ export default function RequestSolutionForm() {
     </form>
   );
 }
+
