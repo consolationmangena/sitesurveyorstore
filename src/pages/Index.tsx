@@ -1,4 +1,3 @@
-
 // Landing page for SiteSurveyor Open-Source Geomatics Appstore in Play Store style
 
 import AppGrid from "@/components/AppGrid";
@@ -109,6 +108,20 @@ const Index = () => {
             </svg>
           </span>
         </form>
+        <nav className="flex items-center gap-1 ml-auto">
+          <a
+            href="/about"
+            className="text-white/90 hover:text-white font-semibold px-3 py-1.5 rounded-lg transition bg-white/10 hover:bg-white/20"
+          >
+            About
+          </a>
+          <a
+            href="/request-solution"
+            className="text-white/90 hover:text-white font-semibold px-3 py-1.5 rounded-lg transition bg-white/10 hover:bg-white/20"
+          >
+            Request Solution
+          </a>
+        </nav>
         <span className="hidden md:inline-flex items-center gap-2 px-4 py-1.5 bg-white/10 rounded-full text-white font-medium text-sm border border-white/20 backdrop-blur">
           <Database className="w-5 h-5 text-white" />
           MIT Licensed &nbsp;|&nbsp; Community-Driven
