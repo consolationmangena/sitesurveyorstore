@@ -1,5 +1,5 @@
 
-// Landing page for SiteSurveyor Open-Source Geomatics Appstore
+// Landing page for SiteSurveyor Open-Source Geomatics Appstore in Play Store style
 
 import AppGrid from "@/components/AppGrid";
 import { Button } from "@/components/ui/button";
@@ -56,33 +56,90 @@ const FEATURE_APPS = [
   },
 ];
 
+const CATEGORIES = [
+  "All",
+  "Mapping",
+  "AI",
+  "Field",
+  "Remote Sensing",
+  "Database",
+  "Photogrammetry",
+  "Offline",
+  "Raster",
+  "Planning",
+  "Tracking",
+  "OpenData",
+];
+
 const Index = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-primary/5 via-secondary/10 to-accent/30 animate-fade-in px-0">
-      {/* Header */}
-      <header className="px-0 py-8 border-b border-border bg-gradient-to-r from-primary/80 via-card/90 to-secondary/80 shadow-xl animate-fade-in">
-        <div className="max-w-7xl mx-auto flex flex-col items-center gap-2">
-          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-primary drop-shadow-lg mb-2 text-center">
-            SiteSurveyor Appstore
-          </h1>
-          <p className="text-lg md:text-xl text-muted-foreground text-center max-w-2xl">
-            Africa’s open-source geomatics toolkit for mapping, survey, and remote sensing workflows.
-          </p>
-          <span className="inline-flex items-center gap-2 mt-4 px-4 py-2 bg-gradient-to-r from-secondary/70 to-accent text-secondary-foreground rounded-lg text-base shadow border font-medium border-primary/40">
-            <Database className="w-5 h-5 text-primary" />
-            MIT Licensed &nbsp;|&nbsp; Community-Driven
+    <div className="min-h-screen bg-gradient-to-br from-green-50 via-accent/40 to-primary/10 w-full">
+      {/* Play Store-style Hero bar */}
+      <header className="sticky top-0 z-20 bg-gradient-to-r from-green-600 via-green-500 to-primary shadow-xl py-4 px-6 flex items-center gap-4">
+        <img
+          src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Google_Play_2022_icon.svg"
+          alt="SiteSurveyor Logo"
+          className="w-10 h-10 rounded-xl bg-white p-2 border border-white/70"
+        />
+        <h1 className="text-2xl md:text-3xl text-white font-black tracking-wide drop-shadow-lg">
+          SiteSurveyor Store
+        </h1>
+        <form className="flex-1 mx-4 max-w-lg relative">
+          <input
+            className="w-full rounded-full bg-white/90 pl-12 pr-4 py-2 text-base focus:ring-2 ring-primary transition shadow-inner"
+            type="search"
+            placeholder="Search apps"
+            aria-label="Search for apps"
+            disabled
+          />
+          <span className="absolute left-4 top-1/2 -translate-y-1/2 text-muted-foreground">
+            <svg
+              width="20"
+              height="20"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="lucide lucide-search"
+              viewBox="0 0 24 24"
+            >
+              <circle cx="11" cy="11" r="8" />
+              <path d="M21 21l-4.3-4.3" />
+            </svg>
           </span>
-        </div>
+        </form>
+        <span className="hidden md:inline-flex items-center gap-2 px-4 py-1.5 bg-white/10 rounded-full text-white font-medium text-sm border border-white/20 backdrop-blur">
+          <Database className="w-5 h-5 text-white" />
+          MIT Licensed &nbsp;|&nbsp; Community-Driven
+        </span>
       </header>
 
-      {/* Mission/Vision CTA */}
-      <section className="max-w-7xl mx-auto px-6 pt-12 pb-10 flex flex-col md:flex-row items-center md:items-start gap-10 md:gap-16">
-        {/* Hero visual (optional illustration) */}
+      {/* Categories filter bar */}
+      <nav className="flex flex-wrap gap-2 px-6 py-4 bg-gradient-to-r from-green-100/70 to-accent/10 border-b border-green-200">
+        {CATEGORIES.map((cat, idx) => (
+          <button
+            key={cat}
+            className={`px-4 py-1.5 rounded-full font-medium text-sm transition shadow-sm border hover:bg-green-600/90 hover:text-white
+            ${
+              idx === 0
+                ? "bg-primary text-white border-primary"
+                : "bg-white/80 border-green-200 text-primary hover:border-primary"
+            }`}
+            disabled={idx === 0}
+          >
+            {cat}
+          </button>
+        ))}
+      </nav>
+
+      {/* Hero / vision */}
+      <section className="max-w-7xl mx-auto px-6 pt-7 pb-5 flex flex-col md:flex-row items-center md:items-start gap-8 md:gap-16">
         <div className="flex-1 mb-6 md:mb-0">
-          <div className="rounded-3xl overflow-hidden w-full bg-gradient-to-tr from-primary via-secondary to-accent/60 shadow-2xl p-6 border border-accent mb-8 min-h-32 flex items-center justify-center relative">
-            <Book className="w-16 h-16 text-accent-foreground opacity-70 absolute left-4 top-4" />
-            <Users className="w-16 h-16 text-accent-foreground opacity-40 absolute right-4 bottom-4" />
-            <span className="block text-xl font-semibold z-10 text-background drop-shadow-lg animate-fade-in">
+          <div className="rounded-3xl overflow-hidden w-full bg-gradient-to-tr from-primary via-green-200 to-accent shadow-2xl p-7 border border-accent mb-8 min-h-32 flex items-center justify-center relative">
+            <Book className="w-16 h-16 text-accent-foreground opacity-80 absolute left-6 top-6" />
+            <Users className="w-16 h-16 text-accent-foreground opacity-60 absolute right-6 bottom-4" />
+            <span className="block text-xl font-bold z-10 text-background drop-shadow-lg animate-fade-in">
               “Accessible, Innovative, Reliable — Built For Africa”
             </span>
           </div>
@@ -90,9 +147,9 @@ const Index = () => {
         {/* Mission summary */}
         <div className="flex-[2]">
           <div className="space-y-4 animate-fade-in">
-            <h2 className="text-2xl md:text-3xl font-bold text-primary mb-1">Our Mission</h2>
+            <h2 className="text-2xl md:text-3xl font-extrabold text-primary mb-1">Our Mission</h2>
             <p className="text-base md:text-lg text-muted-foreground">
-              <span className="font-medium text-foreground">SiteSurveyor</span> provides a free, modern toolkit for surveyors, GIS practitioners, and planners — making advanced mapping technology available to all across Africa.
+              <span className="font-semibold text-foreground">SiteSurveyor</span> provides a free, modern toolkit for surveyors, GIS practitioners, and planners — making advanced mapping technology available to all across Africa.
               <br />
               <br />
               Our open-source model means: <b>no expensive licenses, local empowerment, and reliable tools for the field & office.</b> <br />
@@ -115,13 +172,13 @@ const Index = () => {
 
       {/* Apps Grid */}
       <main className="max-w-7xl mx-auto px-6 pb-16">
-        <h2 className="text-xl md:text-2xl font-bold text-primary mb-4">Browse Open Apps</h2>
+        <h2 className="text-xl md:text-2xl font-bold text-primary mb-4">Featured Apps</h2>
         <AppGrid apps={FEATURE_APPS as any} />
       </main>
 
       {/* Contribute / About block */}
-      <section className="max-w-7xl mx-auto px-6 pb-12">
-        <div className="bg-gradient-to-br from-card/90 to-secondary/60 rounded-2xl shadow-xl border border-accent/40 p-8 flex flex-col md:flex-row items-center gap-6 animate-fade-in">
+      <section className="max-w-7xl mx-auto px-6 pb-10">
+        <div className="bg-gradient-to-br from-green-200/90 to-secondary/60 rounded-2xl shadow-xl border border-accent/40 p-8 flex flex-col md:flex-row items-center gap-7 animate-fade-in">
           <div className="flex-1">
             <h3 className="text-xl font-semibold text-primary mb-2">Want to build something for SiteSurveyor?</h3>
             <p className="text-muted-foreground">
@@ -133,7 +190,7 @@ const Index = () => {
               href="https://github.com/sitesurveyor"
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-foreground to-primary text-background rounded-lg font-semibold shadow-lg hover:from-primary hover:to-accent hover:text-primary-foreground transition-all"
+              className="inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-primary to-accent text-primary-foreground rounded-lg font-semibold shadow-lg hover:from-primary hover:to-accent hover:text-primary-foreground transition-all"
             >
               <ArrowRight className="w-5 h-5" />
               Join the Community
