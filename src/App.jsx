@@ -26,8 +26,8 @@ import { AuthProvider } from './contexts/AuthContext'
 import { AdminProvider } from './contexts/AdminContext'
 
 function App() {
-  // Use different basename for development vs production
-  const basename = import.meta.env.MODE === 'production' ? '/' : '/sitesurveyor'
+  // No need for different basename on Netlify
+  const basename = '/'
   
   return (
     <AuthProvider>
