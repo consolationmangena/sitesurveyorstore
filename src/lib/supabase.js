@@ -3,11 +3,14 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
+// Debug environment variables
+console.log('Environment:', import.meta.env.MODE)
+console.log('Supabase URL configured:', !!supabaseUrl)
+console.log('Supabase Key configured:', !!supabaseAnonKey)
+
 // Check if environment variables are properly configured
 const isConfigured = supabaseUrl && 
   supabaseAnonKey && 
-  supabaseUrl !== 'your_supabase_project_url' && 
-  supabaseAnonKey !== 'your_supabase_anon_key' &&
   supabaseUrl.includes('supabase.co')
 
 if (!isConfigured) {
