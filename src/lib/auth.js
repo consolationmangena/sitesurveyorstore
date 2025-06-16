@@ -203,3 +203,5 @@ export const resetPassword = async (email) => {
 export const onAuthStateChange = (callback) => {
   return supabase.auth.onAuthStateChange(callback)
 }
+
+// Only email/password authentication is supported. No Google OAuth or provider login.

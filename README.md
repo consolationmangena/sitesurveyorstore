@@ -41,7 +41,6 @@ SiteSurveyor now includes a comprehensive authentication system that allows user
 
 ### Sign Up & Sign In Options
 - **Email & Password**: Traditional account creation with email verification
-- **Google OAuth**: Quick sign-in with Google accounts
 - **Secure Authentication**: Powered by Supabase Auth with industry-standard security
 
 ### User Features
@@ -52,9 +51,8 @@ SiteSurveyor now includes a comprehensive authentication system that allows user
 
 ### Getting Started
 1. Click "Sign Up" in the header to create your account
-2. Choose between email/password or Google sign-in
-3. Complete your profile with professional information
-4. Start exploring premium features and personalized content
+2. Complete your profile with professional information
+3. Start exploring premium features and personalized content
 
 ## 🛠️ Core Technologies
 
@@ -64,7 +62,7 @@ Our platform leverages cutting-edge technologies to modernize geomatics workflow
 - **📊 Machine Learning**: Predictive analytics for terrain modeling and error correction
 - **🔗 Blockchain Integration**: Secure, transparent, and tamper-proof spatial data management
 - **☁️ Cloud Computing**: Real-time collaboration and remote processing capabilities
-- **🔐 Secure Authentication**: Supabase-powered auth with OAuth and email verification
+- **🔐 Secure Authentication**: Supabase-powered auth with email verification
 - **📈 Advanced Analytics**: Transform raw spatial data into actionable insights
 - **🌐 Open Standards**: Full interoperability with industry-standard formats (Shapefile, GeoJSON, KML, GeoTIFF)
 
@@ -187,7 +185,6 @@ Create a `.env.local` file with the following variables:
 ```env
 VITE_SUPABASE_URL=your_supabase_project_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-VITE_GOOGLE_CLIENT_ID=your_google_client_id
 ```
 
 ### Building for Production

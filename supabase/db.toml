@@ -1,0 +1,6 @@
+[db]
+host = "db.cnwmbfosihhulkicyurb.supabase.co"
+port = 5432
+name = "postgres"
+user = "postgres"
+schema = "public"
