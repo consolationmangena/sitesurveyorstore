@@ -6,15 +6,15 @@ Apache License
 
    1. Definitions.
 
-      "License" shall mean the terms and conditions for use, reproduction,
+      "License\" shall mean the terms and conditions for use, reproduction,
       and distribution as defined by Sections 1 through 9 of this document.
 
-      "Licensor" shall mean the copyright owner or entity granting the License.
+      "Licensor\" shall mean the copyright owner or entity granting the License.
 
-      "Legal Entity" shall mean the union of the acting entity and all
+      "Legal Entity\" shall mean the union of the acting entity and all
       other entities that control, are controlled by, or are under common
       control with that entity. For the purposes of this definition,
-      "control" means (i) the power, direct or indirect, to cause the
+      "control\" means (i) the power, direct or indirect, to cause the
       direction or management of such entity, whether by contract or
       otherwise, or (ii) ownership of fifty percent (50%) or more of the
       outstanding shares, or (iii) beneficial ownership of such entity.
@@ -22,23 +22,23 @@ Apache License
       "You" (or "Your") shall mean an individual or Legal Entity
       exercising permissions granted by this License.
 
-      "Source" shall mean the preferred form for making modifications,
+      "Source\" shall mean the preferred form for making modifications,
       including but not limited to software source code, documentation
       source, and configuration files.
 
-      "Object" shall mean any form resulting from mechanical
+      "Object\" shall mean any form resulting from mechanical
       transformation or translation of a Source form, including but
       not limited to compiled object code, generated documentation,
       and conversions to other media types.
 
-      "Work" shall mean the work of authorship, whether in Source or
+      "Work\" shall mean the work of authorship, whether in Source or
       Object form, made available under the License, as indicated by a
       copyright notice that is included in or attached to the work
       (which shall not include communications that are conspicuously
       marked or otherwise designated in writing by the copyright owner
       as "Not a Contribution").
 
-      "Derivative Works" shall mean any work, whether in Source or Object
+      "Derivative Works\" shall mean any work, whether in Source or Object
       form, that is based upon (or derived from) the Work and for which the
       editorial revisions, annotations, elaborations, or other modifications
       represent, as a whole, an original work of authorship. For the purposes
@@ -46,7 +46,7 @@ Apache License
       separable from, or merely link (or bind by name) to the interfaces of,
       the Work and derivative works thereof.
 
-      "Contribution" shall mean any work of authorship, including
+      "Contribution\" shall mean any work of authorship, including
       the original version of the Work and any modifications or additions
       to that Work or Derivative Works thereof, that is intentionally
       submitted to Licensor for inclusion in the Work by the copyright owner
@@ -104,7 +104,7 @@ Apache License
           excluding those notices that do not pertain to any part of
           the Derivative Works; and
 
-      (d) If the Work includes a "NOTICE" file as part of its
+      (d) If the Work includes a "NOTICE\" file as part of its
           distribution, then any Derivative Works that You distribute must
           include a readable copy of the attribution notices contained
           within such NOTICE file, excluding those notices that do not
@@ -143,7 +143,7 @@ Apache License
 
    7. Disclaimer of Warranty. Unless required by applicable law or
       agreed to in writing, Licensor provides the Work (and each
-      Contributor provides its Contributions) on an "AS IS" BASIS,
+      Contributor provides its Contributions) on an "AS IS\" BASIS,
       WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or
       implied, including, without limitation, any warranties or conditions
       of TITLE, NON-INFRINGEMENT, MERCHANTABILITY, or FITNESS FOR A
@@ -194,7 +194,7 @@ Apache License
        http://www.apache.org/licenses/
 
    Unless required by applicable law or agreed to in writing, software
-   distributed under the License is distributed on an "AS IS" BASIS,
+   distributed under the License is distributed on an "AS IS\" BASIS,
    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
    See the License for the specific language governing permissions and
    limitations under the License.
