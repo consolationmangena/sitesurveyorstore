@@ -278,7 +278,7 @@ While built in Zimbabwe for African challenges, SiteSurveyor serves the global g
   - Location: Zimbabwe, Africa
 
 ### Powered By
-- **EINEVA Solutions** - Technology Partner
+- **EINEVA Incorporated** - Technology Partner
   - "Solutions Beyond Expectations"
   - Innovation-focused technology company
 
