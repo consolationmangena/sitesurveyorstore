@@ -1,5 +1,3 @@
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import RequestSolutionForm from "@/components/RequestSolutionForm";
 import { Lightbulb, Users, Rocket, Target, CheckCircle, ArrowRight, Sparkles, Heart, Globe, Code, Zap, MessageSquare, TrendingUp, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -63,8 +61,6 @@ export default function RequestSolutionPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      <Header title="Request Solution" subtitle="Share Your Challenge" />
-
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Hero Section */}
         <div className="text-center mb-16 relative">
@@ -372,8 +368,6 @@ export default function RequestSolutionPage() {
           </div>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 }

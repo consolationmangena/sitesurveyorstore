@@ -1,7 +1,5 @@
 import { useParams, Link } from "react-router-dom";
 import { useState, useEffect } from "react";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import { Calendar, User, Clock, ArrowLeft, Tag, Heart, Share2, Eye, MessageSquare, BookOpen, ChevronRight, ThumbsUp, Facebook, Twitter, Linkedin } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -331,7 +329,6 @@ export default function BlogPost() {
   if (!post) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-        <Header title="Blog" subtitle="Insights & Innovation" />
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
           <h1 className="text-4xl font-black text-slate-800 mb-4">Article Not Found</h1>
           <p className="text-lg text-slate-600 mb-8">The article you're looking for doesn't exist or has been moved.</p>
@@ -342,15 +339,12 @@ export default function BlogPost() {
             </Button>
           </Link>
         </div>
-        <Footer />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      <Header title="Blog" subtitle="Insights & Innovation" />
-
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Back Navigation */}
         <div className="mb-8">
@@ -571,8 +565,6 @@ export default function BlogPost() {
           </div>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 }

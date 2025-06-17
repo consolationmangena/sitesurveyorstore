@@ -1,4 +1,3 @@
-
 import AppDetail from "@/components/AppDetail";
 
 export default function AppDetailPage() {

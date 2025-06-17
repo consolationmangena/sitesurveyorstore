@@ -1,5 +1,3 @@
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import { Calendar, User, Clock, ArrowRight, Tag, TrendingUp, BookOpen, MessageSquare, Heart, Share2, Eye, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -47,21 +45,17 @@ export default function Blog() {
   if (error) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-        <Header title="Blog" subtitle="Insights & Innovation" />
         <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
           <h1 className="text-4xl font-black text-slate-800 mb-4">Error Loading Blog Posts</h1>
           <p className="text-lg text-slate-600 mb-8">There was a problem loading the blog posts. Please try again later.</p>
           <Button onClick={() => window.location.reload()}>Retry</Button>
         </div>
-        <Footer />
       </div>
     );
   }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      <Header title="Blog" subtitle="Insights & Innovation" />
-
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Hero Section */}
         <div className="text-center mb-16 relative">
@@ -408,8 +402,6 @@ export default function Blog() {
           </div>
         </div>
       </div>
-
-      <Footer />
     </div>
   );
 }
