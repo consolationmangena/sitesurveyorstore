@@ -22,16 +22,30 @@ if (!isConfigured) {
 }
 
 // Create Supabase client with additional options for better error handling
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-  auth: {
-    autoRefreshToken: true,
-    persistSession: true,
-    detectSessionInUrl: true
-  },
-  global: {
-    headers: {
-      'X-Client-Info': 'sitesurveyor-web'
+let supabaseInstance;
+try {
+  if (!supabaseUrl || !supabaseAnonKey) {
+    throw new Error('Missing Supabase credentials');
+  }
+  supabaseInstance = createClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      autoRefreshToken: true,
+      persistSession: true,
+      detectSessionInUrl: true
+    },
+    global: {
+      headers: {
+        'X-Client-Info': 'sitesurveyor-web'
+      }
     }
+  });
+  console.log('Supabase client initialized successfully');
+} catch (error) {
+  console.error('Failed to initialize Supabase client:', error);
+  supabaseInstance = null;
+}
+
+export const supabase = supabaseInstance;
   }
 })
 
