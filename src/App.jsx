@@ -14,9 +14,12 @@ import { Toaster } from './components/ui/sonner'
 import { AuthProvider } from './contexts/AuthContext'
 
 function App() {
+  // Use different basename for development vs production
+  const basename = import.meta.env.MODE === 'production' ? '/' : '/sitesurveyor'
+  
   return (
     <AuthProvider>
-      <Router basename="/sitesurveyor">
+      <Router basename={basename}>
         <div className="min-h-screen bg-gray-50 flex flex-col">
           <Header title="SiteSurveyor" subtitle="Professional Geomatics Solutions" />
           <main className="flex-grow">
