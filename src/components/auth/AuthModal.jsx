@@ -4,10 +4,9 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
-import { Alert, AlertDescription } from '@/components/ui/alert'
 import { toast } from 'sonner'
 import { signIn, signUp } from '@/lib/auth'
-import { Eye, EyeOff, Mail, User, Lock, UserPlus, LogIn, Shield, Info } from 'lucide-react'
+import { Eye, EyeOff, Mail, User, Lock, UserPlus, LogIn, Shield } from 'lucide-react'
 import { ADMIN_EMAILS } from '@/lib/adminEmails'
 
 export default function AuthModal({ isOpen, onClose }) {
@@ -146,14 +145,6 @@ export default function AuthModal({ isOpen, onClose }) {
             Welcome to SiteSurveyor
           </DialogTitle>
         </DialogHeader>
-
-        {/* Admin Email Info */}
-        <Alert className="mb-4 border-blue-200 bg-blue-50">
-          <Shield className="h-4 w-4 text-blue-600" />
-          <AlertDescription className="text-blue-800">
-            <strong>Admin Access:</strong> Use <span className="font-mono text-blue-700">admin@sitesurveyor.store</span> for admin privileges.
-          </AlertDescription>
-        </Alert>
 
         <Tabs defaultValue="signin" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
