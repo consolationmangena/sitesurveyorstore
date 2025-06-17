@@ -29,6 +29,7 @@ export default function Header({ title, subtitle, showSearch = false, onSearch }
   const navLinks = [
     { to: "/", label: "Home" },
     { to: "/appstore", label: "App Store" },
+    { to: "/blog", label: "Blog" },
     { to: "/about", label: "About" },
     { to: "/request-solution", label: "Request" }
   ];
