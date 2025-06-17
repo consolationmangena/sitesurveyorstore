@@ -4,15 +4,17 @@ import { toast } from "@/hooks/use-toast";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
-import { Lightbulb, Send, Sparkles, MapPin, Users, Clock, CheckCircle } from "lucide-react";
+import { Lightbulb, Send, Sparkles, CheckCircle } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import * as db from "@/lib/database";
 
 export default function RequestSolutionForm() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedUrgency, setSelectedUrgency] = useState("");
   const [characterCount, setCharacterCount] = useState(0);
+  const { user } = useAuth();
   
   const {
     register,
@@ -47,21 +49,32 @@ export default function RequestSolutionForm() {
   const onSubmit = async (data) => {
     // Build the enhanced solution request object
     const submission = {
-      email: data.email || null,
+      user_id: user?.id || null,
+      email: data.email || user?.email || null,
       problem: data.problem,
       category: selectedCategory,
       urgency: selectedUrgency,
       location: data.location || null,
       organization: data.organization || null,
-      submitted_at: new Date().toISOString(),
     };
 
-    // Simulate API call (replace with actual Supabase integration)
     try {
-      // Simulate network delay
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      const { data: result, error } = await db.createSolutionRequest(submission);
       
-      console.log("Solution request submitted:", submission);
+      if (error) {
+        throw error;
+      }
+
+      // Track user activity if logged in
+      if (user?.id) {
+        await db.trackUserActivity(
+          user.id, 
+          'solution_request_created', 
+          'solution_request', 
+          result.id,
+          { category: selectedCategory, urgency: selectedUrgency }
+        );
+      }
       
       toast({
         title: "🎉 Thank you for sharing!",
@@ -79,6 +92,7 @@ export default function RequestSolutionForm() {
         title: "Oops! Something went wrong",
         description: "There was a problem submitting your request. Please try again in a moment.",
         duration: 5000,
+        variant: "destructive"
       });
     }
   };
@@ -89,16 +103,21 @@ export default function RequestSolutionForm() {
       <div className="grid md:grid-cols-2 gap-4">
         <div>
           <label htmlFor="email" className="block text-sm font-bold mb-2 text-slate-800">
-            Your Email <span className="text-slate-500 font-normal">(optional)</span>
+            Your Email {!user && <span className="text-red-600">*</span>}
+            {user && <span className="text-slate-500 font-normal">(from your account)</span>}
           </label>
           <Input
             id="email"
             type="email"
-            placeholder="you@example.com"
+            placeholder={user?.email || "you@example.com"}
+            defaultValue={user?.email || ""}
             className="bg-white border-2 border-slate-300 text-slate-800 placeholder:text-slate-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 rounded-xl"
-            {...register("email")}
+            {...register("email", { required: !user })}
+            disabled={!!user}
           />
-          <p className="text-xs text-slate-600 mt-1">We'll only contact you if we need clarification</p>
+          <p className="text-xs text-slate-600 mt-1">
+            {user ? "Using your account email" : "We'll only contact you if we need clarification"}
+          </p>
         </div>
         
         <div>

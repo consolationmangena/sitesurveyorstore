@@ -1,6 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
 import { supabase } from '@/lib/supabase'
 import { toast } from '@/hooks/use-toast'
+import * as db from '@/lib/database'
 
 const AuthContext = createContext({})
 
@@ -26,6 +27,11 @@ export const AuthProvider = ({ children }) => {
       } else {
         setSession(session)
         setUser(session?.user ?? null)
+        
+        // Create profile if user exists but no profile
+        if (session?.user) {
+          await ensureProfile(session.user)
+        }
       }
       setLoading(false)
     }
@@ -41,6 +47,11 @@ export const AuthProvider = ({ children }) => {
         setLoading(false)
 
         if (event === 'SIGNED_IN') {
+          // Create profile if it doesn't exist
+          if (session?.user) {
+            await ensureProfile(session.user)
+          }
+          
           toast({
             title: "Welcome!",
             description: "You have been successfully signed in.",
@@ -56,6 +67,27 @@ export const AuthProvider = ({ children }) => {
 
     return () => subscription.unsubscribe()
   }, [])
+
+  // Ensure user profile exists
+  const ensureProfile = async (user) => {
+    try {
+      const { data: existingProfile } = await db.getProfile(user.id)
+      
+      if (!existingProfile) {
+        // Create profile from user metadata
+        const profileData = {
+          id: user.id,
+          full_name: user.user_metadata?.full_name || user.email?.split('@')[0] || '',
+          organization: user.user_metadata?.organization || '',
+          avatar_url: user.user_metadata?.avatar_url || user.user_metadata?.picture || ''
+        }
+        
+        await db.createProfile(profileData)
+      }
+    } catch (error) {
+      console.error('Error ensuring profile:', error)
+    }
+  }
 
   // Sign up with email and password
   const signUp = async (email, password, userData = {}) => {
@@ -215,18 +247,28 @@ export const AuthProvider = ({ children }) => {
   // Update profile
   const updateProfile = async (updates) => {
     try {
-      const { data, error } = await supabase.auth.updateUser({
+      // Update auth user metadata
+      const { data: authData, error: authError } = await supabase.auth.updateUser({
         data: updates
       })
 
-      if (error) throw error
+      if (authError) throw authError
 
-      toast({
-        title: "Profile updated",
-        description: "Your profile has been successfully updated.",
-      })
+      // Update profile in database
+      if (user?.id) {
+        const { data: profileData, error: profileError } = await db.updateProfile(user.id, updates)
+        
+        if (profileError) throw profileError
 
-      return { data, error: null }
+        toast({
+          title: "Profile updated",
+          description: "Your profile has been successfully updated.",
+        })
+
+        return { data: profileData, error: null }
+      }
+
+      return { data: authData, error: null }
     } catch (error) {
       console.error('Profile update error:', error)
       toast({

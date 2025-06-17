@@ -6,142 +6,35 @@ import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-
-const BLOG_POSTS = [
-  {
-    id: 1,
-    title: "The Future of AI in African Geomatics: Transforming Surveying with Machine Learning",
-    excerpt: "Discover how artificial intelligence is revolutionizing geomatics workflows across Africa, from automated feature detection to predictive terrain modeling.",
-    content: "Artificial Intelligence is reshaping the geomatics landscape across Africa, offering unprecedented opportunities to automate complex surveying tasks and improve accuracy. In this comprehensive guide, we explore how machine learning algorithms are being integrated into modern surveying workflows...",
-    author: "Consolation Mangena",
-    authorRole: "Founder & Lead Developer",
-    authorAvatar: "/profile.jpg",
-    publishedAt: "2024-03-15",
-    readTime: "8 min read",
-    category: "Technology",
-    tags: ["AI", "Machine Learning", "Surveying", "Innovation"],
-    featured: true,
-    views: 2847,
-    likes: 156,
-    comments: 23,
-    image: "https://images.unsplash.com/photo-1485827404703-89b55fcc595e?w=800&h=400&fit=crop"
-  },
-  {
-    id: 2,
-    title: "Open Source vs Premium: Choosing the Right Geomatics Tools for Your Project",
-    excerpt: "A comprehensive comparison of open-source and premium geomatics solutions, helping you make informed decisions for your surveying projects.",
-    content: "The choice between open-source and premium geomatics tools can significantly impact your project's success and budget. This detailed analysis examines the pros and cons of each approach...",
-    author: "Dr. Sarah Mukamuri",
-    authorRole: "GIS Specialist",
-    authorAvatar: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=100&h=100&fit=crop&crop=face",
-    publishedAt: "2024-03-12",
-    readTime: "6 min read",
-    category: "Guide",
-    tags: ["Open Source", "Premium", "Tools", "Decision Making"],
-    featured: false,
-    views: 1923,
-    likes: 89,
-    comments: 15,
-    image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=400&fit=crop"
-  },
-  {
-    id: 3,
-    title: "Blockchain Technology in Land Management: Securing Property Rights in Zimbabwe",
-    excerpt: "Exploring how blockchain technology is being used to create transparent, tamper-proof land registry systems across Zimbabwe and Africa.",
-    content: "Blockchain technology offers a revolutionary approach to land management, providing immutable records and transparent transactions. In Zimbabwe, where land rights have been a complex issue...",
-    author: "James Chikwanha",
-    authorRole: "Blockchain Developer",
-    authorAvatar: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=100&h=100&fit=crop&crop=face",
-    publishedAt: "2024-03-10",
-    readTime: "10 min read",
-    category: "Innovation",
-    tags: ["Blockchain", "Land Management", "Security", "Zimbabwe"],
-    featured: true,
-    views: 3156,
-    likes: 201,
-    comments: 34,
-    image: "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=400&fit=crop"
-  },
-  {
-    id: 4,
-    title: "Mobile GIS in the Field: Best Practices for Data Collection in Remote Areas",
-    excerpt: "Essential tips and techniques for effective mobile GIS data collection in challenging African terrain and remote locations.",
-    content: "Mobile GIS has transformed field data collection, especially in remote African locations where traditional methods face significant challenges. This guide covers best practices...",
-    author: "Tendai Moyo",
-    authorRole: "Field Survey Specialist",
-    authorAvatar: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&h=100&fit=crop&crop=face",
-    publishedAt: "2024-03-08",
-    readTime: "7 min read",
-    category: "Field Work",
-    tags: ["Mobile GIS", "Field Work", "Data Collection", "Remote Areas"],
-    featured: false,
-    views: 1654,
-    likes: 78,
-    comments: 12,
-    image: "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=400&fit=crop"
-  },
-  {
-    id: 5,
-    title: "Drone Photogrammetry for Infrastructure Monitoring: A Complete Guide",
-    excerpt: "Learn how to use drone technology and photogrammetry for effective infrastructure monitoring and maintenance planning.",
-    content: "Drone photogrammetry has become an essential tool for infrastructure monitoring, offering cost-effective solutions for regular inspections and maintenance planning...",
-    author: "Dr. Chipo Ndebele",
-    authorRole: "Remote Sensing Expert",
-    authorAvatar: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&h=100&fit=crop&crop=face",
-    publishedAt: "2024-03-05",
-    readTime: "12 min read",
-    category: "Remote Sensing",
-    tags: ["Drones", "Photogrammetry", "Infrastructure", "Monitoring"],
-    featured: false,
-    views: 2234,
-    likes: 134,
-    comments: 28,
-    image: "https://images.unsplash.com/photo-1473968512647-3e447244af8f?w=800&h=400&fit=crop"
-  },
-  {
-    id: 6,
-    title: "Building Sustainable Geomatics Communities in Africa",
-    excerpt: "Strategies for developing strong, sustainable geomatics communities that drive innovation and knowledge sharing across the continent.",
-    content: "Building sustainable geomatics communities requires a combination of education, collaboration, and technological innovation. Across Africa, we're seeing the emergence of vibrant communities...",
-    author: "Prof. Nomsa Sibanda",
-    authorRole: "Academic Researcher",
-    authorAvatar: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=100&h=100&fit=crop&crop=face",
-    publishedAt: "2024-03-02",
-    readTime: "9 min read",
-    category: "Community",
-    tags: ["Community", "Education", "Sustainability", "Africa"],
-    featured: false,
-    views: 1876,
-    likes: 92,
-    comments: 19,
-    image: "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=800&h=400&fit=crop"
-  }
-];
-
-const CATEGORIES = [
-  { name: "All", count: BLOG_POSTS.length, color: "bg-blue-100 text-blue-800" },
-  { name: "Technology", count: 2, color: "bg-purple-100 text-purple-800" },
-  { name: "Guide", count: 1, color: "bg-green-100 text-green-800" },
-  { name: "Innovation", count: 1, color: "bg-orange-100 text-orange-800" },
-  { name: "Field Work", count: 1, color: "bg-indigo-100 text-indigo-800" },
-  { name: "Remote Sensing", count: 1, color: "bg-pink-100 text-pink-800" },
-  { name: "Community", count: 1, color: "bg-yellow-100 text-yellow-800" }
-];
+import { useBlogPosts, useBlogStats } from "@/hooks/useDatabase";
 
 export default function Blog() {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredPosts = BLOG_POSTS.filter(post => {
-    const matchesCategory = selectedCategory === "All" || post.category === selectedCategory;
-    const matchesSearch = post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         post.excerpt.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         post.tags.some(tag => tag.toLowerCase().includes(searchTerm.toLowerCase()));
-    return matchesCategory && matchesSearch;
-  });
+  // Database hooks
+  const { stats } = useBlogStats();
+  
+  // Build filters for blog posts
+  const filters = {
+    ...(searchTerm && { search: searchTerm }),
+    ...(selectedCategory !== "All" && { category: selectedCategory })
+  };
+  
+  const { posts, loading, error } = useBlogPosts(filters);
 
-  const featuredPosts = BLOG_POSTS.filter(post => post.featured);
-  const regularPosts = filteredPosts.filter(post => !post.featured);
+  const featuredPosts = posts?.filter(post => post.is_featured) || [];
+  const regularPosts = posts?.filter(post => !post.is_featured) || [];
+
+  // Get unique categories from posts
+  const categories = [
+    { name: "All", count: posts?.length || 0, color: "bg-blue-100 text-blue-800" },
+    ...Array.from(new Set(posts?.map(post => post.category) || [])).map(category => ({
+      name: category,
+      count: posts?.filter(post => post.category === category).length || 0,
+      color: "bg-indigo-100 text-indigo-800"
+    }))
+  ];
 
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
@@ -150,6 +43,20 @@ export default function Blog() {
       day: 'numeric'
     });
   };
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+        <Header title="Blog" subtitle="Insights & Innovation" />
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+          <h1 className="text-4xl font-black text-slate-800 mb-4">Error Loading Blog Posts</h1>
+          <p className="text-lg text-slate-600 mb-8">There was a problem loading the blog posts. Please try again later.</p>
+          <Button onClick={() => window.location.reload()}>Retry</Button>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
@@ -180,23 +87,25 @@ export default function Blog() {
               From AI-powered surveying to blockchain land management, explore the future of spatial technology.
             </p>
             
-            <div className="flex items-center justify-center gap-8 text-lg flex-wrap">
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 border border-blue-200">
-                <BookOpen className="w-5 h-5 text-blue-600" />
-                <span className="font-bold text-blue-800">{BLOG_POSTS.length}</span>
-                <span className="text-blue-600 font-medium">Articles</span>
+            {stats && (
+              <div className="flex items-center justify-center gap-8 text-lg flex-wrap">
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 border border-blue-200">
+                  <BookOpen className="w-5 h-5 text-blue-600" />
+                  <span className="font-bold text-blue-800">{stats.totalPosts}</span>
+                  <span className="text-blue-600 font-medium">Articles</span>
+                </div>
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-green-50 border border-green-200">
+                  <Eye className="w-5 h-5 text-green-600" />
+                  <span className="font-bold text-green-800">{stats.totalViews?.toLocaleString()}</span>
+                  <span className="text-green-600 font-medium">Total Views</span>
+                </div>
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-purple-50 border border-purple-200">
+                  <Heart className="w-5 h-5 text-purple-600" />
+                  <span className="font-bold text-purple-800">{stats.totalLikes}</span>
+                  <span className="text-purple-600 font-medium">Likes</span>
+                </div>
               </div>
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-green-50 border border-green-200">
-                <Eye className="w-5 h-5 text-green-600" />
-                <span className="font-bold text-green-800">{BLOG_POSTS.reduce((sum, post) => sum + post.views, 0).toLocaleString()}</span>
-                <span className="text-green-600 font-medium">Total Views</span>
-              </div>
-              <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-purple-50 border border-purple-200">
-                <Heart className="w-5 h-5 text-purple-600" />
-                <span className="font-bold text-purple-800">{BLOG_POSTS.reduce((sum, post) => sum + post.likes, 0)}</span>
-                <span className="text-purple-600 font-medium">Likes</span>
-              </div>
-            </div>
+            )}
           </div>
         </div>
 
@@ -220,7 +129,7 @@ export default function Blog() {
 
               {/* Category Filter */}
               <div className="flex flex-wrap gap-3">
-                {CATEGORIES.map((category) => (
+                {categories.map((category) => (
                   <button
                     key={category.name}
                     onClick={() => setSelectedCategory(category.name)}
@@ -238,8 +147,19 @@ export default function Blog() {
           </div>
         </div>
 
+        {/* Loading State */}
+        {loading && (
+          <div className="text-center py-20">
+            <div className="relative">
+              <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full blur opacity-20 animate-pulse"></div>
+              <div className="relative inline-block animate-spin rounded-full h-16 w-16 border-4 border-slate-200 border-t-blue-600 shadow-lg"></div>
+            </div>
+            <p className="mt-6 text-xl text-slate-600 animate-pulse font-medium">Loading articles...</p>
+          </div>
+        )}
+
         {/* Featured Posts Section */}
-        {selectedCategory === "All" && (
+        {!loading && selectedCategory === "All" && featuredPosts.length > 0 && (
           <div className="mb-16">
             <div className="flex items-center gap-3 mb-8">
               <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-yellow-500 to-orange-500 flex items-center justify-center">
@@ -253,7 +173,7 @@ export default function Blog() {
                 <Card key={post.id} className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 bg-white/90 backdrop-blur-sm border-2 border-slate-200 hover:border-blue-300 overflow-hidden">
                   <div className="relative">
                     <img 
-                      src={post.image} 
+                      src={post.featured_image} 
                       alt={post.title}
                       className="w-full h-64 object-cover group-hover:scale-105 transition-transform duration-300"
                     />
@@ -272,13 +192,13 @@ export default function Blog() {
                   <CardContent className="p-8">
                     <div className="flex items-center gap-4 mb-4">
                       <img 
-                        src={post.authorAvatar} 
-                        alt={post.author}
+                        src={post.author_avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(post.author_name)}&background=random`}
+                        alt={post.author_name}
                         className="w-12 h-12 rounded-full object-cover border-2 border-white shadow-lg"
                       />
                       <div>
-                        <h4 className="font-bold text-slate-800">{post.author}</h4>
-                        <p className="text-slate-600 text-sm">{post.authorRole}</p>
+                        <h4 className="font-bold text-slate-800">{post.author_name}</h4>
+                        <p className="text-slate-600 text-sm">{post.author_role}</p>
                       </div>
                     </div>
                     
@@ -294,27 +214,27 @@ export default function Blog() {
                       <div className="flex items-center gap-4">
                         <div className="flex items-center gap-1">
                           <Calendar className="w-4 h-4" />
-                          <span>{formatDate(post.publishedAt)}</span>
+                          <span>{formatDate(post.published_at)}</span>
                         </div>
                         <div className="flex items-center gap-1">
                           <Clock className="w-4 h-4" />
-                          <span>{post.readTime}</span>
+                          <span>{post.read_time}</span>
                         </div>
                       </div>
                       <div className="flex items-center gap-4">
                         <div className="flex items-center gap-1">
                           <Eye className="w-4 h-4" />
-                          <span>{post.views.toLocaleString()}</span>
+                          <span>{post.view_count?.toLocaleString()}</span>
                         </div>
                         <div className="flex items-center gap-1">
                           <Heart className="w-4 h-4" />
-                          <span>{post.likes}</span>
+                          <span>{post.like_count}</span>
                         </div>
                       </div>
                     </div>
                     
                     <div className="flex flex-wrap gap-2 mb-6">
-                      {post.tags.slice(0, 3).map((tag) => (
+                      {post.tags?.slice(0, 3).map((tag) => (
                         <Badge key={tag} variant="secondary" className="text-xs font-semibold">
                           {tag}
                         </Badge>
@@ -335,105 +255,129 @@ export default function Blog() {
         )}
 
         {/* Regular Posts Grid */}
-        <div className="mb-16">
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center">
-                <BookOpen className="w-5 h-5 text-white" />
-              </div>
-              <h2 className="text-3xl font-black text-slate-800">
-                {selectedCategory === "All" ? "Latest Articles" : `${selectedCategory} Articles`}
-              </h2>
-            </div>
-            <div className="text-slate-600 font-medium">
-              {filteredPosts.length} article{filteredPosts.length !== 1 ? 's' : ''} found
-            </div>
-          </div>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {(selectedCategory === "All" ? regularPosts : filteredPosts).map((post) => (
-              <Card key={post.id} className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 bg-white/90 backdrop-blur-sm border-2 border-slate-200 hover:border-blue-300 overflow-hidden h-full flex flex-col">
-                <div className="relative">
-                  <img 
-                    src={post.image} 
-                    alt={post.title}
-                    className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
-                  />
-                  <div className="absolute top-4 right-4">
-                    <Badge variant="outline" className="bg-white/90 backdrop-blur-sm font-bold text-xs">
-                      {post.category}
-                    </Badge>
-                  </div>
+        {!loading && (
+          <div className="mb-16">
+            <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center gap-3">
+                <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center">
+                  <BookOpen className="w-5 h-5 text-white" />
                 </div>
-                
-                <CardContent className="p-6 flex-1 flex flex-col">
-                  <div className="flex items-center gap-3 mb-4">
+                <h2 className="text-3xl font-black text-slate-800">
+                  {selectedCategory === "All" ? "Latest Articles" : `${selectedCategory} Articles`}
+                </h2>
+              </div>
+              <div className="text-slate-600 font-medium">
+                {posts?.length || 0} article{posts?.length !== 1 ? 's' : ''} found
+              </div>
+            </div>
+            
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {(selectedCategory === "All" ? regularPosts : posts || []).map((post) => (
+                <Card key={post.id} className="group hover:shadow-2xl transition-all duration-300 hover:-translate-y-2 bg-white/90 backdrop-blur-sm border-2 border-slate-200 hover:border-blue-300 overflow-hidden h-full flex flex-col">
+                  <div className="relative">
                     <img 
-                      src={post.authorAvatar} 
-                      alt={post.author}
-                      className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-lg"
+                      src={post.featured_image} 
+                      alt={post.title}
+                      className="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
                     />
-                    <div>
-                      <h4 className="font-bold text-slate-800 text-sm">{post.author}</h4>
-                      <p className="text-slate-600 text-xs">{post.authorRole}</p>
-                    </div>
-                  </div>
-                  
-                  <h3 className="text-xl font-black text-slate-800 mb-3 group-hover:text-blue-600 transition-colors line-clamp-2 flex-shrink-0">
-                    {post.title}
-                  </h3>
-                  
-                  <p className="text-slate-600 font-medium mb-4 line-clamp-3 leading-relaxed flex-1">
-                    {post.excerpt}
-                  </p>
-                  
-                  <div className="flex items-center justify-between text-xs text-slate-500 mb-4">
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center gap-1">
-                        <Calendar className="w-3 h-3" />
-                        <span>{formatDate(post.publishedAt)}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Clock className="w-3 h-3" />
-                        <span>{post.readTime}</span>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="flex items-center gap-1">
-                        <Eye className="w-3 h-3" />
-                        <span>{post.views.toLocaleString()}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Heart className="w-3 h-3" />
-                        <span>{post.likes}</span>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div className="flex flex-wrap gap-1 mb-4">
-                    {post.tags.slice(0, 2).map((tag) => (
-                      <Badge key={tag} variant="secondary" className="text-xs font-semibold">
-                        {tag}
+                    <div className="absolute top-4 right-4">
+                      <Badge variant="outline" className="bg-white/90 backdrop-blur-sm font-bold text-xs">
+                        {post.category}
                       </Badge>
-                    ))}
-                    {post.tags.length > 2 && (
-                      <Badge variant="outline" className="text-xs">
-                        +{post.tags.length - 2}
-                      </Badge>
-                    )}
+                    </div>
                   </div>
                   
-                  <Link to={`/blog/${post.id}`}>
-                    <Button variant="outline" className="w-full rounded-xl border-2 hover:bg-blue-50 hover:border-blue-300 font-bold transition-all group-hover:scale-105">
-                      Read More
-                      <ChevronRight className="w-4 h-4 ml-2" />
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
-            ))}
+                  <CardContent className="p-6 flex-1 flex flex-col">
+                    <div className="flex items-center gap-3 mb-4">
+                      <img 
+                        src={post.author_avatar || `https://ui-avatars.com/api/?name=${encodeURIComponent(post.author_name)}&background=random`}
+                        alt={post.author_name}
+                        className="w-10 h-10 rounded-full object-cover border-2 border-white shadow-lg"
+                      />
+                      <div>
+                        <h4 className="font-bold text-slate-800 text-sm">{post.author_name}</h4>
+                        <p className="text-slate-600 text-xs">{post.author_role}</p>
+                      </div>
+                    </div>
+                    
+                    <h3 className="text-xl font-black text-slate-800 mb-3 group-hover:text-blue-600 transition-colors line-clamp-2 flex-shrink-0">
+                      {post.title}
+                    </h3>
+                    
+                    <p className="text-slate-600 font-medium mb-4 line-clamp-3 leading-relaxed flex-1">
+                      {post.excerpt}
+                    </p>
+                    
+                    <div className="flex items-center justify-between text-xs text-slate-500 mb-4">
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-1">
+                          <Calendar className="w-3 h-3" />
+                          <span>{formatDate(post.published_at)}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Clock className="w-3 h-3" />
+                          <span>{post.read_time}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-3">
+                        <div className="flex items-center gap-1">
+                          <Eye className="w-3 h-3" />
+                          <span>{post.view_count?.toLocaleString()}</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <Heart className="w-3 h-3" />
+                          <span>{post.like_count}</span>
+                        </div>
+                      </div>
+                    </div>
+                    
+                    <div className="flex flex-wrap gap-1 mb-4">
+                      {post.tags?.slice(0, 2).map((tag) => (
+                        <Badge key={tag} variant="secondary" className="text-xs font-semibold">
+                          {tag}
+                        </Badge>
+                      ))}
+                      {post.tags?.length > 2 && (
+                        <Badge variant="outline" className="text-xs">
+                          +{post.tags.length - 2}
+                        </Badge>
+                      )}
+                    </div>
+                    
+                    <Link to={`/blog/${post.id}`}>
+                      <Button variant="outline" className="w-full rounded-xl border-2 hover:bg-blue-50 hover:border-blue-300 font-bold transition-all group-hover:scale-105">
+                        Read More
+                        <ChevronRight className="w-4 h-4 ml-2" />
+                      </Button>
+                    </Link>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
           </div>
-        </div>
+        )}
+
+        {/* No Results */}
+        {!loading && posts?.length === 0 && (
+          <div className="text-center py-20">
+            <div className="w-20 h-20 rounded-full bg-gradient-to-br from-slate-100 to-slate-200 flex items-center justify-center mx-auto mb-6 shadow-lg">
+              <BookOpen className="w-10 h-10 text-slate-400" />
+            </div>
+            <h3 className="text-2xl font-black text-slate-800 mb-3">No articles found</h3>
+            <p className="text-slate-600 font-medium mb-8 leading-relaxed">
+              We couldn't find any articles matching your criteria. Try adjusting your search or filter settings.
+            </p>
+            <Button 
+              onClick={() => {
+                setSearchTerm("");
+                setSelectedCategory("All");
+              }}
+              className="rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold px-8 py-3 shadow-lg hover:shadow-xl hover:scale-105 transition-all"
+            >
+              Clear Filters
+            </Button>
+          </div>
+        )}
 
         {/* Newsletter Subscription */}
         <div className="mb-16">
@@ -460,49 +404,6 @@ export default function Blog() {
               <p className="text-gray-400 text-sm mt-4">
                 Join 2,500+ geomatics professionals. Unsubscribe anytime.
               </p>
-            </div>
-          </div>
-        </div>
-
-        {/* Popular Tags */}
-        <div className="mb-16">
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-black text-slate-800 mb-4">Popular Topics</h2>
-            <p className="text-lg text-slate-600 font-medium">Explore articles by topic</p>
-          </div>
-          
-          <div className="flex flex-wrap justify-center gap-4">
-            {Array.from(new Set(BLOG_POSTS.flatMap(post => post.tags))).map((tag) => (
-              <button
-                key={tag}
-                className="px-6 py-3 rounded-full bg-white/80 backdrop-blur-sm border border-slate-200 hover:border-blue-300 hover:bg-blue-50 text-slate-700 font-semibold transition-all hover:scale-105 hover:shadow-lg"
-              >
-                <Tag className="w-4 h-4 inline mr-2" />
-                {tag}
-              </button>
-            ))}
-          </div>
-        </div>
-
-        {/* Call to Action */}
-        <div className="text-center">
-          <div className="max-w-3xl mx-auto bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 rounded-3xl p-12 shadow-2xl text-white relative overflow-hidden">
-            <div className="absolute inset-0 bg-black/10"></div>
-            <div className="relative">
-              <h2 className="text-4xl font-black mb-4">Have a Story to Share?</h2>
-              <p className="text-xl mb-8 opacity-90">
-                Join our community of geomatics professionals and share your insights, experiences, and innovations.
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Button className="bg-white text-slate-900 hover:bg-gray-100 font-bold px-8 py-4 rounded-full shadow-lg hover:shadow-xl hover:scale-105 transition-all">
-                  <Share2 className="w-5 h-5 mr-2" />
-                  Submit Article
-                </Button>
-                <Button variant="outline" className="border-white/20 text-white hover:bg-white/10 font-bold px-8 py-4 rounded-full">
-                  <ArrowRight className="w-5 h-5 mr-2" />
-                  Join Community
-                </Button>
-              </div>
             </div>
           </div>
         </div>

@@ -6,61 +6,67 @@ import { Search, Filter, Grid, List, Star, Download, Clock, TrendingUp, Sparkles
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { useAppSearch } from "@/hooks/useAppSearch";
-import appsData from "@/data/apps.json";
+import { useApplications, useCategories, useAppStats } from "@/hooks/useDatabase";
 
 export default function AppStore() {
   const [viewMode, setViewMode] = useState("grid");
-  const [apps, setApps] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
-  const [headerSearchTerm, setHeaderSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedCategory, setSelectedCategory] = useState("all");
   const [appTypeFilter, setAppTypeFilter] = useState("all");
+  const [sortBy, setSortBy] = useState("name");
 
-  const {
-    searchTerm,
-    setSearchTerm,
-    selectedCategory,
-    setSelectedCategory,
-    sortBy,
-    setSortBy,
-    categories,
-    filteredApps: baseFilteredApps,
-    stats
-  } = useAppSearch(apps);
+  // Database hooks
+  const { categories } = useCategories();
+  const { stats } = useAppStats();
+  
+  // Build filters for applications
+  const filters = {
+    ...(searchTerm && { search: searchTerm }),
+    ...(selectedCategory !== "all" && { category: selectedCategory }),
+    ...(appTypeFilter !== "all" && { app_type: appTypeFilter })
+  };
+  
+  const { applications, loading, error } = useApplications(filters);
 
-  // Additional filtering by app type
-  const filteredApps = baseFilteredApps.filter(app => {
-    if (appTypeFilter === "all") return true;
-    return app.app_type === appTypeFilter;
+  // Sort applications
+  const sortedApplications = [...(applications || [])].sort((a, b) => {
+    switch (sortBy) {
+      case "name":
+        return a.name.localeCompare(b.name);
+      case "downloads":
+        return (b.download_count || 0) - (a.download_count || 0);
+      case "updated":
+        return new Date(b.updated_at) - new Date(a.updated_at);
+      case "price":
+        if (a.app_type === 'open_source' && b.app_type === 'pro') return -1;
+        if (a.app_type === 'pro' && b.app_type === 'open_source') return 1;
+        if (a.app_type === 'pro' && b.app_type === 'pro') {
+          return (a.price || 0) - (b.price || 0);
+        }
+        return 0;
+      default:
+        return 0;
+    }
   });
-
-  // Load apps from JSON file
-  useEffect(() => {
-    console.log('Loading apps from JSON file...');
-    setTimeout(() => {
-      setApps(appsData.apps);
-      setIsLoading(false);
-      console.log('Apps loaded successfully:', appsData.apps);
-    }, 500); // Add slight delay for loading effect
-  }, []);
-
-  // Sync header search with local search
-  useEffect(() => {
-    setSearchTerm(headerSearchTerm);
-  }, [headerSearchTerm, setSearchTerm]);
 
   // Handle search from header
   const handleHeaderSearch = (term) => {
-    setHeaderSearchTerm(term);
+    setSearchTerm(term);
   };
 
-  // Calculate app type stats
-  const appTypeStats = {
-    total: apps.length,
-    openSource: apps.filter(app => app.app_type === 'open_source').length,
-    pro: apps.filter(app => app.app_type === 'pro').length,
-    totalRevenue: apps.filter(app => app.app_type === 'pro').reduce((sum, app) => sum + (app.price * app.download_count), 0)
-  };
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+        <Header title="SiteSurveyor" subtitle="Professional Geomatics Solutions" />
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+          <h1 className="text-4xl font-black text-slate-800 mb-4">Error Loading Applications</h1>
+          <p className="text-lg text-slate-600 mb-8">There was a problem loading the applications. Please try again later.</p>
+          <Button onClick={() => window.location.reload()}>Retry</Button>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
@@ -96,26 +102,26 @@ export default function AppStore() {
               From free open-source tools to premium professional solutions - everything you need for modern surveying and GIS work.
             </p>
             
-            {!isLoading && (
+            {stats && (
               <div className="flex items-center justify-center gap-8 text-lg flex-wrap">
                 <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 border border-blue-200">
                   <TrendingUp className="w-5 h-5 text-blue-600" />
-                  <span className="font-bold text-blue-800">{appTypeStats.total}</span>
+                  <span className="font-bold text-blue-800">{stats.total}</span>
                   <span className="text-blue-600 font-medium">Total Apps</span>
                 </div>
                 <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-green-50 border border-green-200">
                   <Sparkles className="w-5 h-5 text-green-600" />
-                  <span className="font-bold text-green-800">{appTypeStats.openSource}</span>
+                  <span className="font-bold text-green-800">{stats.openSource}</span>
                   <span className="text-green-600 font-medium">Free & Open</span>
                 </div>
                 <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-purple-50 border border-purple-200">
                   <Crown className="w-5 h-5 text-purple-600" />
-                  <span className="font-bold text-purple-800">{appTypeStats.pro}</span>
+                  <span className="font-bold text-purple-800">{stats.pro}</span>
                   <span className="text-purple-600 font-medium">Pro Apps</span>
                 </div>
                 <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-yellow-50 border border-yellow-200">
                   <Download className="w-5 h-5 text-yellow-600" />
-                  <span className="font-bold text-yellow-800">{stats.totalDownloads.toLocaleString()}</span>
+                  <span className="font-bold text-yellow-800">{stats.totalDownloads?.toLocaleString()}</span>
                   <span className="text-yellow-600 font-medium">Downloads</span>
                 </div>
               </div>
@@ -156,19 +162,19 @@ export default function AppStore() {
                       <SelectItem value="all" className="rounded-lg">
                         <div className="flex items-center gap-2">
                           <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                          All Apps ({appTypeStats.total})
+                          All Apps ({stats?.total || 0})
                         </div>
                       </SelectItem>
                       <SelectItem value="open_source" className="rounded-lg">
                         <div className="flex items-center gap-2">
                           <div className="w-2 h-2 rounded-full bg-green-500"></div>
-                          Free & Open Source ({appTypeStats.openSource})
+                          Free & Open Source ({stats?.openSource || 0})
                         </div>
                       </SelectItem>
                       <SelectItem value="pro" className="rounded-lg">
                         <div className="flex items-center gap-2">
                           <div className="w-2 h-2 rounded-full bg-purple-500"></div>
-                          Professional ({appTypeStats.pro})
+                          Professional ({stats?.pro || 0})
                         </div>
                       </SelectItem>
                     </SelectContent>
@@ -185,20 +191,17 @@ export default function AppStore() {
                       <SelectItem value="all" className="rounded-lg">
                         <div className="flex items-center gap-2">
                           <div className="w-2 h-2 rounded-full bg-blue-500"></div>
-                          All Categories ({stats.totalApps})
+                          All Categories
                         </div>
                       </SelectItem>
-                      {categories.map(category => {
-                        const count = apps.filter(app => app.category === category).length;
-                        return (
-                          <SelectItem key={category} value={category} className="rounded-lg">
-                            <div className="flex items-center gap-2">
-                              <div className="w-2 h-2 rounded-full bg-indigo-500"></div>
-                              {category} ({count})
-                            </div>
-                          </SelectItem>
-                        );
-                      })}
+                      {categories.map(category => (
+                        <SelectItem key={category.id} value={category.name} className="rounded-lg">
+                          <div className="flex items-center gap-2">
+                            <div className="w-2 h-2 rounded-full bg-indigo-500"></div>
+                            {category.name}
+                          </div>
+                        </SelectItem>
+                      ))}
                     </SelectContent>
                   </Select>
                 </div>
@@ -251,7 +254,7 @@ export default function AppStore() {
         </div>
 
         {/* Enhanced Loading State */}
-        {isLoading && (
+        {loading && (
           <div className="text-center py-20">
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full blur opacity-20 animate-pulse"></div>
@@ -262,13 +265,13 @@ export default function AppStore() {
         )}
 
         {/* Enhanced Results Summary */}
-        {!isLoading && (
+        {!loading && (
           <div className="mb-8 animate-fade-in">
             <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 shadow-lg border border-white/50">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-lg text-slate-700 font-medium">
-                    Showing <span className="font-black text-blue-600 text-xl">{filteredApps.length}</span> of <span className="font-bold text-slate-800">{stats.totalApps}</span> apps
+                    Showing <span className="font-black text-blue-600 text-xl">{sortedApplications.length}</span> of <span className="font-bold text-slate-800">{stats?.total || 0}</span> apps
                     {searchTerm && (
                       <span className="ml-2 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold">
                         for "{searchTerm}"
@@ -296,14 +299,14 @@ export default function AppStore() {
         )}
 
         {/* Apps Grid/List */}
-        {!isLoading && (
+        {!loading && (
           <div className="animate-fade-in">
-            <AppGrid apps={filteredApps} viewMode={viewMode} />
+            <AppGrid apps={sortedApplications} viewMode={viewMode} />
           </div>
         )}
 
         {/* Enhanced No Results */}
-        {!isLoading && filteredApps.length === 0 && apps.length > 0 && (
+        {!loading && sortedApplications.length === 0 && (
           <div className="text-center py-20 animate-fade-in">
             <div className="relative max-w-md mx-auto">
               <div className="absolute inset-0 bg-gradient-to-r from-slate-200 to-slate-300 rounded-3xl blur-xl opacity-50"></div>
@@ -332,7 +335,7 @@ export default function AppStore() {
         )}
 
         {/* Enhanced Stats Section */}
-        {!isLoading && apps.length > 0 && (
+        {!loading && stats && (
           <div className="mt-20 animate-fade-in">
             <div className="text-center mb-12">
               <h2 className="text-3xl font-black text-slate-800 mb-4">Platform Statistics</h2>
@@ -346,7 +349,7 @@ export default function AppStore() {
                   <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform">
                     <Grid className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-4xl font-black text-slate-800 mb-2">{appTypeStats.total}</h3>
+                  <h3 className="text-4xl font-black text-slate-800 mb-2">{stats.total}</h3>
                   <p className="text-slate-600 font-semibold text-lg">Total Apps</p>
                   <div className="mt-4 h-1 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></div>
                 </div>
@@ -358,7 +361,7 @@ export default function AppStore() {
                   <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform">
                     <Sparkles className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-4xl font-black text-slate-800 mb-2">{appTypeStats.openSource}</h3>
+                  <h3 className="text-4xl font-black text-slate-800 mb-2">{stats.openSource}</h3>
                   <p className="text-slate-600 font-semibold text-lg">Free & Open Source</p>
                   <div className="mt-4 h-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full"></div>
                 </div>
@@ -370,7 +373,7 @@ export default function AppStore() {
                   <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-yellow-500 flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform">
                     <Crown className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-4xl font-black text-slate-800 mb-2">{appTypeStats.pro}</h3>
+                  <h3 className="text-4xl font-black text-slate-800 mb-2">{stats.pro}</h3>
                   <p className="text-slate-600 font-semibold text-lg">Professional Apps</p>
                   <div className="mt-4 h-1 bg-gradient-to-r from-purple-500 to-yellow-500 rounded-full"></div>
                 </div>
@@ -383,7 +386,7 @@ export default function AppStore() {
                     <Download className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-4xl font-black text-slate-800 mb-2">
-                    {stats.totalDownloads.toLocaleString()}
+                    {stats.totalDownloads?.toLocaleString()}
                   </h3>
                   <p className="text-slate-600 font-semibold text-lg">Total Downloads</p>
                   <div className="mt-4 h-1 bg-gradient-to-r from-orange-500 to-red-500 rounded-full"></div>
