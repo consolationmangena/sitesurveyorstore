@@ -1,5 +1,5 @@
 import { Search, Database, Menu } from "lucide-react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import {
   NavigationMenu,
@@ -10,13 +10,27 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
+import AuthModal from "@/components/auth/AuthModal";
+import UserMenu from "@/components/auth/UserMenu";
 import SiteSurveyorIcon from "./SiteSurveyorIcon";
 
 export default function Header({ title, subtitle, showSearch = false, onSearch }) {
   const [searchTerm, setSearchTerm] = useState("");
+  const [showAuthModal, setShowAuthModal] = useState(false);
+  const [authModalTab, setAuthModalTab] = useState('signin');
   const location = useLocation();
+  const { user, loading } = useAuth();
 
   const isActive = (path) => location.pathname === path;
+
+  // Check if user needs to authenticate based on navigation state
+  useEffect(() => {
+    if (location.state?.requireAuth && !user && !loading) {
+      setShowAuthModal(true);
+      setAuthModalTab('signin');
+    }
+  }, [location.state, user, loading]);
 
   const handleSearch = (e) => {
     const value = e.target.value;
@@ -24,6 +38,16 @@ export default function Header({ title, subtitle, showSearch = false, onSearch }
     if (onSearch) {
       onSearch(value);
     }
+  };
+
+  const handleSignInClick = () => {
+    setAuthModalTab('signin');
+    setShowAuthModal(true);
+  };
+
+  const handleSignUpClick = () => {
+    setAuthModalTab('signup');
+    setShowAuthModal(true);
   };
 
   const navLinks = [
@@ -51,107 +75,155 @@ export default function Header({ title, subtitle, showSearch = false, onSearch }
   );
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container-professional">
-        <div className="flex h-16 items-center justify-between">
-          <Link to="/" className="flex items-center space-x-3 group">
-            <div className="relative">
-              <SiteSurveyorIcon size={40} className="transition-transform duration-200 group-hover:scale-105" />
-            </div>
-            <div className="flex flex-col">
-              <h1 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
-                {title}
-              </h1>
-              <p className="text-xs text-muted-foreground font-medium">
-                {subtitle}
-              </p>
-            </div>
-          </Link>
+    <>
+      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container-professional">
+          <div className="flex h-16 items-center justify-between">
+            <Link to="/" className="flex items-center space-x-3 group">
+              <div className="relative">
+                <SiteSurveyorIcon size={40} className="transition-transform duration-200 group-hover:scale-105" />
+              </div>
+              <div className="flex flex-col">
+                <h1 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
+                  {title}
+                </h1>
+                <p className="text-xs text-muted-foreground font-medium">
+                  {subtitle}
+                </p>
+              </div>
+            </Link>
 
-          <div className="hidden md:flex flex-1 mx-8 max-w-md">
+            <div className="hidden md:flex flex-1 mx-8 max-w-md">
+              {showSearch && (
+                <div className="w-full animate-fade-in">
+                  {searchInput}
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center space-x-4">
+              <NavigationMenu className="hidden sm:flex">
+                <NavigationMenuList>
+                  {navLinks.map((link) => (
+                    <NavigationMenuItem key={link.to}>
+                      <Link
+                        to={link.to}
+                        className={`${navigationMenuTriggerStyle()} relative text-sm font-medium transition-colors hover:text-primary ${
+                          isActive(link.to) ? "text-primary" : "text-muted-foreground"
+                        }`}
+                      >
+                        {link.label}
+                        {isActive(link.to) && (
+                          <span className="absolute bottom-0 left-1/2 h-0.5 w-6 -translate-x-1/2 bg-primary rounded-full"></span>
+                        )}
+                      </Link>
+                    </NavigationMenuItem>
+                  ))}
+                </NavigationMenuList>
+              </NavigationMenu>
+
+              {/* Authentication Section */}
+              {loading ? (
+                <div className="w-8 h-8 rounded-full bg-muted animate-pulse" />
+              ) : user ? (
+                <UserMenu />
+              ) : (
+                <div className="hidden sm:flex items-center space-x-2">
+                  <Button variant="ghost" onClick={handleSignInClick}>
+                    Sign In
+                  </Button>
+                  <Button onClick={handleSignUpClick}>
+                    Sign Up
+                  </Button>
+                </div>
+              )}
+
+              {/* Mobile Menu */}
+              <Sheet>
+                <SheetTrigger asChild className="sm:hidden">
+                  <Button variant="ghost" size="icon" className="h-9 w-9">
+                    <Menu className="h-4 w-4" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-[300px] sm:w-[350px]">
+                  <div className="flex flex-col h-full">
+                    <div className="flex-1 py-6">
+                      <nav className="flex flex-col space-y-1">
+                        {navLinks.map((link) => (
+                          <SheetClose asChild key={link.to}>
+                            <Link
+                              to={link.to}
+                              className={`flex items-center py-3 px-3 text-sm font-medium rounded-lg transition-colors ${
+                                isActive(link.to)
+                                  ? "bg-accent text-accent-foreground"
+                                  : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                              }`}
+                            >
+                              {link.label}
+                            </Link>
+                          </SheetClose>
+                        ))}
+                      </nav>
+                      
+                      {/* Mobile Auth Buttons */}
+                      {!user && (
+                        <div className="mt-6 space-y-2">
+                          <SheetClose asChild>
+                            <Button 
+                              variant="outline" 
+                              className="w-full"
+                              onClick={handleSignInClick}
+                            >
+                              Sign In
+                            </Button>
+                          </SheetClose>
+                          <SheetClose asChild>
+                            <Button 
+                              className="w-full"
+                              onClick={handleSignUpClick}
+                            >
+                              Sign Up
+                            </Button>
+                          </SheetClose>
+                        </div>
+                      )}
+                    </div>
+                    <div className="border-t border-border pt-4">
+                      <div className="flex items-center space-x-2 px-3 py-2 text-xs text-muted-foreground">
+                        <Database className="h-3 w-3" />
+                        <span>Apache 2.0 Licensed • Open Source</span>
+                      </div>
+                    </div>
+                  </div>
+                </SheetContent>
+              </Sheet>
+              
+              <div className="hidden lg:flex items-center">
+                <div className="flex items-center space-x-2 px-3 py-1.5 text-xs text-muted-foreground bg-muted/50 rounded-full border">
+                  <Database className="h-3 w-3" />
+                  <span>Apache 2.0 Licensed</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile Search */}
+          <div className="md:hidden pb-4 border-b border-border/40">
             {showSearch && (
-              <div className="w-full animate-fade-in">
+              <div className="animate-slide-up">
                 {searchInput}
               </div>
             )}
           </div>
-
-          <div className="flex items-center space-x-4">
-            <NavigationMenu className="hidden sm:flex">
-              <NavigationMenuList>
-                {navLinks.map((link) => (
-                  <NavigationMenuItem key={link.to}>
-                    <Link
-                      to={link.to}
-                      className={`${navigationMenuTriggerStyle()} relative text-sm font-medium transition-colors hover:text-primary ${
-                        isActive(link.to) ? "text-primary" : "text-muted-foreground"
-                      }`}
-                    >
-                      {link.label}
-                      {isActive(link.to) && (
-                        <span className="absolute bottom-0 left-1/2 h-0.5 w-6 -translate-x-1/2 bg-primary rounded-full"></span>
-                      )}
-                    </Link>
-                  </NavigationMenuItem>
-                ))}
-              </NavigationMenuList>
-            </NavigationMenu>
-
-            {/* Mobile Menu */}
-            <Sheet>
-              <SheetTrigger asChild className="sm:hidden">
-                <Button variant="ghost" size="icon" className="h-9 w-9">
-                  <Menu className="h-4 w-4" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-[300px] sm:w-[350px]">
-                <div className="flex flex-col h-full">
-                  <div className="flex-1 py-6">
-                    <nav className="flex flex-col space-y-1">
-                      {navLinks.map((link) => (
-                        <SheetClose asChild key={link.to}>
-                          <Link
-                            to={link.to}
-                            className={`flex items-center py-3 px-3 text-sm font-medium rounded-lg transition-colors ${
-                              isActive(link.to)
-                                ? "bg-accent text-accent-foreground"
-                                : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
-                            }`}
-                          >
-                            {link.label}
-                          </Link>
-                        </SheetClose>
-                      ))}
-                    </nav>
-                  </div>
-                  <div className="border-t border-border pt-4">
-                    <div className="flex items-center space-x-2 px-3 py-2 text-xs text-muted-foreground">
-                      <Database className="h-3 w-3" />
-                      <span>Apache 2.0 Licensed • Open Source</span>
-                    </div>
-                  </div>
-                </div>
-              </SheetContent>
-            </Sheet>
-            
-            <div className="hidden lg:flex items-center">
-              <div className="flex items-center space-x-2 px-3 py-1.5 text-xs text-muted-foreground bg-muted/50 rounded-full border">
-                <Database className="h-3 w-3" />
-                <span>Apache 2.0 Licensed</span>
-              </div>
-            </div>
-          </div>
         </div>
+      </header>
 
-        {/* Mobile Search */}
-        <div className="md:hidden pb-4 border-b border-border/40">
-          {showSearch && (
-            <div className="animate-slide-up">
-              {searchInput}
-            </div>
-          )}
-        </div>
-      </div>
-    </header>
+      {/* Auth Modal */}
+      <AuthModal 
+        isOpen={showAuthModal} 
+        onClose={() => setShowAuthModal(false)}
+        defaultTab={authModalTab}
+      />
+    </>
   );
 }

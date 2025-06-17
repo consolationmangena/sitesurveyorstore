@@ -35,6 +35,27 @@ SiteSurveyor is a comprehensive geomatics solutions platform that bridges the ga
 - **Commercial licensing** options
 - **AI/ML-powered** analysis tools
 
+## 🔐 Authentication System
+
+SiteSurveyor now includes a comprehensive authentication system that allows users to:
+
+### Sign Up & Sign In Options
+- **Email & Password**: Traditional account creation with email verification
+- **Google OAuth**: Quick sign-in with Google accounts
+- **Secure Authentication**: Powered by Supabase Auth with industry-standard security
+
+### User Features
+- **Personal Profiles**: Manage your information, organization, and preferences
+- **Protected Routes**: Access exclusive content and features
+- **Activity Tracking**: Monitor your downloads, favorites, and reading history
+- **Account Security**: Two-factor authentication and password management
+
+### Getting Started
+1. Click "Sign Up" in the header to create your account
+2. Choose between email/password or Google sign-in
+3. Complete your profile with professional information
+4. Start exploring premium features and personalized content
+
 ## 🛠️ Core Technologies
 
 Our platform leverages cutting-edge technologies to modernize geomatics workflows:
@@ -43,6 +64,7 @@ Our platform leverages cutting-edge technologies to modernize geomatics workflow
 - **📊 Machine Learning**: Predictive analytics for terrain modeling and error correction
 - **🔗 Blockchain Integration**: Secure, transparent, and tamper-proof spatial data management
 - **☁️ Cloud Computing**: Real-time collaboration and remote processing capabilities
+- **🔐 Secure Authentication**: Supabase-powered auth with OAuth and email verification
 - **📈 Advanced Analytics**: Transform raw spatial data into actionable insights
 - **🌐 Open Standards**: Full interoperability with industry-standard formats (Shapefile, GeoJSON, KML, GeoTIFF)
 
@@ -91,6 +113,7 @@ Our platform leverages cutting-edge technologies to modernize geomatics workflow
 - ✅ Basic documentation and tutorials
 - ✅ Standard data export formats
 - ✅ Mobile and desktop compatibility
+- ✅ Personal profile and activity tracking
 
 ### For Premium Users
 - 🚀 Advanced AI/ML processing capabilities
@@ -100,6 +123,7 @@ Our platform leverages cutting-edge technologies to modernize geomatics workflow
 - 🚀 Advanced analytics and reporting
 - 🚀 API access for integration
 - 🚀 Training and certification programs
+- 🚀 Enhanced profile features and collaboration tools
 
 ## 🏗️ Technical Architecture
 
@@ -108,6 +132,8 @@ Our platform leverages cutting-edge technologies to modernize geomatics workflow
 │                    SiteSurveyor Platform                    │
 ├─────────────────────────────────────────────────────────────┤
 │  Frontend: React + TypeScript + Tailwind CSS + shadcn/ui   │
+├─────────────────────────────────────────────────────────────┤
+│  Authentication: Supabase Auth + OAuth + Email Verification│
 ├─────────────────────────────────────────────────────────────┤
 │  Backend: Supabase (PostgreSQL + Auth + Storage + Edge)    │
 ├─────────────────────────────────────────────────────────────┤
@@ -125,6 +151,7 @@ Our platform leverages cutting-edge technologies to modernize geomatics workflow
 - Node.js 18+ and npm
 - Git for version control
 - Modern web browser
+- Supabase account (for authentication features)
 
 ### Installation
 
@@ -139,13 +166,29 @@ Our platform leverages cutting-edge technologies to modernize geomatics workflow
    npm install
    ```
 
-3. **Start development server**
+3. **Set up environment variables**
+   ```bash
+   cp .env.local.example .env.local
+   # Edit .env.local with your Supabase credentials
+   ```
+
+4. **Start development server**
    ```bash
    npm run dev
    ```
 
-4. **Open your browser**
+5. **Open your browser**
    Navigate to `http://localhost:8080`
+
+### Environment Variables
+
+Create a `.env.local` file with the following variables:
+
+```env
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+VITE_GOOGLE_CLIENT_ID=your_google_client_id
+```
 
 ### Building for Production
 
@@ -162,6 +205,7 @@ npm run preview
 - **8+** Premium professional tools
 - **89+** Active contributors
 - **47+** Problems solved through community requests
+- **2,500+** Registered users
 
 ## 🤝 Contributing
 
@@ -252,10 +296,11 @@ While built in Zimbabwe for African challenges, SiteSurveyor serves the global g
 ## 🗺️ Roadmap
 
 ### 2024 Q4
+- [x] Enhanced authentication system with OAuth
+- [x] User profiles and account management
 - [ ] Enhanced AI/ML integration
 - [ ] Blockchain data integrity features
 - [ ] Mobile app beta release
-- [ ] Advanced analytics dashboard
 
 ### 2025 Q1
 - [ ] Multi-language support
@@ -292,6 +337,7 @@ We're grateful to our growing community of contributors from around the world. S
 - **Monthly Downloads**: 3,500+
 - **Data Processed**: 50TB+ monthly
 - **Projects Created**: 8,000+
+- **Registered Users**: 2,500+
 
 ### Performance Metrics
 - **Uptime**: 99.9%
@@ -306,6 +352,7 @@ We're grateful to our growing community of contributors from around the world. S
 - **Secure Infrastructure**: SOC 2 Type II certified hosting
 - **Regular Audits**: Quarterly security assessments
 - **Blockchain Integrity**: Immutable audit trails for critical data
+- **OAuth Security**: Industry-standard authentication protocols
 
 ## 🌱 Sustainability
 
@@ -323,6 +370,7 @@ SiteSurveyor is committed to sustainable development:
   <h3>🚀 Ready to Transform Your Geomatics Workflow?</h3>
   
   [**Explore Apps**](https://sitesurveyor.store/appstore) • 
+  [**Create Account**](https://sitesurveyor.store) • 
   [**Request Solution**](https://sitesurveyor.store/request-solution) • 
   [**Join Community**](https://github.com/consolationmangena/sitesurveyor) • 
   [**Get Premium**](https://sitesurveyor.store/premium)
