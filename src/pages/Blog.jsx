@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 const BLOG_POSTS = [
   {
@@ -320,10 +321,12 @@ export default function Blog() {
                       ))}
                     </div>
                     
-                    <Button className="w-full rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 shadow-lg hover:shadow-xl hover:scale-105 transition-all">
-                      Read Full Article
-                      <ArrowRight className="w-4 h-4 ml-2" />
-                    </Button>
+                    <Link to={`/blog/${post.id}`}>
+                      <Button className="w-full rounded-2xl bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 shadow-lg hover:shadow-xl hover:scale-105 transition-all">
+                        Read Full Article
+                        <ArrowRight className="w-4 h-4 ml-2" />
+                      </Button>
+                    </Link>
                   </CardContent>
                 </Card>
               ))}
@@ -420,10 +423,12 @@ export default function Blog() {
                     )}
                   </div>
                   
-                  <Button variant="outline" className="w-full rounded-xl border-2 hover:bg-blue-50 hover:border-blue-300 font-bold transition-all group-hover:scale-105">
-                    Read More
-                    <ChevronRight className="w-4 h-4 ml-2" />
-                  </Button>
+                  <Link to={`/blog/${post.id}`}>
+                    <Button variant="outline" className="w-full rounded-xl border-2 hover:bg-blue-50 hover:border-blue-300 font-bold transition-all group-hover:scale-105">
+                      Read More
+                      <ChevronRight className="w-4 h-4 ml-2" />
+                    </Button>
+                  </Link>
                 </CardContent>
               </Card>
             ))}
