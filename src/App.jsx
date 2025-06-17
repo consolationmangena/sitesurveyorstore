@@ -1,6 +1,5 @@
 import React from 'react'
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
-import { isSupabaseConfigured } from './lib/supabase'
 import Header from './components/Header'
 import Footer from './components/Footer'
 import Index from './pages/Index'
@@ -11,15 +10,9 @@ import Blog from './pages/Blog'
 import BlogPost from './pages/BlogPost'
 import RequestSolution from './pages/RequestSolution'
 import NotFound from './pages/NotFound'
-import SetupGuide from './components/SetupGuide'
 import { Toaster } from './components/ui/sonner'
 
 function App() {
-  // Show setup guide if Supabase is not configured
-  if (!isSupabaseConfigured) {
-    return <SetupGuide />
-  }
-
   return (
     <Router basename="/sitesurveyor">
       <div className="min-h-screen bg-gray-50 flex flex-col">
