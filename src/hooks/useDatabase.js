@@ -78,18 +78,29 @@ export const useBlogPosts = (filters = {}) => {
   return { posts, loading, error }
 }
 
-// Hook for single blog post
-export const useBlogPost = (id) => {
+// Hook for single blog post - supports both ID and slug
+export const useBlogPost = (identifier) => {
   const [post, setPost] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
 
   useEffect(() => {
-    if (!id) return
+    if (!identifier) return
 
     const fetchPost = async () => {
       setLoading(true)
-      const { data, error } = await db.getBlogPost(id)
+      
+      let result
+      // Check if identifier is a UUID (for ID) or a slug
+      const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(identifier)
+      
+      if (isUUID) {
+        result = await db.getBlogPost(identifier)
+      } else {
+        result = await db.getBlogPostBySlug(identifier)
+      }
+      
+      const { data, error } = result
       
       if (error) {
         setError(error)
@@ -104,7 +115,7 @@ export const useBlogPost = (id) => {
     }
 
     fetchPost()
-  }, [id])
+  }, [identifier])
 
   return { post, loading, error }
 }
