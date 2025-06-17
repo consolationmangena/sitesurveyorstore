@@ -1,6 +1,6 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import { Book, Users, Building2, Github, MapPin, Code, GraduationCap, Briefcase, Heart, Star, Globe, Zap } from "lucide-react";
+import { Book, Users, Building2, Github, MapPin, Code, GraduationCap, Briefcase, Heart, Star, Globe, Zap, Shield, Clock } from "lucide-react";
 
 export default function About() {
   return (
@@ -48,7 +48,7 @@ export default function About() {
                 <div className="relative">
                   <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-indigo-600/20"></div>
                   <img 
-                    src="/home/project/public/profile.jpg" 
+                    src="/profile.jpg" 
                     alt="Consolation Mangena - Founder of SiteSurveyor"
                     className="w-full h-full object-cover min-h-[400px] lg:min-h-[500px]"
                   />
@@ -117,11 +117,13 @@ export default function About() {
               <div className="grid lg:grid-cols-2 gap-0">
                 {/* Company Logo */}
                 <div className="relative bg-black flex items-center justify-center p-12">
-                  <img 
-                    src="/2eb1f296-ca21-4ac5-ac54-c2265cf51cbb.png" 
-                    alt="EINEVA Solutions Logo"
-                    className="max-w-full max-h-64 object-contain"
-                  />
+                  <div className="text-center">
+                    <div className="w-32 h-32 rounded-full bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center mx-auto mb-6 shadow-2xl">
+                      <span className="text-4xl font-black text-white">E</span>
+                    </div>
+                    <h3 className="text-3xl font-black text-white mb-2">EINEVA</h3>
+                    <p className="text-red-400 font-bold">Solutions Beyond Expectations</p>
+                  </div>
                 </div>
                 
                 {/* Company Content */}
