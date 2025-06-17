@@ -5,7 +5,7 @@
   
   **Empowering Africa's Geomatics Professionals with Innovative Digital Tools**
   
-  [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
+  [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
   [![GitHub Stars](https://img.shields.io/github/stars/consolationmangena/sitesurveyor?style=social)](https://github.com/consolationmangena/sitesurveyor)
   [![Live Demo](https://img.shields.io/badge/Live-Demo-green.svg)](https://sitesurveyor.store)
   [![Contributors Welcome](https://img.shields.io/badge/Contributors-Welcome-orange.svg)](CONTRIBUTING.md)
@@ -24,7 +24,7 @@
 SiteSurveyor is a comprehensive geomatics solutions platform that bridges the gap between expensive proprietary software and the needs of African professionals. Our ecosystem includes:
 
 ### 🆓 **Open Source Applications**
-- **Free forever** under MIT License
+- **Free forever** under Apache 2.0 License
 - Full source code access
 - Community-driven development
 - Perfect for students, small firms, and NGOs
@@ -189,9 +189,10 @@ See our [Contributing Guide](CONTRIBUTING.md) for detailed instructions.
 ## 📄 Licensing
 
 ### Open Source Components
-- **License**: MIT License
+- **License**: Apache License 2.0
 - **Freedom**: Use, modify, and distribute freely
-- **Commercial Use**: Allowed without restrictions
+- **Commercial Use**: Allowed with proper attribution
+- **Patent Protection**: Includes patent grant from contributors
 
 ### Premium Components
 - **License**: Commercial License
@@ -331,4 +332,4 @@ SiteSurveyor is committed to sustainable development:
 
 ---
 
-*© 2024 SiteSurveyor. Licensed under MIT License for open-source components. Premium features available under commercial license.*
+*© 2024 SiteSurveyor. Licensed under Apache License 2.0 for open-source components. Premium features available under commercial license.*
