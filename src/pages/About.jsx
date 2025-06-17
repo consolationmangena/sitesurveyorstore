@@ -285,7 +285,7 @@ export default function About() {
               Building the Future of Geomatics Technology
             </p>
             <p className="text-slate-600">
-              MIT Licensed • Open Source • Community Driven • Made with ❤️ in Africa
+              Apache 2.0 Licensed • Open Source • Community Driven • Made with ❤️ in Africa
             </p>
           </div>
         </div>

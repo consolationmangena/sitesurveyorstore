@@ -1,4 +1,3 @@
-
 export default function Footer() {
   return (
     <footer className="border-t border-slate-200/50 bg-white/50 backdrop-blur-sm">
@@ -14,7 +13,7 @@ export default function Footer() {
               GitHub
             </a>
             <span className="text-slate-400">•</span>
-            <span className="text-slate-600">MIT License</span>
+            <span className="text-slate-600">Apache 2.0 License</span>
             <span className="text-slate-400">•</span>
             <span className="text-slate-600">Open Source</span>
           </div>
