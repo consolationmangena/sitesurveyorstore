@@ -28,22 +28,22 @@ export default function Header({ title, subtitle, showSearch = false, onSearch }
 
   const navLinks = [
     { to: "/", label: "Home" },
-    { to: "/appstore", label: "App Store" },
-    { to: "/blog", label: "Blog" },
+    { to: "/appstore", label: "Applications" },
+    { to: "/blog", label: "Insights" },
     { to: "/about", label: "About" },
-    { to: "/request-solution", label: "Request" }
+    { to: "/request-solution", label: "Solutions" }
   ];
 
   const searchInput = (
     <div className="relative w-full">
-      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4">
-        <Search className="text-slate-400 w-5 h-5" aria-hidden="true" />
+      <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
+        <Search className="text-muted-foreground w-4 h-4" aria-hidden="true" />
       </div>
       <input
-        className="block w-full rounded-full border-0 py-3 pl-12 pr-4 text-slate-900 ring-1 ring-inset ring-slate-200 placeholder:text-slate-400 focus:ring-2 focus:ring-inset focus:ring-blue-500 bg-white/80 backdrop-blur-sm sm:text-sm"
+        className="block w-full rounded-lg border border-input bg-background py-2.5 pl-10 pr-3 text-sm text-foreground ring-offset-background placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
         type="search"
-        placeholder="Search apps and tools..."
-        aria-label="Search for apps"
+        placeholder="Search applications and resources..."
+        aria-label="Search for applications"
         value={searchTerm}
         onChange={handleSearch}
       />
@@ -51,49 +51,46 @@ export default function Header({ title, subtitle, showSearch = false, onSearch }
   );
 
   return (
-    <header className="sticky top-0 z-50 bg-white/95 backdrop-blur-lg border-b border-slate-200/80 supports-[backdrop-filter]:bg-white/60">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container-professional">
         <div className="flex h-16 items-center justify-between">
-          <Link to="/" className="flex items-center gap-4 group">
+          <Link to="/" className="flex items-center space-x-3 group">
             <div className="relative">
-              <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl blur opacity-30 group-hover:opacity-60 transition duration-300"></div>
-              <div className="relative group-hover:scale-105 transition-transform duration-300">
-                <SiteSurveyorIcon size={48} className="drop-shadow-lg" />
-              </div>
+              <SiteSurveyorIcon size={40} className="transition-transform duration-200 group-hover:scale-105" />
             </div>
             <div className="flex flex-col">
-              <h1 className="text-2xl sm:text-3xl font-black bg-gradient-to-r from-blue-600 via-indigo-600 to-blue-600 bg-clip-text text-transparent bg-[length:200%_auto] group-hover:bg-right transition-all duration-500 ease-in-out">
+              <h1 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
                 {title}
               </h1>
-              <p className="text-sm text-slate-600 font-medium group-hover:text-blue-600 transition-colors">
+              <p className="text-xs text-muted-foreground font-medium">
                 {subtitle}
               </p>
             </div>
           </Link>
 
-          <div className="hidden md:flex flex-1 mx-8 max-w-lg">
+          <div className="hidden md:flex flex-1 mx-8 max-w-md">
             {showSearch && (
-              <div className="w-full animate-in fade-in-0 zoom-in-95 duration-200">
+              <div className="w-full animate-fade-in">
                 {searchInput}
               </div>
             )}
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center space-x-4">
             <NavigationMenu className="hidden sm:flex">
               <NavigationMenuList>
                 {navLinks.map((link) => (
                   <NavigationMenuItem key={link.to}>
                     <Link
                       to={link.to}
-                      className={`${navigationMenuTriggerStyle()} group relative overflow-hidden ${
-                        isActive(link.to) ? "text-blue-600" : ""
+                      className={`${navigationMenuTriggerStyle()} relative text-sm font-medium transition-colors hover:text-primary ${
+                        isActive(link.to) ? "text-primary" : "text-muted-foreground"
                       }`}
                     >
                       {link.label}
-                      <span className={`absolute bottom-0 left-0 h-0.5 bg-blue-600 transition-all ${
-                        isActive(link.to) ? "w-full" : "w-0 group-hover:w-full"
-                      }`}></span>
+                      {isActive(link.to) && (
+                        <span className="absolute bottom-0 left-1/2 h-0.5 w-6 -translate-x-1/2 bg-primary rounded-full"></span>
+                      )}
                     </Link>
                   </NavigationMenuItem>
                 ))}
@@ -103,61 +100,53 @@ export default function Header({ title, subtitle, showSearch = false, onSearch }
             {/* Mobile Menu */}
             <Sheet>
               <SheetTrigger asChild className="sm:hidden">
-                <Button variant="ghost" size="icon">
-                  <Menu className="h-5 w-5" />
+                <Button variant="ghost" size="icon" className="h-9 w-9">
+                  <Menu className="h-4 w-4" />
                 </Button>
               </SheetTrigger>
-              <SheetContent side="right" className="w-[80vw] sm:w-[350px]">
+              <SheetContent side="right" className="w-[300px] sm:w-[350px]">
                 <div className="flex flex-col h-full">
-                  <div className="flex-1">
-                    <div className="flex items-center mb-6">
-                      <span className="text-lg font-semibold">Navigation</span>
-                    </div>
-                    <nav className="flex flex-col space-y-3">
+                  <div className="flex-1 py-6">
+                    <nav className="flex flex-col space-y-1">
                       {navLinks.map((link) => (
                         <SheetClose asChild key={link.to}>
                           <Link
                             to={link.to}
-                            className={`group flex items-center py-2 text-base font-medium ${
+                            className={`flex items-center py-3 px-3 text-sm font-medium rounded-lg transition-colors ${
                               isActive(link.to)
-                                ? "text-blue-600"
-                                : "text-slate-700 hover:text-blue-600"
-                            } transition-colors`}
+                                ? "bg-accent text-accent-foreground"
+                                : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                            }`}
                           >
-                            <span className="relative">
-                              {link.label}
-                              <span className={`absolute -bottom-0.5 left-0 h-0.5 bg-blue-600 transition-all ${
-                                isActive(link.to) ? "w-full" : "w-0 group-hover:w-full"
-                              }`}></span>
-                            </span>
+                            {link.label}
                           </Link>
                         </SheetClose>
                       ))}
                     </nav>
                   </div>
-                  <div className="border-t border-slate-200 pt-4">
-                    <span className="inline-flex items-center gap-x-1.5 rounded-full px-3 py-1.5 text-sm font-medium text-blue-600 ring-1 ring-inset ring-blue-200 bg-blue-50">
-                      <Database className="h-4 w-4" aria-hidden="true" />
-                      Open Source • Apache 2.0 Licensed
-                    </span>
+                  <div className="border-t border-border pt-4">
+                    <div className="flex items-center space-x-2 px-3 py-2 text-xs text-muted-foreground">
+                      <Database className="h-3 w-3" />
+                      <span>Apache 2.0 Licensed • Open Source</span>
+                    </div>
                   </div>
                 </div>
               </SheetContent>
             </Sheet>
             
             <div className="hidden lg:flex items-center">
-              <span className="inline-flex items-center gap-x-1.5 rounded-full px-3 py-1.5 text-sm font-medium text-blue-600 ring-1 ring-inset ring-blue-200 bg-blue-50">
-                <Database className="h-4 w-4" aria-hidden="true" />
-                Open Source • Apache 2.0 Licensed
-              </span>
+              <div className="flex items-center space-x-2 px-3 py-1.5 text-xs text-muted-foreground bg-muted/50 rounded-full border">
+                <Database className="h-3 w-3" />
+                <span>Apache 2.0 Licensed</span>
+              </div>
             </div>
           </div>
         </div>
 
         {/* Mobile Search */}
-        <div className="md:hidden -mx-4 px-4 pb-4 border-b border-slate-200/80">
+        <div className="md:hidden pb-4 border-b border-border/40">
           {showSearch && (
-            <div className="animate-in slide-in-from-top duration-300">
+            <div className="animate-slide-up">
               {searchInput}
             </div>
           )}

@@ -1,27 +1,22 @@
 import React from 'react';
 
 const SiteSurveyorIcon = ({ size = 64, className = "" }) => {
-  const fontSize = size * 0.8; // Make the S about 80% of the container size
-  
   return (
     <div 
-      className={`flex items-center justify-center ${className}`}
+      className={`flex items-center justify-center rounded-lg bg-gradient-to-br from-primary to-primary/80 shadow-professional ${className}`}
       style={{ 
         width: size, 
-        height: size,
-        borderRadius: '50%',
-        background: 'linear-gradient(135deg, #3b82f6, #6366f1, #8b5cf6)',
-        border: '2px solid #1e40af'
+        height: size
       }}
     >
       <span 
         style={{ 
-          fontSize: `${fontSize}px`,
-          fontWeight: 'bold',
+          fontSize: `${size * 0.5}px`,
+          fontWeight: '600',
           color: '#ffffff',
           fontFamily: 'system-ui, -apple-system, sans-serif',
           lineHeight: 1,
-          textAlign: 'center'
+          letterSpacing: '-0.02em'
         }}
       >
         S

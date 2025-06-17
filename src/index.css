@@ -2,69 +2,68 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Colors from referenced Lovable project */
+/* Professional Color Palette */
 @layer base {
   :root {
-    --background: 249 251 253;        /* #f9fbfd */
-    --foreground: 27 36 48;           /* #1B2430 */
+    --background: 250 251 252;        /* #fafbfc - Ultra clean white */
+    --foreground: 15 23 42;           /* #0f172a - Deep professional slate */
 
-    --card: 255 255 255;              /* #fff */
-    --card-foreground: 13 37 56;      /* #0D2538 */
+    --card: 255 255 255;              /* #ffffff - Pure white */
+    --card-foreground: 15 23 42;      /* #0f172a - Deep slate */
 
     --popover: 255 255 255;
-    --popover-foreground: 13 37 56;
+    --popover-foreground: 15 23 42;
 
-    --primary: 0 89 255;              /* #0059FF */
+    --primary: 30 64 175;             /* #1e40af - Professional blue */
     --primary-foreground: 255 255 255;
 
-    --secondary: 93 225 230;          /* #5DE1E6 */
-    --secondary-foreground: 13 37 56; /* #0D2538 */
+    --secondary: 71 85 105;           /* #475569 - Sophisticated slate */
+    --secondary-foreground: 255 255 255;
 
-    --muted: 241 245 249;
-    --muted-foreground: 100 116 139;
+    --muted: 248 250 252;             /* #f8fafc - Subtle background */
+    --muted-foreground: 100 116 139;  /* #64748b - Muted text */
 
-    --accent: 255 212 60;             /* #FFD43C */
-    --accent-foreground: 27 36 48;    /* #1B2430 */
+    --accent: 59 130 246;             /* #3b82f6 - Clean blue accent */
+    --accent-foreground: 255 255 255;
 
-    --destructive: 255 59 59;         /* #FF3B3B */
+    --destructive: 220 38 38;         /* #dc2626 - Professional red */
     --destructive-foreground: 255 255 255;
 
-    --border: 226 232 240;            /* #E2E8F0 */
-    --input: 226 232 240;             /* #E2E8F0 */
-    --ring: 0 89 255;                 /* #0059FF */
+    --border: 226 232 240;            /* #e2e8f0 - Clean borders */
+    --input: 226 232 240;             /* #e2e8f0 - Input borders */
+    --ring: 30 64 175;                /* #1e40af - Focus rings */
 
-    --radius: 1rem;
+    --radius: 0.75rem;                /* More conservative radius */
   }
 
   .dark {
-    --background: 22 28 41;           /* #161C29 */
-    --foreground: 237 245 255;        /* #EDF5FF */
+    --background: 2 6 23;             /* #020617 - Deep professional dark */
+    --foreground: 248 250 252;        /* #f8fafc - Clean white text */
 
-    --card: 20 24 36;
-    --card-foreground: 237 245 255;
+    --card: 15 23 42;                 /* #0f172a - Dark card background */
+    --card-foreground: 248 250 252;
 
-    --popover: 33 39 53;
-    --popover-foreground: 237 245 255;
+    --popover: 15 23 42;
+    --popover-foreground: 248 250 252;
 
-    --primary: 93 225 230;            /* #5DE1E6 */
-    --primary-foreground: 22 28 41;
+    --primary: 59 130 246;            /* #3b82f6 - Bright blue for dark mode */
+    --primary-foreground: 15 23 42;
 
-    --secondary: 0 89 255;            /* #0059FF */
-    --secondary-foreground: 237 245 255;
+    --secondary: 51 65 85;            /* #334155 - Dark secondary */
+    --secondary-foreground: 248 250 252;
 
-    --muted: 30 41 59;
-    --muted-foreground: 148 163 184;
+    --muted: 30 41 59;                /* #1e293b - Dark muted */
+    --muted-foreground: 148 163 184;  /* #94a3b8 - Muted text */
 
-    --accent: 255 212 60;
-    --accent-foreground: 33 39 53;
+    --accent: 59 130 246;             /* #3b82f6 - Accent blue */
+    --accent-foreground: 15 23 42;
 
-    --destructive: 255 59 59;
-    --destructive-foreground: 237 245 255;
+    --destructive: 239 68 68;         /* #ef4444 - Red for dark mode */
+    --destructive-foreground: 248 250 252;
 
-    --border: 42 51 67;               /* #2A3343 */
-    --input: 42 51 67;
-    --ring: 93 225 230;
-
+    --border: 30 41 59;               /* #1e293b - Dark borders */
+    --input: 30 41 59;
+    --ring: 59 130 246;               /* #3b82f6 - Focus rings */
   }
 }
 
@@ -75,26 +74,73 @@
 
   body {
     @apply bg-background text-foreground font-sans antialiased;
+    font-feature-settings: "rlig" 1, "calt" 1;
   }
 
   h1, h2, h3, h4, h5, h6 {
-    @apply font-bold tracking-tight;
+    @apply font-semibold tracking-tight;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Professional typography */
+  .text-display {
+    @apply text-4xl font-bold tracking-tight;
+  }
+
+  .text-headline {
+    @apply text-3xl font-semibold tracking-tight;
+  }
+
+  .text-title {
+    @apply text-xl font-medium;
+  }
+
+  .text-body {
+    @apply text-base leading-relaxed;
+  }
+
+  .text-caption {
+    @apply text-sm text-muted-foreground;
   }
 }
 
 @layer utilities {
+  /* Professional animations */
   .animate-fade-in {
-    animation: fade-in 0.6s ease-out;
-  }
-  
-  .animate-scale-in {
-    animation: scale-in 0.4s ease-out;
+    animation: fade-in 0.4s ease-out;
   }
   
   .animate-slide-up {
-    animation: slide-up 0.5s ease-out;
+    animation: slide-up 0.3s ease-out;
   }
   
+  .animate-scale-in {
+    animation: scale-in 0.2s ease-out;
+  }
+
+  /* Professional shadows */
+  .shadow-professional {
+    box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  }
+
+  .shadow-professional-lg {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  }
+
+  .shadow-professional-xl {
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  }
+
+  /* Professional gradients */
+  .gradient-professional {
+    background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+  }
+
+  .gradient-professional-subtle {
+    background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
+  }
+
+  /* Clean line clamping */
   .line-clamp-2 {
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -108,23 +154,16 @@
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
-  
-  .shadow-3xl {
-    box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.25);
-  }
-  
-  .backdrop-blur-lg {
-    backdrop-filter: blur(16px);
-  }
-  
-  .backdrop-blur-xl {
-    backdrop-filter: blur(24px);
+
+  /* Professional backdrop blur */
+  .backdrop-blur-professional {
+    backdrop-filter: blur(8px);
   }
   
   @keyframes fade-in {
     from {
       opacity: 0;
-      transform: translateY(20px);
+      transform: translateY(8px);
     }
     to {
       opacity: 1;
@@ -135,7 +174,7 @@
   @keyframes scale-in {
     from {
       opacity: 0;
-      transform: scale(0.95);
+      transform: scale(0.98);
     }
     to {
       opacity: 1;
@@ -146,7 +185,7 @@
   @keyframes slide-up {
     from {
       opacity: 0;
-      transform: translateY(30px);
+      transform: translateY(12px);
     }
     to {
       opacity: 1;
@@ -155,55 +194,113 @@
   }
 }
 
-/* Custom scrollbar */
+/* Professional scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #f1f5f9;
-  border-radius: 4px;
+  background: #f8fafc;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(to bottom, #0059FF, #5DE1E6);
-  border-radius: 4px;
+  background: #cbd5e1;
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: linear-gradient(to bottom, #0047CC, #4BC5CA);
+  background: #94a3b8;
 }
 
-/* Enhanced focus styles */
-.focus-visible\:ring-4:focus-visible {
-  ring-width: 4px;
+/* Professional focus styles */
+.focus-visible\:ring-2:focus-visible {
+  ring-width: 2px;
+  ring-color: rgb(30 64 175 / 0.5);
 }
 
-/* Smooth transitions for all interactive elements */
+/* Smooth professional transitions */
 button, a, input, select {
-  transition: all 0.2s ease-in-out;
+  transition: all 0.15s ease-in-out;
 }
 
-/* Enhanced hover effects */
+/* Professional hover effects */
+.hover\:scale-102:hover {
+  transform: scale(1.02);
+}
+
 .hover\:scale-105:hover {
   transform: scale(1.05);
 }
 
-.hover\:scale-110:hover {
-  transform: scale(1.1);
+/* Professional glass effect */
+.glass-professional {
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
 }
 
-/* Glass morphism effect */
-.glass {
-  background: rgba(255, 255, 255, 0.25);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.18);
-}
-
-/* Gradient text */
-.gradient-text {
-  background: linear-gradient(135deg, #0059FF, #5DE1E6);
+/* Professional gradient text */
+.gradient-text-professional {
+  background: linear-gradient(135deg, #1e40af, #3b82f6);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
+}
+
+/* Professional button styles */
+.btn-professional {
+  @apply inline-flex items-center justify-center rounded-lg px-4 py-2 text-sm font-medium transition-colors;
+  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  @apply disabled:pointer-events-none disabled:opacity-50;
+}
+
+.btn-professional-primary {
+  @apply btn-professional bg-primary text-primary-foreground hover:bg-primary/90;
+}
+
+.btn-professional-secondary {
+  @apply btn-professional bg-secondary text-secondary-foreground hover:bg-secondary/80;
+}
+
+.btn-professional-outline {
+  @apply btn-professional border border-input bg-background hover:bg-accent hover:text-accent-foreground;
+}
+
+/* Professional card styles */
+.card-professional {
+  @apply rounded-lg border bg-card text-card-foreground shadow-professional;
+}
+
+.card-professional-hover {
+  @apply card-professional transition-all duration-200 hover:shadow-professional-lg hover:scale-102;
+}
+
+/* Professional spacing system */
+.space-professional-xs { @apply space-y-2; }
+.space-professional-sm { @apply space-y-4; }
+.space-professional-md { @apply space-y-6; }
+.space-professional-lg { @apply space-y-8; }
+.space-professional-xl { @apply space-y-12; }
+
+/* Professional layout containers */
+.container-professional {
+  @apply mx-auto max-w-7xl px-4 sm:px-6 lg:px-8;
+}
+
+.section-professional {
+  @apply py-12 sm:py-16 lg:py-20;
+}
+
+/* Professional form styles */
+.form-professional input,
+.form-professional select,
+.form-professional textarea {
+  @apply block w-full rounded-lg border border-input bg-background px-3 py-2 text-sm;
+  @apply ring-offset-background placeholder:text-muted-foreground;
+  @apply focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2;
+  @apply disabled:cursor-not-allowed disabled:opacity-50;
+}
+
+.form-professional label {
+  @apply text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70;
 }
