@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AppGrid from "@/components/AppGrid";
+import SetupGuide from "@/components/SetupGuide";
 import { Search, Filter, Grid, List, Star, Download, Clock, TrendingUp, Sparkles, Package, Users, Crown, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -14,6 +15,7 @@ export default function AppStore() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [appTypeFilter, setAppTypeFilter] = useState("all");
   const [sortBy, setSortBy] = useState("name");
+  const [showSetup, setShowSetup] = useState(false);
 
   // Database hooks
   const { categories } = useCategories();
@@ -27,6 +29,13 @@ export default function AppStore() {
   };
   
   const { applications, loading, error } = useApplications(filters);
+
+  // Show setup guide if there's a connection error
+  useEffect(() => {
+    if (error && error.message?.includes('Failed to fetch')) {
+      setShowSetup(true);
+    }
+  }, [error]);
 
   // Sort applications
   const sortedApplications = [...(applications || [])].sort((a, b) => {
@@ -54,7 +63,11 @@ export default function AppStore() {
     setSearchTerm(term);
   };
 
-  if (error) {
+  if (showSetup) {
+    return <SetupGuide onComplete={() => setShowSetup(false)} />;
+  }
+
+  if (error && !error.message?.includes('Failed to fetch')) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
         <Header title="SiteSurveyor" subtitle="Professional Geomatics Solutions" />
