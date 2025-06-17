@@ -10,8 +10,8 @@ export const signUp = async (email, password, username, fullName) => {
       password,
       options: {
         data: {
-          username,
-          full_name: fullName
+          username: username || '',
+          full_name: fullName || ''
         }
       }
     })
@@ -20,21 +20,34 @@ export const signUp = async (email, password, username, fullName) => {
       return { user: null, error: authError }
     }
 
-    // If signup successful, create profile
+    // The profile will be created automatically by the database trigger
+    // But let's also ensure it exists by trying to create it manually if needed
     if (authData.user) {
-      const { error: profileError } = await supabase
+      // Wait a moment for the trigger to execute
+      await new Promise(resolve => setTimeout(resolve, 1000))
+      
+      // Check if profile exists, if not create it
+      const { data: existingProfile } = await supabase
         .from('profiles')
-        .insert({
-          id: authData.user.id,
-          full_name: fullName || '',
-          username: username || '',
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString()
-        })
+        .select('id')
+        .eq('id', authData.user.id)
+        .single()
 
-      if (profileError) {
-        console.error('Profile creation error:', profileError)
-        // Don't return error here as auth was successful
+      if (!existingProfile) {
+        const { error: profileError } = await supabase
+          .from('profiles')
+          .insert({
+            id: authData.user.id,
+            full_name: fullName || '',
+            username: username || '',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          })
+
+        if (profileError) {
+          console.error('Profile creation error:', profileError)
+          // Don't return error here as auth was successful
+        }
       }
     }
 
@@ -51,7 +64,33 @@ export const signIn = async (email, password) => {
       password
     })
 
-    return { user: data.user, error }
+    if (error) {
+      return { user: null, error }
+    }
+
+    // Ensure profile exists for existing users
+    if (data.user) {
+      const { data: existingProfile } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('id', data.user.id)
+        .single()
+
+      if (!existingProfile) {
+        // Create profile for existing user
+        await supabase
+          .from('profiles')
+          .insert({
+            id: data.user.id,
+            username: '',
+            full_name: '',
+            created_at: new Date().toISOString(),
+            updated_at: new Date().toISOString()
+          })
+      }
+    }
+
+    return { user: data.user, error: null }
   } catch (error) {
     return { user: null, error }
   }

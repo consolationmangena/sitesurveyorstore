@@ -89,18 +89,12 @@ export default function AuthModal({ isOpen, onClose }) {
       return
     }
 
-    if (!formData.username.trim()) {
-      toast.error('Username is required')
-      setLoading(false)
-      return
-    }
-
     try {
       const { user, error } = await signUp(
         formData.email,
         formData.password,
-        formData.username,
-        formData.fullName
+        formData.username || '',
+        formData.fullName || ''
       )
       
       if (error) {
@@ -116,7 +110,7 @@ export default function AuthModal({ isOpen, onClose }) {
         })
       } else {
         toast.success('Account created successfully!', {
-          description: 'Please check your email to verify your account.'
+          description: 'Welcome to SiteSurveyor! You can now access all features.'
         })
       }
       
@@ -232,11 +226,10 @@ export default function AuthModal({ isOpen, onClose }) {
                       id="signup-username"
                       name="username"
                       type="text"
-                      placeholder="Username"
+                      placeholder="Username (optional)"
                       value={formData.username}
                       onChange={handleInputChange}
                       className="pl-10"
-                      required
                     />
                   </div>
                 </div>
@@ -247,7 +240,7 @@ export default function AuthModal({ isOpen, onClose }) {
                     id="signup-fullname"
                     name="fullName"
                     type="text"
-                    placeholder="Full Name"
+                    placeholder="Full Name (optional)"
                     value={formData.fullName}
                     onChange={handleInputChange}
                   />
