@@ -151,12 +151,7 @@ export default function AuthModal({ isOpen, onClose }) {
         <Alert className="mb-4 border-blue-200 bg-blue-50">
           <Shield className="h-4 w-4 text-blue-600" />
           <AlertDescription className="text-blue-800">
-            <strong>Admin Access:</strong> Use one of these emails for admin privileges:
-            <ul className="mt-2 space-y-1 text-sm">
-              {ADMIN_EMAILS.map(email => (
-                <li key={email} className="font-mono text-blue-700">• {email}</li>
-              ))}
-            </ul>
+            <strong>Admin Access:</strong> Use <span className="font-mono text-blue-700">admin@sitesurveyor.store</span> for admin privileges.
           </AlertDescription>
         </Alert>
 

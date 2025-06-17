@@ -84,12 +84,8 @@ export default function AdminLogin() {
             <Alert className="mb-6 border-blue-200 bg-blue-50">
               <Shield className="h-4 w-4 text-blue-600" />
               <AlertDescription className="text-blue-800">
-                <strong>Admin Emails:</strong>
-                <ul className="mt-2 space-y-1 text-sm font-mono">
-                  {ADMIN_EMAILS.map(adminEmail => (
-                    <li key={adminEmail} className="text-blue-700">• {adminEmail}</li>
-                  ))}
-                </ul>
+                <strong>Admin Email:</strong> <span className="font-mono text-blue-700">admin@sitesurveyor.store</span><br />
+                <strong>Password:</strong> <span className="font-mono text-blue-700">consolation09.</span>
               </AlertDescription>
             </Alert>
 
@@ -134,7 +130,7 @@ export default function AdminLogin() {
                   <Input
                     id="password"
                     type={showPassword ? 'text' : 'password'}
-                    placeholder="Enter your password"
+                    placeholder="consolation09."
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     className="h-12 border-2 border-slate-200 focus:border-blue-500 rounded-xl pl-10 pr-12"

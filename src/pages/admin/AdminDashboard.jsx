@@ -30,11 +30,7 @@ export default function AdminDashboard() {
 
   // Check if user is admin
   React.useEffect(() => {
-    const adminEmails = [
-      'admin@sitesurveyor.store',
-      'consolation@sitesurveyor.store',
-      'support@sitesurveyor.store'
-    ]
+    const adminEmails = ['admin@sitesurveyor.store']
     
     if (!user || !adminEmails.includes(user.email?.toLowerCase())) {
       navigate('/admin/login')
@@ -141,7 +137,7 @@ export default function AdminDashboard() {
             </div>
             <div className="flex items-center gap-2 px-4 py-2 bg-green-100 rounded-full border border-green-200">
               <Shield className="w-4 h-4 text-green-600" />
-              <span className="text-green-700 font-semibold text-sm">Admin Access</span>
+              <span className="text-green-700 font-semibold text-sm">Super Admin</span>
             </div>
           </div>
         </div>
