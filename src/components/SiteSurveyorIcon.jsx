@@ -13,7 +13,7 @@ const SiteSurveyorIcon = ({ size = 64, className = "" }) => {
       {/* Background Circle with Professional Gradient */}
       <circle cx="32" cy="32" r="30" fill="url(#backgroundGradient)" stroke="url(#borderGradient)" strokeWidth="2"/>
       
-      {/* Subtle Grid Pattern */}
+      {/* Subtle Grid Pattern for Surveying Theme */}
       <g opacity="0.1" stroke="#ffffff" strokeWidth="0.5">
         <line x1="16" y1="8" x2="16" y2="56"/>
         <line x1="24" y1="8" x2="24" y2="56"/>
@@ -25,7 +25,7 @@ const SiteSurveyorIcon = ({ size = 64, className = "" }) => {
         <line x1="8" y1="48" x2="56" y2="48"/>
       </g>
       
-      {/* GPS Satellites (Subtle) */}
+      {/* GPS/Survey Points (Subtle) */}
       <g opacity="0.3">
         <circle cx="12" cy="12" r="1.5" fill="#fbbf24"/>
         <path d="M12 12 L24 24" stroke="#fbbf24" strokeWidth="0.8" strokeDasharray="1,1"/>
@@ -37,46 +37,46 @@ const SiteSurveyorIcon = ({ size = 64, className = "" }) => {
         <path d="M48 52 L36 40" stroke="#fbbf24" strokeWidth="0.8" strokeDasharray="1,1"/>
       </g>
       
-      {/* Main Letter 'S' */}
+      {/* Main Letter 'S' - Beautifully Designed */}
       <g transform="translate(32, 32)">
         {/* S Letter Path with Professional Styling */}
-        <path d="M-12 -16 
-                 C-12 -20, -8 -24, -4 -24
-                 L8 -24
-                 C12 -24, 16 -20, 16 -16
-                 C16 -12, 12 -8, 8 -8
-                 L-4 -8
-                 C-6 -8, -8 -6, -8 -4
-                 C-8 -2, -6 0, -4 0
-                 L8 0
-                 C12 0, 16 4, 16 8
-                 C16 12, 12 16, 8 16
-                 L-8 16
-                 C-12 16, -16 12, -16 8
-                 C-16 4, -12 0, -8 0
-                 L4 0
-                 C6 0, 8 2, 8 4
-                 C8 6, 6 8, 4 8
-                 L-8 8
-                 C-12 8, -16 4, -16 0
+        <path d="M-10 -18 
+                 C-10 -22, -6 -26, -2 -26
+                 L10 -26
+                 C14 -26, 18 -22, 18 -18
+                 C18 -14, 14 -10, 10 -10
+                 L-2 -10
+                 C-4 -10, -6 -8, -6 -6
+                 C-6 -4, -4 -2, -2 -2
+                 L10 -2
+                 C14 -2, 18 2, 18 6
+                 C18 10, 14 14, 10 14
+                 L-10 14
+                 C-14 14, -18 10, -18 6
+                 C-18 2, -14 -2, -10 -2
+                 L2 -2
+                 C4 -2, 6 0, 6 2
+                 C6 4, 4 6, 2 6
+                 L-10 6
+                 C-14 6, -18 2, -18 -2
                  Z" 
               fill="url(#letterGradient)" 
               stroke="url(#letterStroke)" 
               strokeWidth="1"
               filter="url(#letterShadow)"/>
         
-        {/* Inner Highlight */}
-        <path d="M-8 -20
-                 C-8 -22, -6 -24, -4 -24
-                 L6 -24
-                 C8 -24, 10 -22, 10 -20
-                 M-4 -4
-                 C-2 -4, 0 -2, 0 0
-                 L6 0
-                 C8 0, 10 2, 10 4
-                 C10 6, 8 8, 6 8
-                 L-6 8
-                 C-8 8, -10 6, -10 4" 
+        {/* Inner Highlight for Depth */}
+        <path d="M-6 -22
+                 C-6 -24, -4 -26, -2 -26
+                 L8 -26
+                 C10 -26, 12 -24, 12 -22
+                 M-2 -6
+                 C0 -6, 2 -4, 2 -2
+                 L8 -2
+                 C10 -2, 12 0, 12 2
+                 C12 4, 10 6, 8 6
+                 L-8 6
+                 C-10 6, -12 4, -12 2" 
               fill="none" 
               stroke="rgba(255,255,255,0.4)" 
               strokeWidth="1.5" 
