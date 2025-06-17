@@ -1,4 +1,3 @@
-
 import type { Config } from "tailwindcss";
 
 // Colors copied from the referenced Lovable project.
@@ -46,6 +45,9 @@ export default {
 					DEFAULT: '#FFFFFF',          // white
 					foreground: '#0D2538'
 				},
+				input: 'hsl(var(--input))',
+				popover: 'hsl(var(--popover))',
+				'popover-foreground': 'hsl(var(--popover-foreground))',
 				ring: '#0059FF',               // primary blue ring
 				border: '#E2E8F0',             // soft border
 			},
