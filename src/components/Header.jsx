@@ -136,7 +136,7 @@ export default function Header({ title, subtitle, showSearch = false, onSearch }
                   <div className="border-t border-slate-200 pt-4">
                     <span className="inline-flex items-center gap-x-1.5 rounded-full px-3 py-1.5 text-sm font-medium text-blue-600 ring-1 ring-inset ring-blue-200 bg-blue-50">
                       <Database className="h-4 w-4" aria-hidden="true" />
-                      Open Source • MIT Licensed
+                      Open Source • Apache 2.0 Licensed
                     </span>
                   </div>
                 </div>
@@ -146,7 +146,7 @@ export default function Header({ title, subtitle, showSearch = false, onSearch }
             <div className="hidden lg:flex items-center">
               <span className="inline-flex items-center gap-x-1.5 rounded-full px-3 py-1.5 text-sm font-medium text-blue-600 ring-1 ring-inset ring-blue-200 bg-blue-50">
                 <Database className="h-4 w-4" aria-hidden="true" />
-                Open Source • MIT Licensed
+                Open Source • Apache 2.0 Licensed
               </span>
             </div>
           </div>
