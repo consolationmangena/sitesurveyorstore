@@ -1,13 +1,6 @@
 import { Search, Database, Menu } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import {
-  NavigationMenu,
-  NavigationMenuList,
-  NavigationMenuItem,
-  NavigationMenuLink,
-  navigationMenuTriggerStyle,
-} from "@/components/ui/navigation-menu";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
 import SiteSurveyorIcon from "./SiteSurveyorIcon";
@@ -77,25 +70,25 @@ export default function Header({ title, subtitle, showSearch = false, onSearch }
           </div>
 
           <div className="flex items-center space-x-4">
-            <NavigationMenu className="hidden sm:flex">
-              <NavigationMenuList>
+            {/* Desktop Navigation */}
+            <nav className="hidden sm:flex">
+              <div className="flex items-center space-x-1">
                 {navLinks.map((link) => (
-                  <NavigationMenuItem key={link.to}>
-                    <Link
-                      to={link.to}
-                      className={`${navigationMenuTriggerStyle()} relative text-sm font-medium transition-colors hover:text-primary ${
-                        isActive(link.to) ? "text-primary" : "text-muted-foreground"
-                      }`}
-                    >
-                      {link.label}
-                      {isActive(link.to) && (
-                        <span className="absolute bottom-0 left-1/2 h-0.5 w-6 -translate-x-1/2 bg-primary rounded-full"></span>
-                      )}
-                    </Link>
-                  </NavigationMenuItem>
+                  <Link
+                    key={link.to}
+                    to={link.to}
+                    className={`relative px-3 py-2 text-sm font-medium transition-colors hover:text-primary rounded-md ${
+                      isActive(link.to) ? "text-primary bg-accent" : "text-muted-foreground"
+                    }`}
+                  >
+                    {link.label}
+                    {isActive(link.to) && (
+                      <span className="absolute bottom-0 left-1/2 h-0.5 w-6 -translate-x-1/2 bg-primary rounded-full"></span>
+                    )}
+                  </Link>
                 ))}
-              </NavigationMenuList>
-            </NavigationMenu>
+              </div>
+            </nav>
 
             {/* Mobile Menu */}
             <Sheet>
