@@ -25,26 +25,11 @@ const createMockClient = () => ({
     insert: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
     update: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
     delete: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } })
-  }),
-  auth: {
-    signUp: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
-    signInWithPassword: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
-    signInWithOAuth: () => Promise.resolve({ data: null, error: { message: 'Supabase not configured' } }),
-    signOut: () => Promise.resolve({ error: null }),
-    getSession: () => Promise.resolve({ data: { session: null }, error: null }),
-    onAuthStateChange: () => ({ data: { subscription: { unsubscribe: () => {} } } })
-  }
+  })
 })
 
 export const supabase = isConfigured 
-  ? createClient(supabaseUrl, supabaseAnonKey, {
-      auth: {
-        autoRefreshToken: true,
-        persistSession: true,
-        detectSessionInUrl: true,
-        flowType: 'pkce'
-      }
-    })
+  ? createClient(supabaseUrl, supabaseAnonKey)
   : createMockClient()
 
 // Test connection function

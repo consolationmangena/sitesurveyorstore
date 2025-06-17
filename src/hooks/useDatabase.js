@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react'
-import { useAuth } from '@/contexts/AuthContext'
 import * as db from '@/lib/database'
 
 // Hook for applications
@@ -84,7 +83,6 @@ export const useBlogPost = (id) => {
   const [post, setPost] = useState(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  const { user } = useAuth()
 
   useEffect(() => {
     if (!id) return
@@ -97,16 +95,16 @@ export const useBlogPost = (id) => {
         setError(error)
       } else {
         setPost(data)
-        // Track view
+        // Track view without user
         if (data) {
-          await db.trackBlogView(data.id, user?.id)
+          await db.trackBlogView(data.id)
         }
       }
       setLoading(false)
     }
 
     fetchPost()
-  }, [id, user?.id])
+  }, [id])
 
   return { post, loading, error }
 }
@@ -134,90 +132,6 @@ export const useCategories = () => {
   }, [])
 
   return { categories, loading, error }
-}
-
-// Hook for user profile
-export const useProfile = () => {
-  const { user } = useAuth()
-  const [profile, setProfile] = useState(null)
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-
-  useEffect(() => {
-    if (!user?.id) {
-      setLoading(false)
-      return
-    }
-
-    const fetchProfile = async () => {
-      setLoading(true)
-      const { data, error } = await db.getProfile(user.id)
-      
-      if (error && error.code !== 'PGRST116') { // Not found error
-        setError(error)
-      } else {
-        setProfile(data)
-      }
-      setLoading(false)
-    }
-
-    fetchProfile()
-  }, [user?.id])
-
-  const updateProfile = async (updates) => {
-    if (!user?.id) return { error: 'No user logged in' }
-
-    const { data, error } = await db.updateProfile(user.id, updates)
-    if (!error) {
-      setProfile(data)
-    }
-    return { data, error }
-  }
-
-  return { profile, loading, error, updateProfile }
-}
-
-// Hook for user favorites
-export const useFavorites = () => {
-  const { user } = useAuth()
-  const [favorites, setFavorites] = useState([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState(null)
-
-  useEffect(() => {
-    if (!user?.id) {
-      setLoading(false)
-      return
-    }
-
-    const fetchFavorites = async () => {
-      setLoading(true)
-      const { data, error } = await db.getUserFavorites(user.id)
-      
-      if (error) {
-        setError(error)
-      } else {
-        setFavorites(data || [])
-      }
-      setLoading(false)
-    }
-
-    fetchFavorites()
-  }, [user?.id])
-
-  const toggleFavorite = async (appId) => {
-    if (!user?.id) return { error: 'Not authenticated' }
-
-    const { favorited, error } = await db.toggleAppFavorite(appId, user.id)
-    if (!error) {
-      // Refresh favorites
-      const { data } = await db.getUserFavorites(user.id)
-      setFavorites(data || [])
-    }
-    return { favorited, error }
-  }
-
-  return { favorites, loading, error, toggleFavorite }
 }
 
 // Hook for app statistics

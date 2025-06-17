@@ -1,20 +1,18 @@
 import React from "react";
 import { useForm } from "react-hook-form";
-import { toast } from "@/hooks/use-toast";
+import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { Lightbulb, Send, Sparkles, CheckCircle } from "lucide-react";
-import { useAuth } from "@/contexts/AuthContext";
 import * as db from "@/lib/database";
 
 export default function RequestSolutionForm() {
   const [selectedCategory, setSelectedCategory] = useState("");
   const [selectedUrgency, setSelectedUrgency] = useState("");
   const [characterCount, setCharacterCount] = useState(0);
-  const { user } = useAuth();
   
   const {
     register,
@@ -47,10 +45,9 @@ export default function RequestSolutionForm() {
   ];
 
   const onSubmit = async (data) => {
-    // Build the enhanced solution request object
+    // Build the solution request object
     const submission = {
-      user_id: user?.id || null,
-      email: data.email || user?.email || null,
+      email: data.email,
       problem: data.problem,
       category: selectedCategory,
       urgency: selectedUrgency,
@@ -64,20 +61,8 @@ export default function RequestSolutionForm() {
       if (error) {
         throw error;
       }
-
-      // Track user activity if logged in
-      if (user?.id) {
-        await db.trackUserActivity(
-          user.id, 
-          'solution_request_created', 
-          'solution_request', 
-          result.id,
-          { category: selectedCategory, urgency: selectedUrgency }
-        );
-      }
       
-      toast({
-        title: "🎉 Thank you for sharing!",
+      toast.success("🎉 Thank you for sharing!", {
         description: "Your challenge has been recorded and will be reviewed by our community. We'll be in touch if we need more details!",
         duration: 6000,
       });
@@ -88,11 +73,9 @@ export default function RequestSolutionForm() {
       setCharacterCount(0);
     } catch (error) {
       console.error("Error saving request:", error);
-      toast({
-        title: "Oops! Something went wrong",
+      toast.error("Oops! Something went wrong", {
         description: "There was a problem submitting your request. Please try again in a moment.",
         duration: 5000,
-        variant: "destructive"
       });
     }
   };
@@ -103,20 +86,17 @@ export default function RequestSolutionForm() {
       <div className="grid md:grid-cols-2 gap-4">
         <div>
           <label htmlFor="email" className="block text-sm font-bold mb-2 text-slate-800">
-            Your Email {!user && <span className="text-red-600">*</span>}
-            {user && <span className="text-slate-500 font-normal">(from your account)</span>}
+            Your Email <span className="text-red-600">*</span>
           </label>
           <Input
             id="email"
             type="email"
-            placeholder={user?.email || "you@example.com"}
-            defaultValue={user?.email || ""}
+            placeholder="you@example.com"
             className="bg-white border-2 border-slate-300 text-slate-800 placeholder:text-slate-500 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 rounded-xl"
-            {...register("email", { required: !user })}
-            disabled={!!user}
+            {...register("email", { required: true })}
           />
           <p className="text-xs text-slate-600 mt-1">
-            {user ? "Using your account email" : "We'll only contact you if we need clarification"}
+            We'll only contact you if we need clarification
           </p>
         </div>
         

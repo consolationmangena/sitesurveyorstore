@@ -1,38 +1,5 @@
 import { supabase } from './supabase'
 
-// ==================== PROFILES ====================
-
-export const getProfile = async (userId) => {
-  const { data, error } = await supabase
-    .from('profiles')
-    .select('*')
-    .eq('id', userId)
-    .single()
-  
-  return { data, error }
-}
-
-export const updateProfile = async (userId, updates) => {
-  const { data, error } = await supabase
-    .from('profiles')
-    .update(updates)
-    .eq('id', userId)
-    .select()
-    .single()
-  
-  return { data, error }
-}
-
-export const createProfile = async (profile) => {
-  const { data, error } = await supabase
-    .from('profiles')
-    .insert(profile)
-    .select()
-    .single()
-  
-  return { data, error }
-}
-
 // ==================== APPLICATIONS ====================
 
 export const getApplications = async (filters = {}) => {
@@ -97,14 +64,14 @@ export const incrementAppDownloads = async (appId) => {
   return { data, error }
 }
 
-export const trackAppDownload = async (appId, userId = null) => {
+export const trackAppDownload = async (appId, userEmail = null) => {
   const downloadData = {
     app_id: appId,
     downloaded_at: new Date().toISOString()
   }
 
-  if (userId) {
-    downloadData.user_id = userId
+  if (userEmail) {
+    downloadData.user_email = userEmail
   }
 
   const { data, error } = await supabase
@@ -185,14 +152,14 @@ export const incrementBlogViews = async (postId) => {
   return { data, error }
 }
 
-export const trackBlogView = async (postId, userId = null) => {
+export const trackBlogView = async (postId, userEmail = null) => {
   const viewData = {
     post_id: postId,
     viewed_at: new Date().toISOString()
   }
 
-  if (userId) {
-    viewData.user_id = userId
+  if (userEmail) {
+    viewData.user_email = userEmail
   }
 
   const { data, error } = await supabase
@@ -203,51 +170,6 @@ export const trackBlogView = async (postId, userId = null) => {
   await incrementBlogViews(postId)
   
   return { data, error }
-}
-
-export const toggleBlogLike = async (postId, userId) => {
-  // Check if user already liked this post
-  const { data: existingLike } = await supabase
-    .from('blog_likes')
-    .select('id')
-    .eq('post_id', postId)
-    .eq('user_id', userId)
-    .single()
-
-  if (existingLike) {
-    // Unlike the post
-    const { error } = await supabase
-      .from('blog_likes')
-      .delete()
-      .eq('post_id', postId)
-      .eq('user_id', userId)
-    
-    if (!error) {
-      await supabase.rpc('decrement_blog_likes', { post_id: postId })
-    }
-    
-    return { liked: false, error }
-  } else {
-    // Like the post
-    const { error } = await supabase
-      .from('blog_likes')
-      .insert({ post_id: postId, user_id: userId })
-    
-    if (!error) {
-      await supabase.rpc('increment_blog_likes', { post_id: postId })
-    }
-    
-    return { liked: true, error }
-  }
-}
-
-export const getUserBlogLikes = async (userId) => {
-  const { data, error } = await supabase
-    .from('blog_likes')
-    .select('post_id')
-    .eq('user_id', userId)
-  
-  return { data: data?.map(like => like.post_id) || [], error }
 }
 
 // ==================== SOLUTION REQUESTS ====================
@@ -278,75 +200,6 @@ export const getSolutionRequests = async (filters = {}) => {
 
   const { data, error } = await query
   return { data, error }
-}
-
-// ==================== USER ACTIVITY ====================
-
-export const trackUserActivity = async (userId, activityType, resourceType = null, resourceId = null, metadata = {}) => {
-  const { data, error } = await supabase
-    .from('user_activity')
-    .insert({
-      user_id: userId,
-      activity_type: activityType,
-      resource_type: resourceType,
-      resource_id: resourceId,
-      metadata
-    })
-  
-  return { data, error }
-}
-
-export const getUserActivity = async (userId, limit = 50) => {
-  const { data, error } = await supabase
-    .from('user_activity')
-    .select('*')
-    .eq('user_id', userId)
-    .order('created_at', { ascending: false })
-    .limit(limit)
-  
-  return { data, error }
-}
-
-// ==================== FAVORITES ====================
-
-export const toggleAppFavorite = async (appId, userId) => {
-  // Check if user already favorited this app
-  const { data: existingFavorite } = await supabase
-    .from('app_favorites')
-    .select('id')
-    .eq('app_id', appId)
-    .eq('user_id', userId)
-    .single()
-
-  if (existingFavorite) {
-    // Remove from favorites
-    const { error } = await supabase
-      .from('app_favorites')
-      .delete()
-      .eq('app_id', appId)
-      .eq('user_id', userId)
-    
-    return { favorited: false, error }
-  } else {
-    // Add to favorites
-    const { error } = await supabase
-      .from('app_favorites')
-      .insert({ app_id: appId, user_id: userId })
-    
-    return { favorited: true, error }
-  }
-}
-
-export const getUserFavorites = async (userId) => {
-  const { data, error } = await supabase
-    .from('app_favorites')
-    .select(`
-      app_id,
-      applications (*)
-    `)
-    .eq('user_id', userId)
-  
-  return { data: data?.map(fav => fav.applications) || [], error }
 }
 
 // ==================== STATISTICS ====================
