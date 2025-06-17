@@ -4,9 +4,11 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
+import { Alert, AlertDescription } from '@/components/ui/alert'
 import { toast } from 'sonner'
 import { signIn, signUp } from '@/lib/auth'
-import { Eye, EyeOff, Mail, User, Lock, UserPlus, LogIn } from 'lucide-react'
+import { Eye, EyeOff, Mail, User, Lock, UserPlus, LogIn, Shield, Info } from 'lucide-react'
+import { ADMIN_EMAILS } from '@/lib/adminEmails'
 
 export default function AuthModal({ isOpen, onClose }) {
   const [loading, setLoading] = useState(false)
@@ -26,6 +28,10 @@ export default function AuthModal({ isOpen, onClose }) {
     }))
   }
 
+  const isAdminEmail = (email) => {
+    return ADMIN_EMAILS.includes(email.toLowerCase())
+  }
+
   const handleSignIn = async (e) => {
     e.preventDefault()
     setLoading(true)
@@ -40,9 +46,15 @@ export default function AuthModal({ isOpen, onClose }) {
         return
       }
 
-      toast.success('Welcome back!', {
-        description: 'You have successfully signed in.'
-      })
+      if (isAdminEmail(formData.email)) {
+        toast.success('Welcome Admin!', {
+          description: 'You have admin privileges. Access the admin panel at /admin/login'
+        })
+      } else {
+        toast.success('Welcome back!', {
+          description: 'You have successfully signed in.'
+        })
+      }
       
       onClose()
       setFormData({
@@ -99,9 +111,15 @@ export default function AuthModal({ isOpen, onClose }) {
         return
       }
 
-      toast.success('Account created successfully!', {
-        description: 'Please check your email to verify your account.'
-      })
+      if (isAdminEmail(formData.email)) {
+        toast.success('Admin account created successfully!', {
+          description: 'You now have admin privileges. Access the admin panel at /admin/login'
+        })
+      } else {
+        toast.success('Account created successfully!', {
+          description: 'Please check your email to verify your account.'
+        })
+      }
       
       onClose()
       setFormData({
@@ -128,6 +146,19 @@ export default function AuthModal({ isOpen, onClose }) {
             Welcome to SiteSurveyor
           </DialogTitle>
         </DialogHeader>
+
+        {/* Admin Email Info */}
+        <Alert className="mb-4 border-blue-200 bg-blue-50">
+          <Shield className="h-4 w-4 text-blue-600" />
+          <AlertDescription className="text-blue-800">
+            <strong>Admin Access:</strong> Use one of these emails for admin privileges:
+            <ul className="mt-2 space-y-1 text-sm">
+              {ADMIN_EMAILS.map(email => (
+                <li key={email} className="font-mono text-blue-700">• {email}</li>
+              ))}
+            </ul>
+          </AlertDescription>
+        </Alert>
 
         <Tabs defaultValue="signin" className="w-full">
           <TabsList className="grid w-full grid-cols-2">
@@ -157,7 +188,15 @@ export default function AuthModal({ isOpen, onClose }) {
                     className="pl-10"
                     required
                   />
+                  {isAdminEmail(formData.email) && (
+                    <Shield className="absolute right-3 top-3 h-4 w-4 text-blue-600" />
+                  )}
                 </div>
+                {isAdminEmail(formData.email) && (
+                  <p className="text-xs text-blue-600 font-medium">
+                    ✓ Admin email detected - you'll have admin privileges
+                  </p>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -243,7 +282,15 @@ export default function AuthModal({ isOpen, onClose }) {
                     className="pl-10"
                     required
                   />
+                  {isAdminEmail(formData.email) && (
+                    <Shield className="absolute right-3 top-3 h-4 w-4 text-blue-600" />
+                  )}
                 </div>
+                {isAdminEmail(formData.email) && (
+                  <p className="text-xs text-blue-600 font-medium">
+                    ✓ Admin email detected - you'll have admin privileges
+                  </p>
+                )}
               </div>
 
               <div className="space-y-2">

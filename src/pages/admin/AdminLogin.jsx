@@ -5,10 +5,11 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Alert, AlertDescription } from '@/components/ui/alert'
-import { Shield, Eye, EyeOff } from 'lucide-react'
+import { Shield, Eye, EyeOff, Mail, Lock } from 'lucide-react'
 import { toast } from 'sonner'
 import { signIn } from '@/lib/auth'
 import { useAuth } from '@/contexts/AuthContext'
+import { isAdminUser, ADMIN_EMAILS } from '@/lib/adminEmails'
 
 export default function AdminLogin() {
   const [email, setEmail] = useState('')
@@ -24,16 +25,6 @@ export default function AdminLogin() {
       navigate('/admin/dashboard')
     }
   }, [user, navigate])
-
-  const isAdminUser = (email) => {
-    // Define admin emails - in production, this should be stored in database
-    const adminEmails = [
-      'admin@sitesurveyor.store',
-      'consolation@sitesurveyor.store',
-      'support@sitesurveyor.store'
-    ]
-    return adminEmails.includes(email?.toLowerCase())
-  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -90,10 +81,15 @@ export default function AdminLogin() {
           </CardHeader>
 
           <CardContent>
-            <Alert className="mb-6 border-amber-200 bg-amber-50">
-              <Shield className="h-4 w-4 text-amber-600" />
-              <AlertDescription className="text-amber-800 font-medium">
-                This area is restricted to authorized administrators only.
+            <Alert className="mb-6 border-blue-200 bg-blue-50">
+              <Shield className="h-4 w-4 text-blue-600" />
+              <AlertDescription className="text-blue-800">
+                <strong>Admin Emails:</strong>
+                <ul className="mt-2 space-y-1 text-sm font-mono">
+                  {ADMIN_EMAILS.map(adminEmail => (
+                    <li key={adminEmail} className="text-blue-700">• {adminEmail}</li>
+                  ))}
+                </ul>
               </AlertDescription>
             </Alert>
 
@@ -102,15 +98,31 @@ export default function AdminLogin() {
                 <Label htmlFor="email" className="text-slate-700 font-semibold">
                   Admin Email
                 </Label>
-                <Input
-                  id="email"
-                  type="email"
-                  placeholder="admin@sitesurveyor.store"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="h-12 border-2 border-slate-200 focus:border-blue-500 rounded-xl"
-                  required
-                />
+                <div className="relative">
+                  <Mail className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="admin@sitesurveyor.store"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="h-12 border-2 border-slate-200 focus:border-blue-500 rounded-xl pl-10"
+                    required
+                  />
+                  {isAdminUser(email) && (
+                    <Shield className="absolute right-3 top-3 h-4 w-4 text-green-600" />
+                  )}
+                </div>
+                {email && !isAdminUser(email) && (
+                  <p className="text-xs text-red-600">
+                    This email does not have admin privileges
+                  </p>
+                )}
+                {isAdminUser(email) && (
+                  <p className="text-xs text-green-600 font-medium">
+                    ✓ Valid admin email
+                  </p>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -118,13 +130,14 @@ export default function AdminLogin() {
                   Password
                 </Label>
                 <div className="relative">
+                  <Lock className="absolute left-3 top-3 h-4 w-4 text-muted-foreground" />
                   <Input
                     id="password"
                     type={showPassword ? 'text' : 'password'}
                     placeholder="Enter your password"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="h-12 border-2 border-slate-200 focus:border-blue-500 rounded-xl pr-12"
+                    className="h-12 border-2 border-slate-200 focus:border-blue-500 rounded-xl pl-10 pr-12"
                     required
                   />
                   <Button
@@ -146,7 +159,7 @@ export default function AdminLogin() {
               <Button
                 type="submit"
                 className="w-full h-12 bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold rounded-xl shadow-lg hover:shadow-xl transition-all"
-                disabled={loading}
+                disabled={loading || !isAdminUser(email)}
               >
                 {loading ? (
                   <div className="flex items-center gap-2">
