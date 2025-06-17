@@ -6,7 +6,7 @@ import { Label } from '@/components/ui/label'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { toast } from 'sonner'
 import { signIn, signUp } from '@/lib/auth'
-import { Eye, EyeOff, Mail, User, Lock, UserPlus, LogIn, Shield } from 'lucide-react'
+import { Eye, EyeOff, Mail, User, Lock, UserPlus, LogIn, Shield, AlertCircle } from 'lucide-react'
 import { ADMIN_EMAILS } from '@/lib/adminEmails'
 
 export default function AuthModal({ isOpen, onClose }) {
@@ -35,35 +35,46 @@ export default function AuthModal({ isOpen, onClose }) {
     e.preventDefault()
     setLoading(true)
 
+    // Basic validation
+    if (!formData.email.trim() || !formData.password) {
+      toast.error('Please enter both email and password')
+      setLoading(false)
+      return
+    }
+
     try {
-      const { user, error } = await signIn(formData.email, formData.password)
+      const { user, error } = await signIn(formData.email.trim(), formData.password)
       
       if (error) {
+        console.error('Sign in error:', error)
         toast.error('Sign in failed', {
-          description: error.message
+          description: error.message || 'Please check your credentials and try again.'
         })
         return
       }
 
-      if (isAdminEmail(formData.email)) {
-        toast.success('Welcome Admin!', {
-          description: 'You have admin privileges. Access the admin panel at /admin/login'
-        })
-      } else {
-        toast.success('Welcome back!', {
-          description: 'You have successfully signed in.'
+      if (user) {
+        if (isAdminEmail(formData.email)) {
+          toast.success('Welcome Admin!', {
+            description: 'You have admin privileges. Access the admin panel at /admin/login'
+          })
+        } else {
+          toast.success('Welcome back!', {
+            description: 'You have successfully signed in.'
+          })
+        }
+        
+        onClose()
+        setFormData({
+          email: '',
+          password: '',
+          username: '',
+          fullName: '',
+          confirmPassword: ''
         })
       }
-      
-      onClose()
-      setFormData({
-        email: '',
-        password: '',
-        username: '',
-        fullName: '',
-        confirmPassword: ''
-      })
     } catch (error) {
+      console.error('Sign in catch error:', error)
       toast.error('An error occurred', {
         description: 'Please try again later.'
       })
@@ -77,6 +88,12 @@ export default function AuthModal({ isOpen, onClose }) {
     setLoading(true)
 
     // Validation
+    if (!formData.email.trim() || !formData.password) {
+      toast.error('Email and password are required')
+      setLoading(false)
+      return
+    }
+
     if (formData.password !== formData.confirmPassword) {
       toast.error('Passwords do not match')
       setLoading(false)
@@ -91,38 +108,42 @@ export default function AuthModal({ isOpen, onClose }) {
 
     try {
       const { user, error } = await signUp(
-        formData.email,
+        formData.email.trim(),
         formData.password,
         formData.username || '',
         formData.fullName || ''
       )
       
       if (error) {
+        console.error('Sign up error:', error)
         toast.error('Sign up failed', {
-          description: error.message
+          description: error.message || 'Please try again.'
         })
         return
       }
 
-      if (isAdminEmail(formData.email)) {
-        toast.success('Admin account created successfully!', {
-          description: 'You now have admin privileges. Access the admin panel at /admin/login'
-        })
-      } else {
-        toast.success('Account created successfully!', {
-          description: 'Welcome to SiteSurveyor! You can now access all features.'
+      if (user) {
+        if (isAdminEmail(formData.email)) {
+          toast.success('Admin account created successfully!', {
+            description: 'You now have admin privileges. Access the admin panel at /admin/login'
+          })
+        } else {
+          toast.success('Account created successfully!', {
+            description: 'Welcome to SiteSurveyor! You can now access all features.'
+          })
+        }
+        
+        onClose()
+        setFormData({
+          email: '',
+          password: '',
+          username: '',
+          fullName: '',
+          confirmPassword: ''
         })
       }
-      
-      onClose()
-      setFormData({
-        email: '',
-        password: '',
-        username: '',
-        fullName: '',
-        confirmPassword: ''
-      })
     } catch (error) {
+      console.error('Sign up catch error:', error)
       toast.error('An error occurred', {
         description: 'Please try again later.'
       })
@@ -167,6 +188,7 @@ export default function AuthModal({ isOpen, onClose }) {
                     onChange={handleInputChange}
                     className="pl-10"
                     required
+                    autoComplete="email"
                   />
                   {isAdminEmail(formData.email) && (
                     <Shield className="absolute right-3 top-3 h-4 w-4 text-blue-600" />
@@ -192,6 +214,7 @@ export default function AuthModal({ isOpen, onClose }) {
                     onChange={handleInputChange}
                     className="pl-10 pr-10"
                     required
+                    autoComplete="current-password"
                   />
                   <Button
                     type="button"
@@ -209,8 +232,27 @@ export default function AuthModal({ isOpen, onClose }) {
                 </div>
               </div>
 
+              {/* Demo credentials notice */}
+              <div className="bg-blue-50 border border-blue-200 rounded-lg p-3">
+                <div className="flex items-start gap-2">
+                  <AlertCircle className="w-4 h-4 text-blue-600 mt-0.5 flex-shrink-0" />
+                  <div className="text-xs text-blue-800">
+                    <p className="font-semibold mb-1">Demo Credentials:</p>
+                    <p><strong>Admin:</strong> admin@sitesurveyor.store / consolation09.</p>
+                    <p><strong>User:</strong> Create a new account or use any valid email</p>
+                  </div>
+                </div>
+              </div>
+
               <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? 'Signing in...' : 'Sign In'}
+                {loading ? (
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    Signing in...
+                  </div>
+                ) : (
+                  'Sign In'
+                )}
               </Button>
             </form>
           </TabsContent>
@@ -260,6 +302,7 @@ export default function AuthModal({ isOpen, onClose }) {
                     onChange={handleInputChange}
                     className="pl-10"
                     required
+                    autoComplete="email"
                   />
                   {isAdminEmail(formData.email) && (
                     <Shield className="absolute right-3 top-3 h-4 w-4 text-blue-600" />
@@ -280,11 +323,12 @@ export default function AuthModal({ isOpen, onClose }) {
                     id="signup-password"
                     name="password"
                     type={showPassword ? 'text' : 'password'}
-                    placeholder="Create password"
+                    placeholder="Create password (min 6 characters)"
                     value={formData.password}
                     onChange={handleInputChange}
                     className="pl-10 pr-10"
                     required
+                    autoComplete="new-password"
                   />
                   <Button
                     type="button"
@@ -315,12 +359,20 @@ export default function AuthModal({ isOpen, onClose }) {
                     onChange={handleInputChange}
                     className="pl-10"
                     required
+                    autoComplete="new-password"
                   />
                 </div>
               </div>
 
               <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? 'Creating account...' : 'Create Account'}
+                {loading ? (
+                  <div className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin"></div>
+                    Creating account...
+                  </div>
+                ) : (
+                  'Create Account'
+                )}
               </Button>
             </form>
           </TabsContent>

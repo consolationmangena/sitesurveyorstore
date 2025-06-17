@@ -18,7 +18,19 @@ if (!isConfigured) {
   console.warn('3. Restart the development server')
 }
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey)
+// Create Supabase client with additional options for better error handling
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true
+  },
+  global: {
+    headers: {
+      'X-Client-Info': 'sitesurveyor-web'
+    }
+  }
+})
 
 // Test connection function
 export const testConnection = async () => {
@@ -28,11 +40,17 @@ export const testConnection = async () => {
   }
 
   try {
-    const { data, error } = await supabase.from('categories').select('count').limit(1)
+    // Test with a simple query that should work
+    const { data, error } = await supabase
+      .from('categories')
+      .select('count')
+      .limit(1)
+    
     if (error) {
       console.error('❌ Supabase connection test failed:', error.message)
       return false
     }
+    
     console.log('✅ Supabase connection successful!')
     return true
   } catch (error) {

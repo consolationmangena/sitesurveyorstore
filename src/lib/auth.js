@@ -17,6 +17,7 @@ export const signUp = async (email, password, username, fullName) => {
     })
 
     if (authError) {
+      console.error('Signup auth error:', authError)
       return { user: null, error: authError }
     }
 
@@ -61,40 +62,77 @@ export const signUp = async (email, password, username, fullName) => {
 
 export const signIn = async (email, password) => {
   try {
+    // Validate inputs
+    if (!email || !password) {
+      return { 
+        user: null, 
+        error: { message: 'Email and password are required' }
+      }
+    }
+
+    // Trim whitespace from email
+    const trimmedEmail = email.trim()
+
+    console.log('Attempting sign in for:', trimmedEmail)
+
     const { data, error } = await supabase.auth.signInWithPassword({
-      email,
-      password
+      email: trimmedEmail,
+      password: password
     })
 
     if (error) {
-      return { user: null, error }
+      console.error('Sign in error:', error)
+      
+      // Provide more user-friendly error messages
+      let userMessage = error.message
+      if (error.message.includes('Invalid login credentials')) {
+        userMessage = 'Invalid email or password. Please check your credentials and try again.'
+      } else if (error.message.includes('Email not confirmed')) {
+        userMessage = 'Please check your email and click the confirmation link before signing in.'
+      } else if (error.message.includes('Too many requests')) {
+        userMessage = 'Too many sign-in attempts. Please wait a moment and try again.'
+      }
+      
+      return { 
+        user: null, 
+        error: { ...error, message: userMessage }
+      }
     }
 
     // Ensure profile exists for existing users
     if (data.user) {
-      const { data: existingProfile, error: profileCheckError } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('id', data.user.id)
-        .single()
-
-      if (profileCheckError && profileCheckError.code === 'PGRST116') {
-        // Profile doesn't exist, create it for existing user
-        await supabase
+      try {
+        const { data: existingProfile, error: profileCheckError } = await supabase
           .from('profiles')
-          .insert({
-            id: data.user.id,
-            username: '',
-            full_name: '',
-            created_at: new Date().toISOString(),
-            updated_at: new Date().toISOString()
-          })
+          .select('id')
+          .eq('id', data.user.id)
+          .single()
+
+        if (profileCheckError && profileCheckError.code === 'PGRST116') {
+          // Profile doesn't exist, create it for existing user
+          await supabase
+            .from('profiles')
+            .insert({
+              id: data.user.id,
+              username: '',
+              full_name: '',
+              created_at: new Date().toISOString(),
+              updated_at: new Date().toISOString()
+            })
+        }
+      } catch (profileError) {
+        console.error('Profile check/creation error:', profileError)
+        // Don't fail sign-in if profile creation fails
       }
     }
 
     return { user: data.user, error: null }
   } catch (error) {
-    return { user: null, error }
+    console.error('Sign in catch error:', error)
+    return { 
+      user: null, 
+      error: { message: 'An unexpected error occurred. Please try again.' }
+    }
   }
 }
 
