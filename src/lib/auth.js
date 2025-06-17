@@ -20,20 +20,21 @@ export const signUp = async (email, password, username, fullName) => {
       return { user: null, error: authError }
     }
 
-    // The profile will be created automatically by the database trigger
-    // But let's also ensure it exists by trying to create it manually if needed
+    // The profile should be created automatically by the database trigger
+    // But let's add a small delay and check if it was created
     if (authData.user) {
       // Wait a moment for the trigger to execute
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      await new Promise(resolve => setTimeout(resolve, 1500))
       
-      // Check if profile exists, if not create it
-      const { data: existingProfile } = await supabase
+      // Check if profile exists, if not create it manually
+      const { data: existingProfile, error: profileCheckError } = await supabase
         .from('profiles')
         .select('id')
         .eq('id', authData.user.id)
         .single()
 
-      if (!existingProfile) {
+      if (profileCheckError && profileCheckError.code === 'PGRST116') {
+        // Profile doesn't exist, create it manually
         const { error: profileError } = await supabase
           .from('profiles')
           .insert({
@@ -45,7 +46,7 @@ export const signUp = async (email, password, username, fullName) => {
           })
 
         if (profileError) {
-          console.error('Profile creation error:', profileError)
+          console.error('Manual profile creation error:', profileError)
           // Don't return error here as auth was successful
         }
       }
@@ -53,6 +54,7 @@ export const signUp = async (email, password, username, fullName) => {
 
     return { user: authData.user, error: null }
   } catch (error) {
+    console.error('Signup error:', error)
     return { user: null, error }
   }
 }
@@ -70,14 +72,14 @@ export const signIn = async (email, password) => {
 
     // Ensure profile exists for existing users
     if (data.user) {
-      const { data: existingProfile } = await supabase
+      const { data: existingProfile, error: profileCheckError } = await supabase
         .from('profiles')
         .select('id')
         .eq('id', data.user.id)
         .single()
 
-      if (!existingProfile) {
-        // Create profile for existing user
+      if (profileCheckError && profileCheckError.code === 'PGRST116') {
+        // Profile doesn't exist, create it for existing user
         await supabase
           .from('profiles')
           .insert({
