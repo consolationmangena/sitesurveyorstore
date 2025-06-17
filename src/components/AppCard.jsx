@@ -4,7 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
 import { Link } from "react-router-dom";
 
-export default function AppCard({ app, viewMode = "grid" }) {
+export default function AppCard({ app }) {
   const [isLiked, setIsLiked] = useState(false);
   const [downloadCount, setDownloadCount] = useState(app.download_count || 0);
 
@@ -17,14 +17,12 @@ export default function AppCard({ app, viewMode = "grid" }) {
   };
 
   const handleDownload = () => {
-    // Simulate download count increase
     setDownloadCount(prev => prev + 1);
     console.log(`Downloading ${app.name}...`);
     
     if (app.app_type === 'open_source') {
       window.open(app.repo_url, '_blank');
     } else {
-      // For pro apps, redirect to purchase/trial page
       window.open(app.homepage_url, '_blank');
     }
   };
@@ -46,163 +44,6 @@ export default function AppCard({ app, viewMode = "grid" }) {
   const isPro = app.app_type === 'pro';
   const isOpenSource = app.app_type === 'open_source';
 
-  if (viewMode === "list") {
-    return (
-      <Link to={`/app/${app.id}`}>
-        <div className="group relative">
-          <div className={`absolute inset-0 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
-            isPro ? 'bg-gradient-to-r from-purple-500/10 to-yellow-500/10' : 'bg-gradient-to-r from-blue-500/10 to-indigo-500/10'
-          }`}></div>
-          <div className={`relative bg-white/95 backdrop-blur-lg rounded-3xl shadow-xl border hover:shadow-2xl transition-all duration-300 p-8 group-hover:scale-[1.02] ${
-            isPro ? 'border-purple-200 hover:border-purple-300' : 'border-white/50 hover:border-blue-200'
-          }`}>
-            <div className="flex items-center gap-8">
-              {/* Enhanced Icon with Pro Badge */}
-              <div className="relative flex-shrink-0">
-                <div className={`absolute inset-0 rounded-3xl blur opacity-30 group-hover:opacity-50 transition-opacity ${
-                  isPro ? 'bg-gradient-to-br from-purple-600 to-yellow-600' : 'bg-gradient-to-br from-blue-600 to-indigo-600'
-                }`}></div>
-                <div className={`relative w-20 h-20 rounded-3xl flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300 ${
-                  isPro ? 'bg-gradient-to-br from-purple-600 to-yellow-600' : 'bg-gradient-to-br from-blue-600 to-indigo-600'
-                }`}>
-                  <span className="text-3xl text-white">
-                    {getIconEmoji(app.icon)}
-                  </span>
-                </div>
-                {isPro && (
-                  <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-600 flex items-center justify-center shadow-lg">
-                    <Crown className="w-4 h-4 text-white" />
-                  </div>
-                )}
-              </div>
-
-              {/* Enhanced Content */}
-              <div className="flex-1 min-w-0">
-                <div className="flex items-start justify-between gap-6">
-                  <div className="flex-1 min-w-0">
-                    <div className="flex items-center gap-3 mb-3">
-                      <h3 className={`text-2xl font-black truncate group-hover:transition-colors ${
-                        isPro ? 'text-slate-800 group-hover:text-purple-600' : 'text-slate-800 group-hover:text-blue-600'
-                      }`}>
-                        {app.name}
-                      </h3>
-                      {isPro && (
-                        <Badge className="bg-gradient-to-r from-purple-600 to-yellow-600 text-white border-0 font-bold">
-                          PRO
-                        </Badge>
-                      )}
-                      {isOpenSource && (
-                        <Badge variant="outline" className="border-green-500 text-green-700 font-bold">
-                          OPEN SOURCE
-                        </Badge>
-                      )}
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={handleLike}
-                        className={`rounded-full p-2 transition-all hover:scale-110 ${isLiked ? 'text-red-500 hover:text-red-600' : 'text-slate-400 hover:text-red-500'}`}
-                      >
-                        <Heart className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`} />
-                      </Button>
-                    </div>
-                    <p className="text-slate-600 font-medium mb-4 line-clamp-2 text-lg leading-relaxed">
-                      {app.description}
-                    </p>
-                    
-                    {/* Pricing Information */}
-                    <div className="flex items-center gap-4 mb-4">
-                      {isPro ? (
-                        <div className="flex items-center gap-2">
-                          <span className="text-3xl font-black text-purple-600">
-                            ${app.price}
-                          </span>
-                          <span className="text-slate-500 font-medium">USD</span>
-                          {app.trial_available && (
-                            <Badge variant="outline" className="border-green-500 text-green-700 font-bold">
-                              {app.trial_days}-Day Trial
-                            </Badge>
-                          )}
-                        </div>
-                      ) : (
-                        <div className="flex items-center gap-2">
-                          <span className="text-2xl font-black text-green-600">FREE</span>
-                          <Badge variant="outline" className="border-green-500 text-green-700 font-bold">
-                            Open Source
-                          </Badge>
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="flex items-center gap-6 text-sm text-slate-500">
-                      {app.author && (
-                        <span className="font-semibold">by {app.author}</span>
-                      )}
-                      {app.version && (
-                        <Badge variant="outline" className="text-xs font-bold border-2">
-                          v{app.version}
-                        </Badge>
-                      )}
-                      <div className="flex items-center gap-2">
-                        <Calendar className="w-4 h-4" />
-                        <span className="font-medium">{formatDate(app.updated_at)}</span>
-                      </div>
-                      <div className="flex items-center gap-2">
-                        <Download className="w-4 h-4" />
-                        <span className="font-bold text-green-600">{downloadCount}</span>
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Enhanced Actions */}
-                  <div className="flex items-center gap-3 flex-shrink-0">
-                    <Button
-                      onClick={handleDownload}
-                      className={`rounded-2xl px-8 py-3 hover:scale-105 transition-all shadow-lg hover:shadow-xl font-bold ${
-                        isPro 
-                          ? 'bg-gradient-to-r from-purple-600 to-yellow-600 hover:from-purple-700 hover:to-yellow-700 text-white'
-                          : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white'
-                      }`}
-                    >
-                      {isPro ? (
-                        <>
-                          <Crown className="w-5 h-5 mr-2" />
-                          {app.trial_available ? 'Start Trial' : 'Buy Now'}
-                        </>
-                      ) : (
-                        <>
-                          <Download className="w-5 h-5 mr-2" />
-                          Get Free
-                        </>
-                      )}
-                    </Button>
-                  </div>
-                </div>
-
-                {/* Enhanced Tags */}
-                {app.tags && app.tags.length > 0 && (
-                  <div className="flex items-center gap-3 mt-4 flex-wrap">
-                    <Tag className="w-4 h-4 text-slate-400" />
-                    {app.tags.slice(0, 4).map((tag, index) => (
-                      <Badge key={index} variant="secondary" className="text-xs hover:bg-blue-100 cursor-pointer transition-colors rounded-full px-3 py-1 font-semibold">
-                        {tag}
-                      </Badge>
-                    ))}
-                    {app.tags.length > 4 && (
-                      <Badge variant="outline" className="text-xs rounded-full px-3 py-1 font-semibold">
-                        +{app.tags.length - 4} more
-                      </Badge>
-                    )}
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </Link>
-    );
-  }
-
-  // Enhanced Grid view
   return (
     <Link to={`/app/${app.id}`}>
       <div className="group relative h-full">
@@ -213,7 +54,7 @@ export default function AppCard({ app, viewMode = "grid" }) {
           isPro ? 'border-purple-200 hover:border-purple-300' : 'border-white/50 hover:border-blue-300'
         }`}>
           <div className="p-8 flex-1 flex flex-col">
-            {/* Enhanced Header */}
+            {/* Header */}
             <div className="flex items-center gap-5 mb-6">
               <div className="relative">
                 <div className={`absolute inset-0 rounded-2xl blur opacity-30 group-hover:opacity-50 transition-opacity ${
@@ -295,7 +136,7 @@ export default function AppCard({ app, viewMode = "grid" }) {
               )}
             </div>
 
-            {/* Enhanced Description */}
+            {/* Description */}
             <p className="text-slate-600 font-medium mb-6 line-clamp-3 min-h-[4.5rem] leading-relaxed flex-1">
               {app.description}
             </p>
@@ -323,7 +164,7 @@ export default function AppCard({ app, viewMode = "grid" }) {
               </div>
             )}
 
-            {/* Enhanced Metadata */}
+            {/* Metadata */}
             <div className="space-y-4 mb-6">
               <div className="flex items-center justify-between text-sm">
                 <div className="flex items-center gap-2 px-3 py-2 bg-green-50 rounded-full border border-green-200">
@@ -338,9 +179,9 @@ export default function AppCard({ app, viewMode = "grid" }) {
                 )}
               </div>
               
-              {app.author && (
+              {app.author_name && (
                 <div className="text-sm text-slate-500">
-                  <span className="font-semibold">by {app.author}</span>
+                  <span className="font-semibold">by {app.author_name}</span>
                 </div>
               )}
 
@@ -350,7 +191,7 @@ export default function AppCard({ app, viewMode = "grid" }) {
               </div>
             </div>
 
-            {/* Enhanced Tags */}
+            {/* Tags */}
             {app.tags && app.tags.length > 0 && (
               <div className="flex flex-wrap gap-2 mb-6">
                 {app.tags.slice(0, 3).map((tag, index) => (
@@ -366,7 +207,7 @@ export default function AppCard({ app, viewMode = "grid" }) {
               </div>
             )}
 
-            {/* Enhanced Actions */}
+            {/* Actions */}
             <div className="flex gap-3 mt-auto">
               <Button
                 onClick={handleDownload}
@@ -400,7 +241,7 @@ export default function AppCard({ app, viewMode = "grid" }) {
               )}
             </div>
 
-            {/* Enhanced License */}
+            {/* License */}
             {app.license && (
               <div className="mt-4 pt-4 border-t border-slate-200">
                 <p className="text-xs text-slate-500 text-center font-medium">

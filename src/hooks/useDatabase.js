@@ -23,7 +23,7 @@ export const useApplications = (filters = {}) => {
     fetchApplications()
   }, [JSON.stringify(filters)])
 
-  return { applications, loading, error, refetch: () => fetchApplications() }
+  return { applications, loading, error }
 }
 
 // Hook for single application

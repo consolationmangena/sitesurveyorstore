@@ -4,24 +4,30 @@ import { Star, Download, ExternalLink, Github, Calendar, Tag, User2, Crown, Zap,
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import appsData from "@/data/apps.json";
-
-const getAppById = (id) => appsData.apps.find(a => String(a.id) === String(id));
+import { useApplication } from "@/hooks/useDatabase";
 
 export default function AppDetail() {
   const { id } = useParams();
-  const [app, setApp] = useState(null);
+  const { application: app, loading, error } = useApplication(id);
 
-  useEffect(() => {
-    const found = getAppById(id);
-    setApp(found || null);
-  }, [id]);
-
-  if (!app) {
+  if (loading) {
     return (
-      <div className="text-center p-16">
-        <h2 className="text-3xl font-bold text-slate-700 mb-6">App Not Found</h2>
-        <Link to="/appstore" className="text-blue-600 underline hover:text-blue-800">Back to App Store</Link>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+          <div className="animate-spin rounded-full h-16 w-16 border-4 border-slate-200 border-t-blue-600 mx-auto mb-4"></div>
+          <p className="text-xl text-slate-600">Loading application...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error || !app) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-16 text-center">
+          <h2 className="text-3xl font-bold text-slate-700 mb-6">App Not Found</h2>
+          <Link to="/appstore" className="text-blue-600 underline hover:text-blue-800">Back to App Store</Link>
+        </div>
       </div>
     );
   }
@@ -45,7 +51,7 @@ export default function AppDetail() {
         <div className={`bg-white/95 rounded-3xl shadow-2xl border p-8 mb-8 animate-fade-in ${
           isPro ? 'border-purple-200' : 'border-slate-200'
         }`}>
-          {/* Enhanced Header */}
+          {/* Header */}
           <div className="flex gap-6 items-start mb-6">
             <div className="relative">
               <div className={`w-20 h-20 rounded-3xl flex items-center justify-center text-4xl shadow-xl ${
@@ -105,7 +111,7 @@ export default function AppDetail() {
               <div className="flex gap-4 text-sm text-slate-500 mb-4">
                 <span className="flex items-center gap-1">
                   <User2 className="w-4 h-4" />
-                  <span className="font-medium">{app.author || "Unknown developer"}</span>
+                  <span className="font-medium">{app.author_name || "Unknown developer"}</span>
                 </span>
                 <span className="flex items-center gap-1">
                   <Calendar className="w-4 h-4" />
@@ -120,7 +126,7 @@ export default function AppDetail() {
               <span className={`inline-block px-4 py-2 rounded-full text-sm font-bold ${
                 isPro ? 'bg-purple-100 text-purple-800' : 'bg-blue-100 text-blue-800'
               }`}>
-                {app.category}
+                {app.categories?.name || 'Uncategorized'}
               </span>
             </div>
           </div>
@@ -129,24 +135,6 @@ export default function AppDetail() {
           <div className="mb-6">
             <p className="text-lg text-slate-800 leading-relaxed">{app.description}</p>
           </div>
-
-          {/* Screenshots */}
-          {app.screenshots && app.screenshots.length > 0 && (
-            <div className="mb-8">
-              <h3 className="text-xl font-bold text-slate-800 mb-4">Screenshots</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                {app.screenshots.map((screenshot, index) => (
-                  <div key={index} className="rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-shadow">
-                    <img 
-                      src={screenshot} 
-                      alt={`${app.name} screenshot ${index + 1}`}
-                      className="w-full h-64 object-cover hover:scale-105 transition-transform duration-300"
-                    />
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
 
           {/* Features Comparison */}
           {app.features && app.features.length > 0 && (
@@ -269,19 +257,6 @@ export default function AppDetail() {
               </a>
             </div>
           )}
-
-          {/* Placeholder sections */}
-          <div className="space-y-6">
-            <div className="bg-gradient-to-r from-slate-50 to-blue-50 rounded-2xl p-6 border border-slate-200">
-              <h3 className="text-xl font-bold text-slate-800 mb-2">Reviews & Ratings</h3>
-              <p className="text-slate-600 italic">Community reviews and ratings coming soon...</p>
-            </div>
-
-            <div className="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-2xl p-6 border border-blue-200">
-              <h3 className="text-xl font-bold text-slate-800 mb-2">Changelog</h3>
-              <p className="text-slate-600 italic">Version history and updates will be displayed here...</p>
-            </div>
-          </div>
         </div>
 
         {/* Back link */}
