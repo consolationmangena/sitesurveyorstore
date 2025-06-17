@@ -26,8 +26,8 @@ export const signUp = async (email, password, username, fullName) => {
         .from('profiles')
         .insert({
           id: authData.user.id,
-          full_name: fullName,
-          username,
+          full_name: fullName || '',
+          username: username || '',
           created_at: new Date().toISOString(),
           updated_at: new Date().toISOString()
         })
