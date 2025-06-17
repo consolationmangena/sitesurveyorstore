@@ -10,6 +10,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import SiteSurveyorIcon from "./SiteSurveyorIcon";
 
 export default function Header({ title, subtitle, showSearch = false, onSearch }) {
   const [searchTerm, setSearchTerm] = useState("");
@@ -55,8 +56,8 @@ export default function Header({ title, subtitle, showSearch = false, onSearch }
           <Link to="/" className="flex items-center gap-4 group">
             <div className="relative">
               <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-2xl blur opacity-30 group-hover:opacity-60 transition duration-300"></div>
-              <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center shadow-lg text-white text-2xl font-black group-hover:scale-105 transition-transform duration-300">
-                S
+              <div className="relative group-hover:scale-105 transition-transform duration-300">
+                <SiteSurveyorIcon size={48} className="drop-shadow-lg" />
               </div>
             </div>
             <div className="flex flex-col">
