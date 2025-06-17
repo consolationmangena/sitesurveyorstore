@@ -32,7 +32,7 @@ export const supabase = isConfigured
   ? createClient(supabaseUrl, supabaseAnonKey)
   : createMockClient()
 
-// Test connection function
+// Test connection function with better error handling
 export const testConnection = async () => {
   if (!isConfigured) {
     console.warn('⚠️ Skipping connection test - Supabase not configured')
@@ -40,15 +40,18 @@ export const testConnection = async () => {
   }
 
   try {
+    // Use a simple query that should work with any Supabase project
     const { data, error } = await supabase.from('categories').select('count').limit(1)
     if (error) {
-      console.error('❌ Supabase connection test failed:', error.message)
+      // Don't log connection errors as they might be expected during development
+      console.warn('⚠️ Supabase connection test failed:', error.message)
       return false
     }
     console.log('✅ Supabase connection successful!')
     return true
   } catch (error) {
-    console.error('❌ Supabase connection error:', error)
+    // Handle network errors more gracefully
+    console.warn('⚠️ Supabase connection error (this may be expected during development):', error.message)
     return false
   }
 }
@@ -56,7 +59,10 @@ export const testConnection = async () => {
 // Export configuration status
 export const isSupabaseConfigured = isConfigured
 
-// Only test connection if properly configured
+// Only test connection if properly configured, and don't block the app if it fails
 if (isConfigured) {
-  testConnection()
+  // Run connection test asynchronously without blocking
+  testConnection().catch(() => {
+    // Silently handle connection test failures
+  })
 }
