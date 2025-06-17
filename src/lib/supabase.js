@@ -3,27 +3,19 @@ import { createClient } from '@supabase/supabase-js'
 const supabaseUrl = import.meta.env.VITE_SUPABASE_URL
 const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY
 
-// Provide fallback values for development
-const defaultUrl = 'https://placeholder.supabase.co'
-const defaultKey = 'placeholder-key'
-
-if (!supabaseUrl || !supabaseAnonKey || supabaseUrl.includes('your-project-id') || supabaseAnonKey.includes('your-anon-key')) {
-  console.warn('⚠️ Supabase credentials not configured properly!')
-  console.warn('Please update your .env file with your actual Supabase project URL and anon key.')
-  console.warn('You can find these in your Supabase project settings: https://supabase.com/dashboard')
+if (!supabaseUrl || !supabaseAnonKey) {
+  console.error('Missing Supabase environment variables!')
+  console.error('Please check your .env file and ensure VITE_SUPABASE_URL and VITE_SUPABASE_ANON_KEY are set')
 }
 
-export const supabase = createClient(
-  supabaseUrl || defaultUrl, 
-  supabaseAnonKey || defaultKey,
-  {
-    auth: {
-      autoRefreshToken: true,
-      persistSession: true,
-      detectSessionInUrl: true
-    }
+export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    autoRefreshToken: true,
+    persistSession: true,
+    detectSessionInUrl: true,
+    flowType: 'pkce'
   }
-)
+})
 
 // Test connection function
 export const testConnection = async () => {
@@ -40,3 +32,6 @@ export const testConnection = async () => {
     return false
   }
 }
+
+// Initialize connection test
+testConnection()

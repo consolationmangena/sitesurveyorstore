@@ -7,7 +7,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } f
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Separator } from '@/components/ui/separator'
-import { Eye, EyeOff, Mail, Lock, User, Chrome, Loader2 } from 'lucide-react'
+import { Eye, EyeOff, Mail, Lock, User, Chrome, Loader2, AlertCircle } from 'lucide-react'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
@@ -75,7 +75,10 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'signin' }) {
   }
 
   const handleGoogleSignIn = async () => {
-    await signInWithGoogle()
+    const { error } = await signInWithGoogle()
+    if (!error) {
+      // The redirect will handle closing the modal
+    }
   }
 
   const handleClose = () => {
@@ -147,11 +150,13 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'signin' }) {
                         type="email"
                         placeholder="Enter your email"
                         className="pl-10"
+                        disabled={loading}
                         {...signInForm.register('email')}
                       />
                     </div>
                     {signInForm.formState.errors.email && (
-                      <p className="text-sm text-destructive">
+                      <p className="text-sm text-destructive flex items-center gap-1">
+                        <AlertCircle className="h-3 w-3" />
                         {signInForm.formState.errors.email.message}
                       </p>
                     )}
@@ -166,6 +171,7 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'signin' }) {
                         type={showPassword ? 'text' : 'password'}
                         placeholder="Enter your password"
                         className="pl-10 pr-10"
+                        disabled={loading}
                         {...signInForm.register('password')}
                       />
                       <Button
@@ -174,6 +180,7 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'signin' }) {
                         size="sm"
                         className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                         onClick={() => setShowPassword(!showPassword)}
+                        disabled={loading}
                       >
                         {showPassword ? (
                           <EyeOff className="h-4 w-4" />
@@ -183,7 +190,8 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'signin' }) {
                       </Button>
                     </div>
                     {signInForm.formState.errors.password && (
-                      <p className="text-sm text-destructive">
+                      <p className="text-sm text-destructive flex items-center gap-1">
+                        <AlertCircle className="h-3 w-3" />
                         {signInForm.formState.errors.password.message}
                       </p>
                     )}
@@ -258,11 +266,13 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'signin' }) {
                         type="text"
                         placeholder="Enter your full name"
                         className="pl-10"
+                        disabled={loading}
                         {...signUpForm.register('fullName')}
                       />
                     </div>
                     {signUpForm.formState.errors.fullName && (
-                      <p className="text-sm text-destructive">
+                      <p className="text-sm text-destructive flex items-center gap-1">
+                        <AlertCircle className="h-3 w-3" />
                         {signUpForm.formState.errors.fullName.message}
                       </p>
                     )}
@@ -277,11 +287,13 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'signin' }) {
                         type="email"
                         placeholder="Enter your email"
                         className="pl-10"
+                        disabled={loading}
                         {...signUpForm.register('email')}
                       />
                     </div>
                     {signUpForm.formState.errors.email && (
-                      <p className="text-sm text-destructive">
+                      <p className="text-sm text-destructive flex items-center gap-1">
+                        <AlertCircle className="h-3 w-3" />
                         {signUpForm.formState.errors.email.message}
                       </p>
                     )}
@@ -293,6 +305,7 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'signin' }) {
                       id="signup-organization"
                       type="text"
                       placeholder="Your company or university"
+                      disabled={loading}
                       {...signUpForm.register('organization')}
                     />
                   </div>
@@ -306,6 +319,7 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'signin' }) {
                         type={showPassword ? 'text' : 'password'}
                         placeholder="Create a password"
                         className="pl-10 pr-10"
+                        disabled={loading}
                         {...signUpForm.register('password')}
                       />
                       <Button
@@ -314,6 +328,7 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'signin' }) {
                         size="sm"
                         className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                         onClick={() => setShowPassword(!showPassword)}
+                        disabled={loading}
                       >
                         {showPassword ? (
                           <EyeOff className="h-4 w-4" />
@@ -323,7 +338,8 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'signin' }) {
                       </Button>
                     </div>
                     {signUpForm.formState.errors.password && (
-                      <p className="text-sm text-destructive">
+                      <p className="text-sm text-destructive flex items-center gap-1">
+                        <AlertCircle className="h-3 w-3" />
                         {signUpForm.formState.errors.password.message}
                       </p>
                     )}
@@ -338,6 +354,7 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'signin' }) {
                         type={showConfirmPassword ? 'text' : 'password'}
                         placeholder="Confirm your password"
                         className="pl-10 pr-10"
+                        disabled={loading}
                         {...signUpForm.register('confirmPassword')}
                       />
                       <Button
@@ -346,6 +363,7 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'signin' }) {
                         size="sm"
                         className="absolute right-0 top-0 h-full px-3 py-2 hover:bg-transparent"
                         onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                        disabled={loading}
                       >
                         {showConfirmPassword ? (
                           <EyeOff className="h-4 w-4" />
@@ -355,7 +373,8 @@ export default function AuthModal({ isOpen, onClose, defaultTab = 'signin' }) {
                       </Button>
                     </div>
                     {signUpForm.formState.errors.confirmPassword && (
-                      <p className="text-sm text-destructive">
+                      <p className="text-sm text-destructive flex items-center gap-1">
+                        <AlertCircle className="h-3 w-3" />
                         {signUpForm.formState.errors.confirmPassword.message}
                       </p>
                     )}

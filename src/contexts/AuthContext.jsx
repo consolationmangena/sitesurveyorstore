@@ -46,7 +46,7 @@ export const AuthProvider = ({ children }) => {
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
       async (event, session) => {
-        console.log('Auth state changed:', event, session)
+        console.log('Auth state changed:', event, session?.user?.email)
         setSession(session)
         setUser(session?.user ?? null)
         setLoading(false)
@@ -66,6 +66,8 @@ export const AuthProvider = ({ children }) => {
             title: "Signed out",
             description: "You have been successfully signed out.",
           })
+        } else if (event === 'TOKEN_REFRESHED') {
+          console.log('Token refreshed successfully')
         }
       }
     )
@@ -96,6 +98,8 @@ export const AuthProvider = ({ children }) => {
         const { error: createError } = await db.createProfile(profileData)
         if (createError) {
           console.error('Error creating profile:', createError)
+        } else {
+          console.log('Profile created successfully')
         }
       }
     } catch (error) {
@@ -111,7 +115,8 @@ export const AuthProvider = ({ children }) => {
         email,
         password,
         options: {
-          data: userData
+          data: userData,
+          emailRedirectTo: `${window.location.origin}/auth/callback`
         }
       })
 
@@ -168,7 +173,11 @@ export const AuthProvider = ({ children }) => {
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`
+          redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            access_type: 'offline',
+            prompt: 'consent',
+          }
         }
       })
 
