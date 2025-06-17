@@ -11,28 +11,31 @@ import BlogPost from './pages/BlogPost'
 import RequestSolution from './pages/RequestSolution'
 import NotFound from './pages/NotFound'
 import { Toaster } from './components/ui/sonner'
+import { AuthProvider } from './contexts/AuthContext'
 
 function App() {
   return (
-    <Router basename="/sitesurveyor">
-      <div className="min-h-screen bg-gray-50 flex flex-col">
-        <Header />
-        <main className="flex-grow">
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/appstore" element={<AppStore />} />
-            <Route path="/app/:id" element={<AppDetail />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/blog/:slug" element={<BlogPost />} />
-            <Route path="/request-solution" element={<RequestSolution />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </main>
-        <Footer />
-        <Toaster />
-      </div>
-    </Router>
+    <AuthProvider>
+      <Router basename="/sitesurveyor">
+        <div className="min-h-screen bg-gray-50 flex flex-col">
+          <Header title="SiteSurveyor" subtitle="Professional Geomatics Solutions" />
+          <main className="flex-grow">
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/about" element={<About />} />
+              <Route path="/appstore" element={<AppStore />} />
+              <Route path="/app/:id" element={<AppDetail />} />
+              <Route path="/blog" element={<Blog />} />
+              <Route path="/blog/:slug" element={<BlogPost />} />
+              <Route path="/request-solution" element={<RequestSolution />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </main>
+          <Footer />
+          <Toaster />
+        </div>
+      </Router>
+    </AuthProvider>
   )
 }
 

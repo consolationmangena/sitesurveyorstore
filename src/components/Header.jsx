@@ -1,13 +1,27 @@
-import { Search, Database, Menu } from "lucide-react";
+import { Search, Database, Menu, User, LogOut } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Sheet, SheetContent, SheetTrigger, SheetClose } from "@/components/ui/sheet";
 import { Button } from "@/components/ui/button";
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuSeparator, 
+  DropdownMenuTrigger 
+} from "@/components/ui/dropdown-menu";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import SiteSurveyorIcon from "./SiteSurveyorIcon";
+import AuthModal from "./auth/AuthModal";
+import { useAuth } from "@/contexts/AuthContext";
+import { signOut } from "@/lib/auth";
+import { toast } from "sonner";
 
 export default function Header({ title, subtitle, showSearch = false, onSearch }) {
   const [searchTerm, setSearchTerm] = useState("");
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const location = useLocation();
+  const { user, profile, loading } = useAuth();
 
   const isActive = (path) => location.pathname === path;
 
@@ -16,6 +30,15 @@ export default function Header({ title, subtitle, showSearch = false, onSearch }
     setSearchTerm(value);
     if (onSearch) {
       onSearch(value);
+    }
+  };
+
+  const handleSignOut = async () => {
+    try {
+      await signOut();
+      toast.success('Signed out successfully');
+    } catch (error) {
+      toast.error('Error signing out');
     }
   };
 
@@ -43,108 +66,207 @@ export default function Header({ title, subtitle, showSearch = false, onSearch }
     </div>
   );
 
-  return (
-    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
-      <div className="container-professional">
-        <div className="flex h-16 items-center justify-between">
-          <Link to="/" className="flex items-center space-x-3 group">
-            <div className="relative">
-              <SiteSurveyorIcon size={40} className="transition-transform duration-200 group-hover:scale-105" />
-            </div>
-            <div className="flex flex-col">
-              <h1 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
-                {title}
-              </h1>
-              <p className="text-xs text-muted-foreground font-medium">
-                {subtitle}
-              </p>
-            </div>
-          </Link>
+  const getUserInitials = () => {
+    if (profile?.full_name) {
+      return profile.full_name.split(' ').map(n => n[0]).join('').toUpperCase();
+    }
+    if (profile?.username) {
+      return profile.username.slice(0, 2).toUpperCase();
+    }
+    if (user?.email) {
+      return user.email.slice(0, 2).toUpperCase();
+    }
+    return 'U';
+  };
 
-          <div className="hidden md:flex flex-1 mx-8 max-w-md">
+  return (
+    <>
+      <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+        <div className="container-professional">
+          <div className="flex h-16 items-center justify-between">
+            <Link to="/" className="flex items-center space-x-3 group">
+              <div className="relative">
+                <SiteSurveyorIcon size={40} className="transition-transform duration-200 group-hover:scale-105" />
+              </div>
+              <div className="flex flex-col">
+                <h1 className="text-lg font-semibold text-foreground group-hover:text-primary transition-colors">
+                  {title}
+                </h1>
+                <p className="text-xs text-muted-foreground font-medium">
+                  {subtitle}
+                </p>
+              </div>
+            </Link>
+
+            <div className="hidden md:flex flex-1 mx-8 max-w-md">
+              {showSearch && (
+                <div className="w-full animate-fade-in">
+                  {searchInput}
+                </div>
+              )}
+            </div>
+
+            <div className="flex items-center space-x-4">
+              {/* Desktop Navigation */}
+              <nav className="hidden sm:flex">
+                <div className="flex items-center space-x-1">
+                  {navLinks.map((link) => (
+                    <Link
+                      key={link.to}
+                      to={link.to}
+                      className={`relative px-3 py-2 text-sm font-medium transition-colors hover:text-primary rounded-md ${
+                        isActive(link.to) ? "text-primary bg-accent" : "text-muted-foreground"
+                      }`}
+                    >
+                      {link.label}
+                      {isActive(link.to) && (
+                        <span className="absolute bottom-0 left-1/2 h-0.5 w-6 -translate-x-1/2 bg-primary rounded-full"></span>
+                      )}
+                    </Link>
+                  ))}
+                </div>
+              </nav>
+
+              {/* Auth Section */}
+              {!loading && (
+                <div className="flex items-center space-x-2">
+                  {user ? (
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="relative h-8 w-8 rounded-full">
+                          <Avatar className="h-8 w-8">
+                            <AvatarImage src={profile?.avatar_url} alt={profile?.username || user.email} />
+                            <AvatarFallback>{getUserInitials()}</AvatarFallback>
+                          </Avatar>
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent className="w-56" align="end" forceMount>
+                        <div className="flex items-center justify-start gap-2 p-2">
+                          <div className="flex flex-col space-y-1 leading-none">
+                            {profile?.full_name && (
+                              <p className="font-medium">{profile.full_name}</p>
+                            )}
+                            <p className="w-[200px] truncate text-sm text-muted-foreground">
+                              {user.email}
+                            </p>
+                          </div>
+                        </div>
+                        <DropdownMenuSeparator />
+                        <DropdownMenuItem>
+                          <User className="mr-2 h-4 w-4" />
+                          <span>Profile</span>
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={handleSignOut}>
+                          <LogOut className="mr-2 h-4 w-4" />
+                          <span>Sign out</span>
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  ) : (
+                    <Button onClick={() => setShowAuthModal(true)} size="sm">
+                      Sign In
+                    </Button>
+                  )}
+                </div>
+              )}
+
+              {/* Mobile Menu */}
+              <Sheet>
+                <SheetTrigger asChild className="sm:hidden">
+                  <Button variant="ghost" size="icon" className="h-9 w-9">
+                    <Menu className="h-4 w-4" />
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-[300px] sm:w-[350px]">
+                  <div className="flex flex-col h-full">
+                    <div className="flex-1 py-6">
+                      <nav className="flex flex-col space-y-1">
+                        {navLinks.map((link) => (
+                          <SheetClose asChild key={link.to}>
+                            <Link
+                              to={link.to}
+                              className={`flex items-center py-3 px-3 text-sm font-medium rounded-lg transition-colors ${
+                                isActive(link.to)
+                                  ? "bg-accent text-accent-foreground"
+                                  : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
+                              }`}
+                            >
+                              {link.label}
+                            </Link>
+                          </SheetClose>
+                        ))}
+                      </nav>
+                      
+                      {/* Mobile Auth */}
+                      {!loading && (
+                        <div className="mt-6 pt-6 border-t border-border">
+                          {user ? (
+                            <div className="space-y-3">
+                              <div className="flex items-center gap-3 px-3 py-2">
+                                <Avatar className="h-8 w-8">
+                                  <AvatarImage src={profile?.avatar_url} alt={profile?.username || user.email} />
+                                  <AvatarFallback>{getUserInitials()}</AvatarFallback>
+                                </Avatar>
+                                <div className="flex flex-col">
+                                  {profile?.full_name && (
+                                    <p className="font-medium text-sm">{profile.full_name}</p>
+                                  )}
+                                  <p className="text-xs text-muted-foreground truncate">
+                                    {user.email}
+                                  </p>
+                                </div>
+                              </div>
+                              <Button 
+                                variant="outline" 
+                                className="w-full justify-start" 
+                                onClick={handleSignOut}
+                              >
+                                <LogOut className="mr-2 h-4 w-4" />
+                                Sign out
+                              </Button>
+                            </div>
+                          ) : (
+                            <Button 
+                              onClick={() => setShowAuthModal(true)} 
+                              className="w-full"
+                            >
+                              Sign In
+                            </Button>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                    <div className="border-t border-border pt-4">
+                      <div className="flex items-center space-x-2 px-3 py-2 text-xs text-muted-foreground">
+                        <Database className="h-3 w-3" />
+                        <span>Apache 2.0 Licensed • Open Source</span>
+                      </div>
+                    </div>
+                  </div>
+                </SheetContent>
+              </Sheet>
+              
+              <div className="hidden lg:flex items-center">
+                <div className="flex items-center space-x-2 px-3 py-1.5 text-xs text-muted-foreground bg-muted/50 rounded-full border">
+                  <Database className="h-3 w-3" />
+                  <span>Apache 2.0 Licensed</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Mobile Search */}
+          <div className="md:hidden pb-4 border-b border-border/40">
             {showSearch && (
-              <div className="w-full animate-fade-in">
+              <div className="animate-slide-up">
                 {searchInput}
               </div>
             )}
           </div>
-
-          <div className="flex items-center space-x-4">
-            {/* Desktop Navigation */}
-            <nav className="hidden sm:flex">
-              <div className="flex items-center space-x-1">
-                {navLinks.map((link) => (
-                  <Link
-                    key={link.to}
-                    to={link.to}
-                    className={`relative px-3 py-2 text-sm font-medium transition-colors hover:text-primary rounded-md ${
-                      isActive(link.to) ? "text-primary bg-accent" : "text-muted-foreground"
-                    }`}
-                  >
-                    {link.label}
-                    {isActive(link.to) && (
-                      <span className="absolute bottom-0 left-1/2 h-0.5 w-6 -translate-x-1/2 bg-primary rounded-full"></span>
-                    )}
-                  </Link>
-                ))}
-              </div>
-            </nav>
-
-            {/* Mobile Menu */}
-            <Sheet>
-              <SheetTrigger asChild className="sm:hidden">
-                <Button variant="ghost" size="icon" className="h-9 w-9">
-                  <Menu className="h-4 w-4" />
-                </Button>
-              </SheetTrigger>
-              <SheetContent side="right" className="w-[300px] sm:w-[350px]">
-                <div className="flex flex-col h-full">
-                  <div className="flex-1 py-6">
-                    <nav className="flex flex-col space-y-1">
-                      {navLinks.map((link) => (
-                        <SheetClose asChild key={link.to}>
-                          <Link
-                            to={link.to}
-                            className={`flex items-center py-3 px-3 text-sm font-medium rounded-lg transition-colors ${
-                              isActive(link.to)
-                                ? "bg-accent text-accent-foreground"
-                                : "text-muted-foreground hover:text-foreground hover:bg-accent/50"
-                            }`}
-                          >
-                            {link.label}
-                          </Link>
-                        </SheetClose>
-                      ))}
-                    </nav>
-                  </div>
-                  <div className="border-t border-border pt-4">
-                    <div className="flex items-center space-x-2 px-3 py-2 text-xs text-muted-foreground">
-                      <Database className="h-3 w-3" />
-                      <span>Apache 2.0 Licensed • Open Source</span>
-                    </div>
-                  </div>
-                </div>
-              </SheetContent>
-            </Sheet>
-            
-            <div className="hidden lg:flex items-center">
-              <div className="flex items-center space-x-2 px-3 py-1.5 text-xs text-muted-foreground bg-muted/50 rounded-full border">
-                <Database className="h-3 w-3" />
-                <span>Apache 2.0 Licensed</span>
-              </div>
-            </div>
-          </div>
         </div>
+      </header>
 
-        {/* Mobile Search */}
-        <div className="md:hidden pb-4 border-b border-border/40">
-          {showSearch && (
-            <div className="animate-slide-up">
-              {searchInput}
-            </div>
-          )}
-        </div>
-      </div>
-    </header>
+      <AuthModal isOpen={showAuthModal} onClose={() => setShowAuthModal(false)} />
+    </>
   );
 }
