@@ -1,228 +1,190 @@
-import { useState, useEffect } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Alert, AlertDescription } from '@/components/ui/alert'
-import { CheckCircle, XCircle, ExternalLink, Copy, Database, Key, Globe } from 'lucide-react'
-import { testConnection } from '@/lib/supabase'
+import React from 'react'
+import { AlertTriangle, ExternalLink, Copy, Check } from 'lucide-react'
+import { Alert, AlertDescription } from './ui/alert'
+import { Button } from './ui/button'
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './ui/card'
 
-export default function SetupGuide({ onComplete }) {
-  const [connectionStatus, setConnectionStatus] = useState('checking')
-  const [showGuide, setShowGuide] = useState(true)
+const SetupGuide = () => {
+  const [copied, setCopied] = React.useState('')
 
-  useEffect(() => {
-    checkConnection()
-  }, [])
-
-  const checkConnection = async () => {
-    setConnectionStatus('checking')
-    const isConnected = await testConnection()
-    setConnectionStatus(isConnected ? 'connected' : 'disconnected')
-    
-    if (isConnected && onComplete) {
-      setTimeout(() => {
-        setShowGuide(false)
-        onComplete()
-      }, 2000)
-    }
-  }
-
-  const copyToClipboard = (text) => {
+  const copyToClipboard = (text, key) => {
     navigator.clipboard.writeText(text)
+    setCopied(key)
+    setTimeout(() => setCopied(''), 2000)
   }
 
-  if (!showGuide) return null
+  const envTemplate = `# Supabase Configuration
+VITE_SUPABASE_URL=your_supabase_project_url
+VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+
+# Google OAuth (optional)
+VITE_GOOGLE_CLIENT_ID=your_google_client_id`
 
   return (
-    <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <Card className="w-full max-w-2xl max-h-[90vh] overflow-y-auto">
-        <CardHeader>
-          <div className="flex items-center gap-3">
-            <div className="w-12 h-12 rounded-lg bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center">
-              <Database className="w-6 h-6 text-white" />
-            </div>
-            <div>
-              <CardTitle className="text-2xl">Setup Supabase Database</CardTitle>
-              <CardDescription>
-                Connect your Supabase database to enable all features
-              </CardDescription>
-            </div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 p-4">
+      <div className="max-w-4xl mx-auto">
+        <div className="text-center mb-8">
+          <div className="flex items-center justify-center mb-4">
+            <AlertTriangle className="h-12 w-12 text-amber-500 mr-3" />
+            <h1 className="text-3xl font-bold text-gray-900">Setup Required</h1>
           </div>
-        </CardHeader>
+          <p className="text-lg text-gray-600">
+            SiteSurveyor needs to be configured with your Supabase credentials to work properly.
+          </p>
+        </div>
 
-        <CardContent className="space-y-6">
-          {/* Connection Status */}
-          <Alert className={connectionStatus === 'connected' ? 'border-green-500 bg-green-50' : 'border-orange-500 bg-orange-50'}>
-            <div className="flex items-center gap-2">
-              {connectionStatus === 'checking' && (
-                <>
-                  <div className="w-4 h-4 border-2 border-blue-600 border-t-transparent rounded-full animate-spin" />
-                  <span>Checking connection...</span>
-                </>
-              )}
-              {connectionStatus === 'connected' && (
-                <>
-                  <CheckCircle className="w-4 h-4 text-green-600" />
-                  <span className="text-green-800 font-medium">Database connected successfully!</span>
-                </>
-              )}
-              {connectionStatus === 'disconnected' && (
-                <>
-                  <XCircle className="w-4 h-4 text-orange-600" />
-                  <span className="text-orange-800 font-medium">Database not connected</span>
-                </>
-              )}
-            </div>
-          </Alert>
+        <Alert className="mb-8 border-amber-200 bg-amber-50">
+          <AlertTriangle className="h-4 w-4 text-amber-600" />
+          <AlertDescription className="text-amber-800">
+            <strong>Supabase not configured:</strong> The application cannot connect to the database. 
+            Please follow the setup steps below to get started.
+          </AlertDescription>
+        </Alert>
 
-          {connectionStatus === 'disconnected' && (
-            <>
-              {/* Step 1: Create Supabase Project */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <Badge className="bg-blue-600 text-white">Step 1</Badge>
-                  <h3 className="text-lg font-semibold">Create Supabase Project</h3>
-                </div>
-                
-                <div className="pl-6 space-y-3">
-                  <p className="text-slate-600">
-                    First, you need to create a free Supabase project to store your data.
-                  </p>
-                  
-                  <Button asChild className="w-full">
-                    <a href="https://supabase.com/dashboard" target="_blank" rel="noopener noreferrer">
-                      <Globe className="w-4 h-4 mr-2" />
-                      Create Supabase Project
-                      <ExternalLink className="w-4 h-4 ml-2" />
-                    </a>
-                  </Button>
-                  
-                  <div className="text-sm text-slate-500 space-y-1">
-                    <p>• Sign up for a free account at supabase.com</p>
-                    <p>• Click "New Project" and choose your organization</p>
-                    <p>• Give your project a name (e.g., "SiteSurveyor")</p>
-                    <p>• Choose a secure database password</p>
-                    <p>• Select a region close to your users</p>
-                  </div>
-                </div>
+        <div className="grid gap-6 md:grid-cols-2">
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-2">1</span>
+                Create Supabase Project
+              </CardTitle>
+              <CardDescription>
+                Set up a new Supabase project if you haven't already
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-gray-600">
+                Go to Supabase and create a new project. This will give you the database and authentication services needed for SiteSurveyor.
+              </p>
+              <Button 
+                variant="outline" 
+                className="w-full"
+                onClick={() => window.open('https://supabase.com/dashboard', '_blank')}
+              >
+                <ExternalLink className="h-4 w-4 mr-2" />
+                Open Supabase Dashboard
+              </Button>
+            </CardContent>
+          </Card>
+
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-2">2</span>
+                Get API Credentials
+              </CardTitle>
+              <CardDescription>
+                Copy your project URL and anonymous key from Supabase
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-gray-600">
+                In your Supabase project dashboard, go to Settings → API to find your project URL and anon public key.
+              </p>
+              <div className="text-xs text-gray-500 bg-gray-50 p-2 rounded">
+                <strong>Project URL:</strong> https://your-project.supabase.co<br />
+                <strong>Anon Key:</strong> eyJ... (long string)
               </div>
+            </CardContent>
+          </Card>
 
-              {/* Step 2: Get Credentials */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <Badge className="bg-purple-600 text-white">Step 2</Badge>
-                  <h3 className="text-lg font-semibold">Get Your Credentials</h3>
-                </div>
-                
-                <div className="pl-6 space-y-3">
-                  <p className="text-slate-600">
-                    Once your project is created, get your API credentials:
-                  </p>
-                  
-                  <div className="text-sm text-slate-500 space-y-1">
-                    <p>• Go to Settings → API in your Supabase dashboard</p>
-                    <p>• Copy your "Project URL"</p>
-                    <p>• Copy your "anon public" key</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Step 3: Update Environment */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <Badge className="bg-green-600 text-white">Step 3</Badge>
-                  <h3 className="text-lg font-semibold">Update Environment Variables</h3>
-                </div>
-                
-                <div className="pl-6 space-y-3">
-                  <p className="text-slate-600">
-                    Update your .env file with your Supabase credentials:
-                  </p>
-                  
-                  <div className="bg-slate-900 text-green-400 p-4 rounded-lg font-mono text-sm">
-                    <div className="flex items-center justify-between mb-2">
-                      <span className="text-slate-400">.env file:</span>
-                      <Button
-                        variant="ghost"
-                        size="sm"
-                        onClick={() => copyToClipboard(`VITE_SUPABASE_URL=https://your-project-id.supabase.co
-VITE_SUPABASE_ANON_KEY=your-anon-key-here`)}
-                        className="text-slate-400 hover:text-white"
-                      >
-                        <Copy className="w-4 h-4" />
-                      </Button>
-                    </div>
-                    <div className="space-y-1">
-                      <div>VITE_SUPABASE_URL=https://your-project-id.supabase.co</div>
-                      <div>VITE_SUPABASE_ANON_KEY=your-anon-key-here</div>
-                    </div>
-                  </div>
-                  
-                  <Alert>
-                    <Key className="w-4 h-4" />
-                    <AlertDescription>
-                      Replace "your-project-id" and "your-anon-key-here" with your actual Supabase credentials.
-                    </AlertDescription>
-                  </Alert>
-                </div>
-              </div>
-
-              {/* Step 4: Run Migrations */}
-              <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <Badge className="bg-orange-600 text-white">Step 4</Badge>
-                  <h3 className="text-lg font-semibold">Set Up Database Schema</h3>
-                </div>
-                
-                <div className="pl-6 space-y-3">
-                  <p className="text-slate-600">
-                    Run the database migrations in your Supabase SQL editor:
-                  </p>
-                  
-                  <Button asChild variant="outline" className="w-full">
-                    <a href="https://supabase.com/dashboard/project/_/sql" target="_blank" rel="noopener noreferrer">
-                      <Database className="w-4 h-4 mr-2" />
-                      Open SQL Editor
-                      <ExternalLink className="w-4 h-4 ml-2" />
-                    </a>
-                  </Button>
-                  
-                  <div className="text-sm text-slate-500 space-y-1">
-                    <p>• Go to the SQL Editor in your Supabase dashboard</p>
-                    <p>• Copy and run the migration files from supabase/migrations/</p>
-                    <p>• Run them in order: schema first, then sample data</p>
-                  </div>
-                </div>
-              </div>
-
-              {/* Test Connection Button */}
-              <div className="pt-4 border-t">
-                <Button onClick={checkConnection} className="w-full" disabled={connectionStatus === 'checking'}>
-                  {connectionStatus === 'checking' ? (
-                    <>
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin mr-2" />
-                      Testing Connection...
-                    </>
-                  ) : (
-                    <>
-                      <Database className="w-4 h-4 mr-2" />
-                      Test Connection
-                    </>
-                  )}
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-2">3</span>
+                Create Environment File
+              </CardTitle>
+              <CardDescription>
+                Set up your local environment variables
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-gray-600">
+                Create a <code className="bg-gray-100 px-1 rounded">.env</code> file in your project root with your Supabase credentials:
+              </p>
+              <div className="relative">
+                <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg text-xs overflow-x-auto">
+                  {envTemplate}
+                </pre>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="absolute top-2 right-2"
+                  onClick={() => copyToClipboard(envTemplate, 'env')}
+                >
+                  {copied === 'env' ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
                 </Button>
               </div>
-            </>
-          )}
+            </CardContent>
+          </Card>
 
-          {connectionStatus === 'connected' && (
-            <div className="text-center py-8">
-              <CheckCircle className="w-16 h-16 text-green-600 mx-auto mb-4" />
-              <h3 className="text-xl font-semibold text-green-800 mb-2">All Set!</h3>
-              <p className="text-green-600">Your database is connected and ready to use.</p>
+          <Card>
+            <CardHeader>
+              <CardTitle className="flex items-center">
+                <span className="bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center text-sm mr-2">4</span>
+                Restart Development Server
+              </CardTitle>
+              <CardDescription>
+                Apply your configuration changes
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-sm text-gray-600">
+                After creating your .env file, restart the development server to apply the changes:
+              </p>
+              <div className="relative">
+                <pre className="bg-gray-900 text-gray-100 p-4 rounded-lg text-xs">
+                  npm run dev
+                </pre>
+                <Button
+                  size="sm"
+                  variant="outline"
+                  className="absolute top-2 right-2"
+                  onClick={() => copyToClipboard('npm run dev', 'cmd')}
+                >
+                  {copied === 'cmd' ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        <Card className="mt-8">
+          <CardHeader>
+            <CardTitle>Need Help?</CardTitle>
+            <CardDescription>
+              Additional resources and support options
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="grid gap-4 md:grid-cols-3">
+              <Button 
+                variant="outline" 
+                onClick={() => window.open('https://supabase.com/docs/guides/getting-started', '_blank')}
+              >
+                <ExternalLink className="h-4 w-4 mr-2" />
+                Supabase Docs
+              </Button>
+              <Button 
+                variant="outline"
+                onClick={() => window.open('https://github.com/consolationmangena/sitesurveyor', '_blank')}
+              >
+                <ExternalLink className="h-4 w-4 mr-2" />
+                GitHub Repository
+              </Button>
+              <Button 
+                variant="outline"
+                onClick={() => window.open('mailto:support@sitesurveyor.store', '_blank')}
+              >
+                <ExternalLink className="h-4 w-4 mr-2" />
+                Get Support
+              </Button>
             </div>
-          )}
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      </div>
     </div>
   )
 }
+
+export default SetupGuide
