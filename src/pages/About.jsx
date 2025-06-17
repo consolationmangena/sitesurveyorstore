@@ -1,12 +1,8 @@
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import { Book, Users, Building2, Github, MapPin, Code, GraduationCap, Briefcase, Heart, Star, Globe, Zap, Shield, Clock } from "lucide-react";
 
 export default function About() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
-      <Header title="About" subtitle="Our Story & Mission" />
-
       <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Hero Section */}
         <div className="text-center mb-16 relative">
@@ -292,8 +288,6 @@ export default function About() {
           </div>
         </div>
       </div>
-      
-      <Footer />
     </div>
   );
 }

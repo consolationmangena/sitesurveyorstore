@@ -1,47 +1,48 @@
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
 import AppGrid from "@/components/AppGrid";
 import { ArrowRight, Code, Globe, Users, Zap, Star, Heart, Crown, Sparkles, Shield, CheckCircle, TrendingUp, Award } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const apps = [
 	{
-		name: "GeoDataCollector",
+		id: "1",
+		name: "Site Survey Tool",
 		description:
-			"Professional mobile data collection platform for field surveys with advanced offline capabilities and precision GPS integration.",
-		repoUrl: "https://github.com/sitesurveyor/geodatacollector",
+			"A comprehensive tool for site surveying and mapping in the field with GPS integration and offline capabilities.",
+		repoUrl: "https://github.com/sitesurveyor/survey-tool",
 		icon: "map",
-		tags: ["Mobile", "GPS", "Survey"],
+		tags: ["surveying", "mapping", "gis", "field-work"],
 		download_count: 1250,
 		updated_at: "2024-06-10",
-		category: "Data Collection",
+		category: "Field Tools",
 		app_type: "open_source",
 		price: 0
 	},
 	{
-		name: "Survey Report Generator",
+		id: "2",
+		name: "GIS Data Viewer",
 		description:
-			"Automated report generation system from survey data with customizable templates and professional export options.",
-		repoUrl: "https://github.com/sitesurveyor/survey-reports",
+			"View and analyze GIS data with this powerful viewer application supporting multiple file formats.",
+		repoUrl: "https://github.com/sitesurveyor/gis-viewer",
 		icon: "database",
-		tags: ["Reports", "Automation", "PDF"],
+		tags: ["gis", "data", "visualization", "analysis"],
 		download_count: 890,
 		updated_at: "2024-06-08",
-		category: "Reports",
+		category: "Data Analysis",
 		app_type: "open_source",
 		price: 0
 	},
 	{
+		id: "3",
 		name: "Coordinate Converter Pro",
 		description:
-			"Enterprise-grade coordinate system converter with advanced precision calculations and batch processing capabilities.",
+			"Professional-grade coordinate system converter with advanced precision calculations and batch processing capabilities.",
 		repoUrl: null,
 		homepage_url: "https://geotools.africa/coord-converter-pro",
 		icon: "database",
-		tags: ["Coordinates", "Conversion", "Professional"],
+		tags: ["coordinates", "conversion", "precision", "surveying", "professional"],
 		download_count: 156,
 		updated_at: "2024-06-12",
-		category: "Tools",
+		category: "Utilities",
 		app_type: "pro",
 		price: 149.99,
 		trial_available: true,
@@ -113,11 +114,6 @@ const benefits = [
 export default function Index() {
 	return (
 		<div className="min-h-screen bg-background">
-			<Header
-				title="SiteSurveyor"
-				subtitle="Professional Geomatics Solutions"
-			/>
-
 			{/* Hero Section */}
 			<section className="section-professional border-b border-border/40">
 				<div className="container-professional">
@@ -137,9 +133,11 @@ export default function Index() {
 							</p>
 						</div>
 						<div className="flex flex-col sm:flex-row gap-4 justify-center">
-							<Button size="lg" className="btn-professional-primary h-12 px-8 text-base">
-								Explore Applications
-								<ArrowRight className="ml-2 h-4 w-4" />
+							<Button size="lg" className="btn-professional-primary h-12 px-8 text-base" asChild>
+								<a href="/appstore">
+									Explore Applications
+									<ArrowRight className="ml-2 h-4 w-4" />
+								</a>
 							</Button>
 							<Button variant="outline" size="lg" className="btn-professional-outline h-12 px-8 text-base" asChild>
 								<a href="https://github.com/consolationmangena/sitesurveyor" target="_blank" rel="noopener noreferrer">
@@ -292,8 +290,6 @@ export default function Index() {
 					</div>
 				</div>
 			</section>
-
-			<Footer />
 		</div>
 	);
 }
