@@ -10,8 +10,16 @@ import Blog from './pages/Blog'
 import BlogPost from './pages/BlogPost'
 import RequestSolution from './pages/RequestSolution'
 import NotFound from './pages/NotFound'
+
+// Admin Pages
+import AdminLogin from './pages/admin/AdminLogin'
+import AdminDashboard from './pages/admin/AdminDashboard'
+import ApplicationsManager from './pages/admin/ApplicationsManager'
+import BlogManager from './pages/admin/BlogManager'
+
 import { Toaster } from './components/ui/sonner'
 import { AuthProvider } from './contexts/AuthContext'
+import { AdminProvider } from './contexts/AdminContext'
 
 function App() {
   // Use different basename for development vs production
@@ -19,25 +27,40 @@ function App() {
   
   return (
     <AuthProvider>
-      <Router basename={basename}>
-        <div className="min-h-screen bg-gray-50 flex flex-col">
-          <Header title="SiteSurveyor" subtitle="Professional Geomatics Solutions" />
-          <main className="flex-grow">
+      <AdminProvider>
+        <Router basename={basename}>
+          <div className="min-h-screen bg-gray-50 flex flex-col">
             <Routes>
-              <Route path="/" element={<Index />} />
-              <Route path="/about" element={<About />} />
-              <Route path="/appstore" element={<AppStore />} />
-              <Route path="/app/:id" element={<AppDetail />} />
-              <Route path="/blog" element={<Blog />} />
-              <Route path="/blog/:slug" element={<BlogPost />} />
-              <Route path="/request-solution" element={<RequestSolution />} />
-              <Route path="*" element={<NotFound />} />
+              {/* Admin Routes - No Header/Footer */}
+              <Route path="/admin/login" element={<AdminLogin />} />
+              <Route path="/admin/dashboard" element={<AdminDashboard />} />
+              <Route path="/admin/applications" element={<ApplicationsManager />} />
+              <Route path="/admin/blog" element={<BlogManager />} />
+              
+              {/* Public Routes - With Header/Footer */}
+              <Route path="/*" element={
+                <>
+                  <Header title="SiteSurveyor" subtitle="Professional Geomatics Solutions" />
+                  <main className="flex-grow">
+                    <Routes>
+                      <Route path="/" element={<Index />} />
+                      <Route path="/about" element={<About />} />
+                      <Route path="/appstore" element={<AppStore />} />
+                      <Route path="/app/:id" element={<AppDetail />} />
+                      <Route path="/blog" element={<Blog />} />
+                      <Route path="/blog/:slug" element={<BlogPost />} />
+                      <Route path="/request-solution" element={<RequestSolution />} />
+                      <Route path="*" element={<NotFound />} />
+                    </Routes>
+                  </main>
+                  <Footer />
+                </>
+              } />
             </Routes>
-          </main>
-          <Footer />
-          <Toaster />
-        </div>
-      </Router>
+            <Toaster />
+          </div>
+        </Router>
+      </AdminProvider>
     </AuthProvider>
   )
 }
