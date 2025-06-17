@@ -26,7 +26,7 @@ function App() {
 
   return (
     <AuthProvider>
-      <Router>
+      <Router basename="/sitesurveyor">
         <div className="min-h-screen bg-gray-50 flex flex-col">
           <Header />
           <main className="flex-grow">
