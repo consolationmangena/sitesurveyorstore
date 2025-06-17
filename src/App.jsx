@@ -16,6 +16,10 @@ import AdminLogin from './pages/admin/AdminLogin'
 import AdminDashboard from './pages/admin/AdminDashboard'
 import ApplicationsManager from './pages/admin/ApplicationsManager'
 import BlogManager from './pages/admin/BlogManager'
+import CategoriesManager from './pages/admin/CategoriesManager'
+import RequestsManager from './pages/admin/RequestsManager'
+import UsersManager from './pages/admin/UsersManager'
+import AnalyticsManager from './pages/admin/AnalyticsManager'
 
 import { Toaster } from './components/ui/sonner'
 import { AuthProvider } from './contexts/AuthContext'
@@ -36,6 +40,10 @@ function App() {
               <Route path="/admin/dashboard" element={<AdminDashboard />} />
               <Route path="/admin/applications" element={<ApplicationsManager />} />
               <Route path="/admin/blog" element={<BlogManager />} />
+              <Route path="/admin/categories" element={<CategoriesManager />} />
+              <Route path="/admin/requests" element={<RequestsManager />} />
+              <Route path="/admin/users" element={<UsersManager />} />
+              <Route path="/admin/analytics" element={<AnalyticsManager />} />
               
               {/* Public Routes - With Header/Footer */}
               <Route path="/*" element={
