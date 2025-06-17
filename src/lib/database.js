@@ -47,13 +47,15 @@ export const getApplications = async (filters = {}) => {
       )
     `)
     .eq('is_active', true)
-    .order('created_at', { ascending: false })
+    .order('is_featured', { ascending: false })
+    .order('download_count', { ascending: false })
 
-  if (filters.category) {
+  if (filters.category && filters.category !== 'all') {
+    // Join with categories table to filter by category name
     query = query.eq('categories.name', filters.category)
   }
 
-  if (filters.app_type) {
+  if (filters.app_type && filters.app_type !== 'all') {
     query = query.eq('app_type', filters.app_type)
   }
 
@@ -121,6 +123,7 @@ export const getCategories = async () => {
   const { data, error } = await supabase
     .from('categories')
     .select('*')
+    .eq('is_active', true)
     .order('name')
   
   return { data, error }
@@ -133,6 +136,7 @@ export const getBlogPosts = async (filters = {}) => {
     .from('blog_posts')
     .select('*')
     .eq('is_published', true)
+    .order('is_featured', { ascending: false })
     .order('published_at', { ascending: false })
 
   if (filters.category && filters.category !== 'All') {

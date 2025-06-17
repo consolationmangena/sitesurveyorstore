@@ -21,19 +21,24 @@ export const AuthProvider = ({ children }) => {
   useEffect(() => {
     // Get initial session
     const getInitialSession = async () => {
-      const { data: { session }, error } = await supabase.auth.getSession()
-      if (error) {
-        console.error('Error getting session:', error)
-      } else {
-        setSession(session)
-        setUser(session?.user ?? null)
-        
-        // Create profile if user exists but no profile
-        if (session?.user) {
-          await ensureProfile(session.user)
+      try {
+        const { data: { session }, error } = await supabase.auth.getSession()
+        if (error) {
+          console.error('Error getting session:', error)
+        } else {
+          setSession(session)
+          setUser(session?.user ?? null)
+          
+          // Create profile if user exists but no profile
+          if (session?.user) {
+            await ensureProfile(session.user)
+          }
         }
+      } catch (error) {
+        console.error('Session error:', error)
+      } finally {
+        setLoading(false)
       }
-      setLoading(false)
     }
 
     getInitialSession()
@@ -71,7 +76,13 @@ export const AuthProvider = ({ children }) => {
   // Ensure user profile exists
   const ensureProfile = async (user) => {
     try {
-      const { data: existingProfile } = await db.getProfile(user.id)
+      const { data: existingProfile, error } = await db.getProfile(user.id)
+      
+      if (error && error.code !== 'PGRST116') {
+        // Error other than "not found"
+        console.error('Error checking profile:', error)
+        return
+      }
       
       if (!existingProfile) {
         // Create profile from user metadata
@@ -82,7 +93,10 @@ export const AuthProvider = ({ children }) => {
           avatar_url: user.user_metadata?.avatar_url || user.user_metadata?.picture || ''
         }
         
-        await db.createProfile(profileData)
+        const { error: createError } = await db.createProfile(profileData)
+        if (createError) {
+          console.error('Error creating profile:', createError)
+        }
       }
     } catch (error) {
       console.error('Error ensuring profile:', error)
