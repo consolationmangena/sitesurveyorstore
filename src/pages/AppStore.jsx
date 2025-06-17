@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import AppGrid from "@/components/AppGrid";
-import { Search, Filter, Grid, List, Star, Download, Clock, TrendingUp, Sparkles, Package, Users } from "lucide-react";
+import { Search, Filter, Grid, List, Star, Download, Clock, TrendingUp, Sparkles, Package, Users, Crown, Zap } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -14,6 +14,7 @@ export default function AppStore() {
   const [apps, setApps] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [headerSearchTerm, setHeaderSearchTerm] = useState("");
+  const [appTypeFilter, setAppTypeFilter] = useState("all");
 
   const {
     searchTerm,
@@ -23,9 +24,15 @@ export default function AppStore() {
     sortBy,
     setSortBy,
     categories,
-    filteredApps,
+    filteredApps: baseFilteredApps,
     stats
   } = useAppSearch(apps);
+
+  // Additional filtering by app type
+  const filteredApps = baseFilteredApps.filter(app => {
+    if (appTypeFilter === "all") return true;
+    return app.app_type === appTypeFilter;
+  });
 
   // Load apps from JSON file
   useEffect(() => {
@@ -47,11 +54,19 @@ export default function AppStore() {
     setHeaderSearchTerm(term);
   };
 
+  // Calculate app type stats
+  const appTypeStats = {
+    total: apps.length,
+    openSource: apps.filter(app => app.app_type === 'open_source').length,
+    pro: apps.filter(app => app.app_type === 'pro').length,
+    totalRevenue: apps.filter(app => app.app_type === 'pro').reduce((sum, app) => sum + (app.price * app.download_count), 0)
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50">
       <Header 
         title="SiteSurveyor" 
-        subtitle="Open-Source Geomatics Tools" 
+        subtitle="Professional Geomatics Solutions" 
         showSearch={true} 
         onSearch={handleHeaderSearch} 
       />
@@ -68,35 +83,40 @@ export default function AppStore() {
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-lg">
                 <Package className="w-8 h-8 text-white" />
               </div>
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-600 to-purple-600 flex items-center justify-center shadow-lg">
-                <Sparkles className="w-8 h-8 text-white" />
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-600 to-yellow-600 flex items-center justify-center shadow-lg">
+                <Crown className="w-8 h-8 text-white" />
               </div>
             </div>
             
             <h1 className="text-5xl sm:text-6xl font-black bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 bg-clip-text text-transparent mb-6 animate-fade-in">
-              App Store
+              Professional App Store
             </h1>
             <p className="text-xl text-slate-600 font-medium max-w-3xl mx-auto leading-relaxed mb-8">
-              Discover our curated collection of professional-grade geomatics applications. 
-              All open-source, battle-tested, and ready for production use across Africa and beyond.
+              Discover our comprehensive collection of geomatics applications. 
+              From free open-source tools to premium professional solutions - everything you need for modern surveying and GIS work.
             </p>
             
             {!isLoading && (
-              <div className="flex items-center justify-center gap-8 text-lg">
+              <div className="flex items-center justify-center gap-8 text-lg flex-wrap">
                 <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 border border-blue-200">
                   <TrendingUp className="w-5 h-5 text-blue-600" />
-                  <span className="font-bold text-blue-800">{stats.totalApps}</span>
-                  <span className="text-blue-600 font-medium">Apps</span>
+                  <span className="font-bold text-blue-800">{appTypeStats.total}</span>
+                  <span className="text-blue-600 font-medium">Total Apps</span>
                 </div>
                 <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-green-50 border border-green-200">
-                  <Download className="w-5 h-5 text-green-600" />
-                  <span className="font-bold text-green-800">{stats.totalDownloads.toLocaleString()}</span>
-                  <span className="text-green-600 font-medium">Downloads</span>
+                  <Sparkles className="w-5 h-5 text-green-600" />
+                  <span className="font-bold text-green-800">{appTypeStats.openSource}</span>
+                  <span className="text-green-600 font-medium">Free & Open</span>
                 </div>
                 <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-purple-50 border border-purple-200">
-                  <Users className="w-5 h-5 text-purple-600" />
-                  <span className="font-bold text-purple-800">{stats.totalCategories}</span>
-                  <span className="text-purple-600 font-medium">Categories</span>
+                  <Crown className="w-5 h-5 text-purple-600" />
+                  <span className="font-bold text-purple-800">{appTypeStats.pro}</span>
+                  <span className="text-purple-600 font-medium">Pro Apps</span>
+                </div>
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-yellow-50 border border-yellow-200">
+                  <Download className="w-5 h-5 text-yellow-600" />
+                  <span className="font-bold text-yellow-800">{stats.totalDownloads.toLocaleString()}</span>
+                  <span className="text-yellow-600 font-medium">Downloads</span>
                 </div>
               </div>
             )}
@@ -125,6 +145,36 @@ export default function AppStore() {
 
               {/* Enhanced Filters */}
               <div className="flex flex-wrap gap-4 items-center">
+                {/* App Type Filter */}
+                <div className="flex gap-3 items-center bg-slate-50 rounded-2xl px-4 py-2 border border-slate-200">
+                  <Zap className="w-5 h-5 text-slate-600" />
+                  <Select value={appTypeFilter} onValueChange={setAppTypeFilter}>
+                    <SelectTrigger className="w-44 rounded-xl border-0 bg-transparent focus:ring-0 font-medium">
+                      <SelectValue placeholder="App Type" />
+                    </SelectTrigger>
+                    <SelectContent className="rounded-xl border-2 border-slate-200 shadow-2xl">
+                      <SelectItem value="all" className="rounded-lg">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-blue-500"></div>
+                          All Apps ({appTypeStats.total})
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="open_source" className="rounded-lg">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-green-500"></div>
+                          Free & Open Source ({appTypeStats.openSource})
+                        </div>
+                      </SelectItem>
+                      <SelectItem value="pro" className="rounded-lg">
+                        <div className="flex items-center gap-2">
+                          <div className="w-2 h-2 rounded-full bg-purple-500"></div>
+                          Professional ({appTypeStats.pro})
+                        </div>
+                      </SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
                 <div className="flex gap-3 items-center bg-slate-50 rounded-2xl px-4 py-2 border border-slate-200">
                   <Filter className="w-5 h-5 text-slate-600" />
                   <Select value={selectedCategory} onValueChange={setSelectedCategory}>
@@ -163,6 +213,7 @@ export default function AppStore() {
                       <SelectItem value="name" className="rounded-lg">Name A-Z</SelectItem>
                       <SelectItem value="downloads" className="rounded-lg">Most Downloaded</SelectItem>
                       <SelectItem value="updated" className="rounded-lg">Recently Updated</SelectItem>
+                      <SelectItem value="price" className="rounded-lg">Price: Low to High</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
@@ -206,7 +257,7 @@ export default function AppStore() {
               <div className="absolute inset-0 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full blur opacity-20 animate-pulse"></div>
               <div className="relative inline-block animate-spin rounded-full h-16 w-16 border-4 border-slate-200 border-t-blue-600 shadow-lg"></div>
             </div>
-            <p className="mt-6 text-xl text-slate-600 animate-pulse font-medium">Loading amazing apps...</p>
+            <p className="mt-6 text-xl text-slate-600 animate-pulse font-medium">Loading professional apps...</p>
           </div>
         )}
 
@@ -217,7 +268,7 @@ export default function AppStore() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-lg text-slate-700 font-medium">
-                    Showing <span className="font-black text-blue-600 text-xl">{stats.filteredCount}</span> of <span className="font-bold text-slate-800">{stats.totalApps}</span> apps
+                    Showing <span className="font-black text-blue-600 text-xl">{filteredApps.length}</span> of <span className="font-bold text-slate-800">{stats.totalApps}</span> apps
                     {searchTerm && (
                       <span className="ml-2 px-3 py-1 bg-blue-100 text-blue-800 rounded-full text-sm font-semibold">
                         for "{searchTerm}"
@@ -226,6 +277,11 @@ export default function AppStore() {
                     {selectedCategory !== "all" && (
                       <span className="ml-2 px-3 py-1 bg-indigo-100 text-indigo-800 rounded-full text-sm font-semibold">
                         in {selectedCategory}
+                      </span>
+                    )}
+                    {appTypeFilter !== "all" && (
+                      <span className="ml-2 px-3 py-1 bg-purple-100 text-purple-800 rounded-full text-sm font-semibold">
+                        {appTypeFilter === 'open_source' ? 'Free & Open Source' : 'Professional'}
                       </span>
                     )}
                   </p>
@@ -263,6 +319,7 @@ export default function AppStore() {
                   onClick={() => {
                     setSearchTerm("");
                     setSelectedCategory("all");
+                    setAppTypeFilter("all");
                   }}
                   className="rounded-full bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white font-bold px-8 py-3 shadow-lg hover:shadow-xl hover:scale-105 transition-all"
                 >
@@ -282,15 +339,15 @@ export default function AppStore() {
               <p className="text-lg text-slate-600 font-medium">Real-time insights into our growing ecosystem</p>
             </div>
             
-            <div className="grid md:grid-cols-3 gap-8">
+            <div className="grid md:grid-cols-4 gap-8">
               <div className="group relative">
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity"></div>
                 <div className="relative bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl border border-white/50 p-8 text-center hover:scale-105 transition-all duration-300 group-hover:shadow-2xl">
                   <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform">
                     <Grid className="w-8 h-8 text-white" />
                   </div>
-                  <h3 className="text-4xl font-black text-slate-800 mb-2">{stats.totalApps}</h3>
-                  <p className="text-slate-600 font-semibold text-lg">Available Apps</p>
+                  <h3 className="text-4xl font-black text-slate-800 mb-2">{appTypeStats.total}</h3>
+                  <p className="text-slate-600 font-semibold text-lg">Total Apps</p>
                   <div className="mt-4 h-1 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full"></div>
                 </div>
               </div>
@@ -299,25 +356,37 @@ export default function AppStore() {
                 <div className="absolute inset-0 bg-gradient-to-br from-green-500 to-emerald-500 rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity"></div>
                 <div className="relative bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl border border-white/50 p-8 text-center hover:scale-105 transition-all duration-300 group-hover:shadow-2xl">
                   <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500 to-emerald-500 flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform">
+                    <Sparkles className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-4xl font-black text-slate-800 mb-2">{appTypeStats.openSource}</h3>
+                  <p className="text-slate-600 font-semibold text-lg">Free & Open Source</p>
+                  <div className="mt-4 h-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full"></div>
+                </div>
+              </div>
+              
+              <div className="group relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-yellow-500 rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity"></div>
+                <div className="relative bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl border border-white/50 p-8 text-center hover:scale-105 transition-all duration-300 group-hover:shadow-2xl">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-yellow-500 flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform">
+                    <Crown className="w-8 h-8 text-white" />
+                  </div>
+                  <h3 className="text-4xl font-black text-slate-800 mb-2">{appTypeStats.pro}</h3>
+                  <p className="text-slate-600 font-semibold text-lg">Professional Apps</p>
+                  <div className="mt-4 h-1 bg-gradient-to-r from-purple-500 to-yellow-500 rounded-full"></div>
+                </div>
+              </div>
+
+              <div className="group relative">
+                <div className="absolute inset-0 bg-gradient-to-br from-orange-500 to-red-500 rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity"></div>
+                <div className="relative bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl border border-white/50 p-8 text-center hover:scale-105 transition-all duration-300 group-hover:shadow-2xl">
+                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-orange-500 to-red-500 flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform">
                     <Download className="w-8 h-8 text-white" />
                   </div>
                   <h3 className="text-4xl font-black text-slate-800 mb-2">
                     {stats.totalDownloads.toLocaleString()}
                   </h3>
                   <p className="text-slate-600 font-semibold text-lg">Total Downloads</p>
-                  <div className="mt-4 h-1 bg-gradient-to-r from-green-500 to-emerald-500 rounded-full"></div>
-                </div>
-              </div>
-              
-              <div className="group relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-purple-500 to-pink-500 rounded-3xl blur-xl opacity-20 group-hover:opacity-30 transition-opacity"></div>
-                <div className="relative bg-white/90 backdrop-blur-sm rounded-3xl shadow-xl border border-white/50 p-8 text-center hover:scale-105 transition-all duration-300 group-hover:shadow-2xl">
-                  <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform">
-                    <Star className="w-8 h-8 text-white" />
-                  </div>
-                  <h3 className="text-4xl font-black text-slate-800 mb-2">{stats.totalCategories}</h3>
-                  <p className="text-slate-600 font-semibold text-lg">Categories</p>
-                  <div className="mt-4 h-1 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full"></div>
+                  <div className="mt-4 h-1 bg-gradient-to-r from-orange-500 to-red-500 rounded-full"></div>
                 </div>
               </div>
             </div>

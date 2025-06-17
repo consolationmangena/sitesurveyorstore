@@ -1,4 +1,4 @@
-import { Star, Download, ExternalLink, Github, Calendar, Tag, Heart, Sparkles } from "lucide-react";
+import { Star, Download, ExternalLink, Github, Calendar, Tag, Heart, Sparkles, Crown, Zap, Shield, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
@@ -20,7 +20,13 @@ export default function AppCard({ app, viewMode = "grid" }) {
     // Simulate download count increase
     setDownloadCount(prev => prev + 1);
     console.log(`Downloading ${app.name}...`);
-    window.open(app.repo_url, '_blank');
+    
+    if (app.app_type === 'open_source') {
+      window.open(app.repo_url, '_blank');
+    } else {
+      // For pro apps, redirect to purchase/trial page
+      window.open(app.homepage_url, '_blank');
+    }
   };
 
   const handleLike = () => {
@@ -37,21 +43,37 @@ export default function AppCard({ app, viewMode = "grid" }) {
     return icons[iconType] || icons.default;
   };
 
+  const isPro = app.app_type === 'pro';
+  const isOpenSource = app.app_type === 'open_source';
+
   if (viewMode === "list") {
     return (
       <Link to={`/app/${app.id}`}>
         <div className="group relative">
-          <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-indigo-500/10 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-          <div className="relative bg-white/95 backdrop-blur-lg rounded-3xl shadow-xl border border-white/50 hover:shadow-2xl transition-all duration-300 p-8 group-hover:scale-[1.02] hover:border-blue-200">
+          <div className={`absolute inset-0 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 ${
+            isPro ? 'bg-gradient-to-r from-purple-500/10 to-yellow-500/10' : 'bg-gradient-to-r from-blue-500/10 to-indigo-500/10'
+          }`}></div>
+          <div className={`relative bg-white/95 backdrop-blur-lg rounded-3xl shadow-xl border hover:shadow-2xl transition-all duration-300 p-8 group-hover:scale-[1.02] ${
+            isPro ? 'border-purple-200 hover:border-purple-300' : 'border-white/50 hover:border-blue-200'
+          }`}>
             <div className="flex items-center gap-8">
-              {/* Enhanced Icon */}
+              {/* Enhanced Icon with Pro Badge */}
               <div className="relative flex-shrink-0">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-3xl blur opacity-30 group-hover:opacity-50 transition-opacity"></div>
-                <div className="relative w-20 h-20 rounded-3xl bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300">
+                <div className={`absolute inset-0 rounded-3xl blur opacity-30 group-hover:opacity-50 transition-opacity ${
+                  isPro ? 'bg-gradient-to-br from-purple-600 to-yellow-600' : 'bg-gradient-to-br from-blue-600 to-indigo-600'
+                }`}></div>
+                <div className={`relative w-20 h-20 rounded-3xl flex items-center justify-center shadow-xl group-hover:scale-110 transition-transform duration-300 ${
+                  isPro ? 'bg-gradient-to-br from-purple-600 to-yellow-600' : 'bg-gradient-to-br from-blue-600 to-indigo-600'
+                }`}>
                   <span className="text-3xl text-white">
                     {getIconEmoji(app.icon)}
                   </span>
                 </div>
+                {isPro && (
+                  <div className="absolute -top-2 -right-2 w-8 h-8 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-600 flex items-center justify-center shadow-lg">
+                    <Crown className="w-4 h-4 text-white" />
+                  </div>
+                )}
               </div>
 
               {/* Enhanced Content */}
@@ -59,9 +81,21 @@ export default function AppCard({ app, viewMode = "grid" }) {
                 <div className="flex items-start justify-between gap-6">
                   <div className="flex-1 min-w-0">
                     <div className="flex items-center gap-3 mb-3">
-                      <h3 className="text-2xl font-black text-slate-800 truncate group-hover:text-blue-600 transition-colors">
+                      <h3 className={`text-2xl font-black truncate group-hover:transition-colors ${
+                        isPro ? 'text-slate-800 group-hover:text-purple-600' : 'text-slate-800 group-hover:text-blue-600'
+                      }`}>
                         {app.name}
                       </h3>
+                      {isPro && (
+                        <Badge className="bg-gradient-to-r from-purple-600 to-yellow-600 text-white border-0 font-bold">
+                          PRO
+                        </Badge>
+                      )}
+                      {isOpenSource && (
+                        <Badge variant="outline" className="border-green-500 text-green-700 font-bold">
+                          OPEN SOURCE
+                        </Badge>
+                      )}
                       <Button
                         variant="ghost"
                         size="sm"
@@ -74,6 +108,31 @@ export default function AppCard({ app, viewMode = "grid" }) {
                     <p className="text-slate-600 font-medium mb-4 line-clamp-2 text-lg leading-relaxed">
                       {app.description}
                     </p>
+                    
+                    {/* Pricing Information */}
+                    <div className="flex items-center gap-4 mb-4">
+                      {isPro ? (
+                        <div className="flex items-center gap-2">
+                          <span className="text-3xl font-black text-purple-600">
+                            ${app.price}
+                          </span>
+                          <span className="text-slate-500 font-medium">USD</span>
+                          {app.trial_available && (
+                            <Badge variant="outline" className="border-green-500 text-green-700 font-bold">
+                              {app.trial_days}-Day Trial
+                            </Badge>
+                          )}
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2">
+                          <span className="text-2xl font-black text-green-600">FREE</span>
+                          <Badge variant="outline" className="border-green-500 text-green-700 font-bold">
+                            Open Source
+                          </Badge>
+                        </div>
+                      )}
+                    </div>
+
                     <div className="flex items-center gap-6 text-sm text-slate-500">
                       {app.author && (
                         <span className="font-semibold">by {app.author}</span>
@@ -98,10 +157,23 @@ export default function AppCard({ app, viewMode = "grid" }) {
                   <div className="flex items-center gap-3 flex-shrink-0">
                     <Button
                       onClick={handleDownload}
-                      className="bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white rounded-2xl px-8 py-3 hover:scale-105 transition-all shadow-lg hover:shadow-xl font-bold"
+                      className={`rounded-2xl px-8 py-3 hover:scale-105 transition-all shadow-lg hover:shadow-xl font-bold ${
+                        isPro 
+                          ? 'bg-gradient-to-r from-purple-600 to-yellow-600 hover:from-purple-700 hover:to-yellow-700 text-white'
+                          : 'bg-gradient-to-r from-blue-600 to-indigo-600 hover:from-blue-700 hover:to-indigo-700 text-white'
+                      }`}
                     >
-                      <Download className="w-5 h-5 mr-2" />
-                      Get App
+                      {isPro ? (
+                        <>
+                          <Crown className="w-5 h-5 mr-2" />
+                          {app.trial_available ? 'Start Trial' : 'Buy Now'}
+                        </>
+                      ) : (
+                        <>
+                          <Download className="w-5 h-5 mr-2" />
+                          Get Free
+                        </>
+                      )}
                     </Button>
                   </div>
                 </div>
@@ -134,22 +206,37 @@ export default function AppCard({ app, viewMode = "grid" }) {
   return (
     <Link to={`/app/${app.id}`}>
       <div className="group relative h-full">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-indigo-500/10 to-purple-500/10 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-        <div className="relative bg-white/95 backdrop-blur-lg rounded-3xl shadow-xl border border-white/50 hover:shadow-2xl transition-all duration-300 hover:scale-105 group h-full flex flex-col">
+        <div className={`absolute inset-0 rounded-3xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 ${
+          isPro ? 'bg-gradient-to-br from-purple-500/10 via-yellow-500/10 to-purple-500/10' : 'bg-gradient-to-br from-blue-500/10 via-indigo-500/10 to-purple-500/10'
+        }`}></div>
+        <div className={`relative bg-white/95 backdrop-blur-lg rounded-3xl shadow-xl border hover:shadow-2xl transition-all duration-300 hover:scale-105 group h-full flex flex-col ${
+          isPro ? 'border-purple-200 hover:border-purple-300' : 'border-white/50 hover:border-blue-300'
+        }`}>
           <div className="p-8 flex-1 flex flex-col">
             {/* Enhanced Header */}
             <div className="flex items-center gap-5 mb-6">
               <div className="relative">
-                <div className="absolute inset-0 bg-gradient-to-br from-blue-500 to-indigo-500 rounded-2xl blur opacity-30 group-hover:opacity-50 transition-opacity"></div>
-                <div className="relative w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-indigo-500 flex items-center justify-center shadow-lg group-hover:scale-110 transition-all duration-300">
+                <div className={`absolute inset-0 rounded-2xl blur opacity-30 group-hover:opacity-50 transition-opacity ${
+                  isPro ? 'bg-gradient-to-br from-purple-500 to-yellow-500' : 'bg-gradient-to-br from-blue-500 to-indigo-500'
+                }`}></div>
+                <div className={`relative w-16 h-16 rounded-2xl flex items-center justify-center shadow-lg group-hover:scale-110 transition-all duration-300 ${
+                  isPro ? 'bg-gradient-to-br from-purple-500 to-yellow-500' : 'bg-gradient-to-br from-blue-500 to-indigo-500'
+                }`}>
                   <span className="text-2xl text-white transform group-hover:scale-110 transition-transform duration-300">
                     {getIconEmoji(app.icon)}
                   </span>
                 </div>
+                {isPro && (
+                  <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-600 flex items-center justify-center shadow-lg">
+                    <Crown className="w-3 h-3 text-white" />
+                  </div>
+                )}
               </div>
               <div className="flex-1 min-w-0">
                 <div className="flex items-center gap-2 mb-1">
-                  <h3 className="text-xl font-black text-slate-800 truncate group-hover:text-blue-600 transition-colors">
+                  <h3 className={`text-xl font-black truncate group-hover:transition-colors ${
+                    isPro ? 'text-slate-800 group-hover:text-purple-600' : 'text-slate-800 group-hover:text-blue-600'
+                  }`}>
                     {app.name}
                   </h3>
                   <Button
@@ -161,18 +248,80 @@ export default function AppCard({ app, viewMode = "grid" }) {
                     <Heart className={`w-4 h-4 ${isLiked ? 'fill-current' : ''}`} />
                   </Button>
                 </div>
-                {app.category && (
-                  <p className="text-sm text-blue-600 font-bold">
-                    {app.category}
-                  </p>
-                )}
+                <div className="flex items-center gap-2 mb-2">
+                  {isPro && (
+                    <Badge className="bg-gradient-to-r from-purple-600 to-yellow-600 text-white border-0 font-bold text-xs">
+                      PRO
+                    </Badge>
+                  )}
+                  {isOpenSource && (
+                    <Badge variant="outline" className="border-green-500 text-green-700 font-bold text-xs">
+                      OPEN SOURCE
+                    </Badge>
+                  )}
+                  {app.category && (
+                    <p className="text-sm text-blue-600 font-bold">
+                      {app.category}
+                    </p>
+                  )}
+                </div>
               </div>
+            </div>
+
+            {/* Pricing Section */}
+            <div className="mb-4">
+              {isPro ? (
+                <div className="flex items-center justify-between">
+                  <div className="flex items-baseline gap-2">
+                    <span className="text-2xl font-black text-purple-600">
+                      ${app.price}
+                    </span>
+                    <span className="text-slate-500 font-medium text-sm">USD</span>
+                  </div>
+                  {app.trial_available && (
+                    <Badge variant="outline" className="border-green-500 text-green-700 font-bold text-xs">
+                      <Clock className="w-3 h-3 mr-1" />
+                      {app.trial_days}d Trial
+                    </Badge>
+                  )}
+                </div>
+              ) : (
+                <div className="flex items-center gap-2">
+                  <span className="text-xl font-black text-green-600">FREE</span>
+                  <Badge variant="outline" className="border-green-500 text-green-700 font-bold text-xs">
+                    Open Source
+                  </Badge>
+                </div>
+              )}
             </div>
 
             {/* Enhanced Description */}
             <p className="text-slate-600 font-medium mb-6 line-clamp-3 min-h-[4.5rem] leading-relaxed flex-1">
               {app.description}
             </p>
+
+            {/* Pro Features Preview */}
+            {isPro && app.pro_features && app.pro_features.length > 0 && (
+              <div className="mb-6">
+                <div className="flex items-center gap-2 mb-3">
+                  <Zap className="w-4 h-4 text-purple-600" />
+                  <span className="text-sm font-bold text-purple-600">Pro Features</span>
+                </div>
+                <div className="space-y-1">
+                  {app.pro_features.slice(0, 3).map((feature, index) => (
+                    <div key={index} className="flex items-center gap-2 text-xs text-slate-600">
+                      <Shield className="w-3 h-3 text-purple-500" />
+                      <span>{feature}</span>
+                    </div>
+                  ))}
+                  {app.pro_features.length > 3 && (
+                    <div className="text-xs text-purple-600 font-semibold">
+                      +{app.pro_features.length - 3} more features
+                    </div>
+                  )}
+                </div>
+              </div>
+            )}
 
             {/* Enhanced Metadata */}
             <div className="space-y-4 mb-6">
@@ -221,10 +370,23 @@ export default function AppCard({ app, viewMode = "grid" }) {
             <div className="flex gap-3 mt-auto">
               <Button
                 onClick={handleDownload}
-                className="flex-1 bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white rounded-2xl hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl font-bold py-3"
+                className={`flex-1 rounded-2xl hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-xl font-bold py-3 ${
+                  isPro 
+                    ? 'bg-gradient-to-r from-purple-500 to-yellow-500 hover:from-purple-600 hover:to-yellow-600 text-white'
+                    : 'bg-gradient-to-r from-blue-500 to-indigo-500 hover:from-blue-600 hover:to-indigo-600 text-white'
+                }`}
               >
-                <Download className="w-4 h-4 mr-2" />
-                Get App
+                {isPro ? (
+                  <>
+                    <Crown className="w-4 h-4 mr-2" />
+                    {app.trial_available ? 'Try Free' : 'Buy Now'}
+                  </>
+                ) : (
+                  <>
+                    <Download className="w-4 h-4 mr-2" />
+                    Get Free
+                  </>
+                )}
               </Button>
               {app.homepage_url && (
                 <Button

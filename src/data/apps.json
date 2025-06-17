@@ -1,4 +1,3 @@
-
 {
   "apps": [
     {
@@ -19,7 +18,22 @@
       "created_at": "2024-01-15T10:00:00Z",
       "updated_at": "2024-03-10T14:30:00Z",
       "requirements": "Android 8.0+, iOS 12+",
-      "installation_notes": "Download APK for Android or install via App Store for iOS"
+      "installation_notes": "Download APK for Android or install via App Store for iOS",
+      "app_type": "open_source",
+      "price": 0,
+      "currency": "USD",
+      "trial_available": false,
+      "trial_days": 0,
+      "features": [
+        "GPS Integration",
+        "Offline Mapping",
+        "Data Export",
+        "Basic Reporting"
+      ],
+      "pro_features": [],
+      "screenshots": [
+        "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=600&fit=crop"
+      ]
     },
     {
       "id": "2",
@@ -39,7 +53,22 @@
       "created_at": "2024-02-01T09:15:00Z",
       "updated_at": "2024-03-15T16:45:00Z",
       "requirements": "Windows 10+, macOS 10.15+, Linux",
-      "installation_notes": "Download installer for your platform"
+      "installation_notes": "Download installer for your platform",
+      "app_type": "open_source",
+      "price": 0,
+      "currency": "USD",
+      "trial_available": false,
+      "trial_days": 0,
+      "features": [
+        "Multiple Format Support",
+        "Basic Visualization",
+        "Data Import/Export",
+        "Layer Management"
+      ],
+      "pro_features": [],
+      "screenshots": [
+        "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop"
+      ]
     },
     {
       "id": "3",
@@ -59,47 +88,158 @@
       "created_at": "2024-01-20T11:30:00Z",
       "updated_at": "2024-03-08T13:20:00Z",
       "requirements": "Android 9.0+, iOS 13+",
-      "installation_notes": "Available on Google Play Store and Apple App Store"
+      "installation_notes": "Available on Google Play Store and Apple App Store",
+      "app_type": "open_source",
+      "price": 0,
+      "currency": "USD",
+      "trial_available": false,
+      "trial_days": 0,
+      "features": [
+        "GPS Geotagging",
+        "Photo Organization",
+        "Basic Metadata",
+        "Export Options"
+      ],
+      "pro_features": [],
+      "screenshots": [
+        "https://images.unsplash.com/photo-1486312338219-ce68d2c6f44d?w=800&h=600&fit=crop"
+      ]
     },
     {
       "id": "4",
-      "name": "Coordinate Converter",
-      "description": "Convert between different coordinate systems and datums with high precision calculations for surveying work.",
-      "repo_url": "https://github.com/sitesurveyor/coord-converter",
+      "name": "Coordinate Converter Pro",
+      "description": "Professional-grade coordinate system converter with advanced precision calculations and batch processing capabilities.",
+      "repo_url": null,
       "icon": "database",
-      "tags": ["coordinates", "conversion", "precision", "surveying"],
+      "tags": ["coordinates", "conversion", "precision", "surveying", "professional"],
       "category": "Utilities",
-      "version": "1.2.3",
+      "version": "2.5.1",
       "author": "GeoTools Africa",
-      "license": "Apache-2.0",
-      "homepage_url": "https://geotools.africa/coord-converter",
-      "documentation_url": "https://docs.geotools.africa/coord-converter",
-      "download_count": 156,
+      "license": "Commercial",
+      "homepage_url": "https://geotools.africa/coord-converter-pro",
+      "documentation_url": "https://docs.geotools.africa/coord-converter-pro",
+      "download_count": 89,
       "is_active": true,
       "created_at": "2024-02-10T08:45:00Z",
       "updated_at": "2024-03-12T10:15:00Z",
-      "requirements": "Web browser, Node.js for CLI",
-      "installation_notes": "Use online tool or install CLI via npm"
+      "requirements": "Windows 10+, macOS 10.15+, Linux",
+      "installation_notes": "Download from our secure portal after purchase",
+      "app_type": "pro",
+      "price": 149.99,
+      "currency": "USD",
+      "trial_available": true,
+      "trial_days": 14,
+      "features": [
+        "Basic Coordinate Conversion",
+        "Standard Datum Support",
+        "Single Point Processing"
+      ],
+      "pro_features": [
+        "Batch Processing (1000+ points)",
+        "Custom Datum Creation",
+        "Advanced Precision Algorithms",
+        "API Integration",
+        "Priority Support",
+        "Advanced Reporting",
+        "Cloud Sync",
+        "Team Collaboration"
+      ],
+      "screenshots": [
+        "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1460925895917-afdab827c52f?w=800&h=600&fit=crop"
+      ]
     },
     {
       "id": "5",
-      "name": "Land Parcel Manager",
-      "description": "Manage and track land parcels with boundary mapping and ownership documentation features.",
-      "repo_url": "https://github.com/landtech/parcel-manager",
+      "name": "Land Parcel Manager Pro",
+      "description": "Enterprise land management solution with advanced boundary mapping, ownership tracking, and legal documentation features.",
+      "repo_url": null,
       "icon": "map",
-      "tags": ["land-management", "parcels", "boundaries", "property"],
+      "tags": ["land-management", "parcels", "boundaries", "property", "enterprise"],
       "category": "Land Management",
-      "version": "3.0.1",
+      "version": "4.2.0",
       "author": "LandTech Solutions",
-      "license": "GPL-3.0",
-      "homepage_url": "https://landtech.solutions/parcel-manager",
-      "documentation_url": "https://docs.landtech.solutions/parcel-manager",
-      "download_count": 89,
+      "license": "Commercial",
+      "homepage_url": "https://landtech.solutions/parcel-manager-pro",
+      "documentation_url": "https://docs.landtech.solutions/parcel-manager-pro",
+      "download_count": 156,
       "is_active": true,
       "created_at": "2024-01-25T14:20:00Z",
       "updated_at": "2024-03-18T12:30:00Z",
       "requirements": "Windows 10+, requires .NET Framework",
-      "installation_notes": "Download Windows installer from releases page"
+      "installation_notes": "Enterprise installer with license key required",
+      "app_type": "pro",
+      "price": 299.99,
+      "currency": "USD",
+      "trial_available": true,
+      "trial_days": 30,
+      "features": [
+        "Basic Parcel Mapping",
+        "Simple Boundary Tools",
+        "Basic Reporting"
+      ],
+      "pro_features": [
+        "Advanced CAD Integration",
+        "Legal Document Generation",
+        "Multi-user Collaboration",
+        "Advanced Analytics",
+        "Custom Workflows",
+        "API Access",
+        "Priority Support",
+        "Data Migration Tools",
+        "Compliance Reporting",
+        "Cloud Backup"
+      ],
+      "screenshots": [
+        "https://images.unsplash.com/photo-1473968512647-3e447244af8f?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&h=600&fit=crop"
+      ]
+    },
+    {
+      "id": "6",
+      "name": "DroneView Analytics Pro",
+      "description": "AI-powered drone image analysis with machine learning algorithms for advanced photogrammetry and automated feature detection.",
+      "repo_url": null,
+      "icon": "camera",
+      "tags": ["ai", "drones", "photogrammetry", "machine-learning", "professional"],
+      "category": "Remote Sensing",
+      "version": "3.1.2",
+      "author": "AeroTech Solutions",
+      "license": "Commercial",
+      "homepage_url": "https://aerotech.solutions/droneview-pro",
+      "documentation_url": "https://docs.aerotech.solutions/droneview-pro",
+      "download_count": 67,
+      "is_active": true,
+      "created_at": "2024-02-15T16:30:00Z",
+      "updated_at": "2024-03-20T09:45:00Z",
+      "requirements": "Windows 10+, NVIDIA GPU recommended, 16GB RAM minimum",
+      "installation_notes": "Requires GPU acceleration for AI features",
+      "app_type": "pro",
+      "price": 499.99,
+      "currency": "USD",
+      "trial_available": true,
+      "trial_days": 7,
+      "features": [
+        "Basic Image Processing",
+        "Simple Orthomosaic Generation",
+        "Standard 3D Models"
+      ],
+      "pro_features": [
+        "AI-Powered Feature Detection",
+        "Advanced Machine Learning Models",
+        "Automated Quality Control",
+        "High-Resolution Processing",
+        "Custom AI Training",
+        "Batch Processing",
+        "Cloud Processing",
+        "Advanced Analytics",
+        "API Integration",
+        "Priority Support"
+      ],
+      "screenshots": [
+        "https://images.unsplash.com/photo-1473968512647-3e447244af8f?w=800&h=600&fit=crop",
+        "https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=800&h=600&fit=crop"
+      ]
     }
   ]
 }
