@@ -91,10 +91,11 @@ export const useBlogPost = (identifier) => {
       setLoading(true)
       
       let result
-      // Check if identifier is a UUID (for ID) or a slug
+      // Check if identifier is a UUID or numeric ID
       const isUUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i.test(identifier)
+      const isNumeric = /^\d+$/.test(identifier)
       
-      if (isUUID) {
+      if (isUUID || isNumeric) {
         result = await db.getBlogPost(identifier)
       } else {
         result = await db.getBlogPostBySlug(identifier)
