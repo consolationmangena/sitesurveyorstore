@@ -18,6 +18,8 @@ const iconMap = {
 export default function Index() {
   const [featuredApps, setFeaturedApps] = useState([]);
   const [loadingApps, setLoadingApps] = useState(true);
+  const [frontendContent, setFrontendContent] = useState(null);
+  const [loadingContent, setLoadingContent] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -35,11 +37,27 @@ export default function Index() {
       }
     };
 
+    // Load frontend content
+    const loadFrontendContent = async () => {
+      try {
+        const contentResult = await getFrontendStats();
+        if (contentResult.error) throw contentResult.error;
+        setFrontendContent(contentResult);
+      } catch (err) {
+        console.error('Error loading frontend content:', err);
+        setError('Failed to load frontend content');
+      } finally {
+        setLoadingContent(false);
+      }
+    };
+
     // Load both in parallel
     loadApps();
+    loadFrontendContent();
   }, []);
 
   const isLoading = loadingApps && loadingContent;
+
 
   if (error) {
     return (
