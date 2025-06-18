@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import AppGrid from "/src/components/AppGrid.jsx";
-import { ArrowRight, Code, Globe, Users, Crown, TrendingUp, Award, CheckCircle, Loader2 } from "lucide-react";
+import { ArrowRight, Code, Globe, Users, Crown, TrendingUp, Award, CheckCircle, Loader2, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getFeaturedApplications, getFrontendStats } from "@/lib/database";
 
@@ -16,10 +16,38 @@ const iconMap = {
 };
 
 export default function Index() {
-  const [featuredApps, setFeaturedApps] = useState([]);
-  const [loadingApps, setLoadingApps] = useState(true);
-  const [frontendContent, setFrontendContent] = useState(null);
-  const [loadingContent, setLoadingContent] = useState(true);
+  const [featuredApps, setFeaturedApps] = useState([
+    {
+      id: 1,
+      name: "Static App 1",
+      description: "A static featured app for fallback",
+      icon: "",
+      categories: [{ name: "Static" }],
+    },
+    {
+      id: 2,
+      name: "Static App 2",
+      description: "Another static featured app for fallback",
+      icon: "",
+      categories: [{ name: "Static" }],
+    },
+  ]);
+  const [loadingApps, setLoadingApps] = useState(false);
+  const [frontendContent, setFrontendContent] = useState({
+    benefits: [
+      {
+        icon: "CheckCircle",
+        title: "Static Benefit 1",
+        description: "Static benefit description 1",
+      },
+      {
+        icon: "CheckCircle",
+        title: "Static Benefit 2",
+        description: "Static benefit description 2",
+      },
+    ],
+  });
+  const [loadingContent, setLoadingContent] = useState(false);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -58,14 +86,6 @@ export default function Index() {
 
   const isLoading = loadingApps && loadingContent;
 
-
-  if (error) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center text-red-600">
-        {error}
-      </div>
-    );
-  }
 
   // Show skeleton loading state instead of full-page loader
   if (isLoading) {

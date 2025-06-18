@@ -20,7 +20,7 @@ const isCacheValid = (key) => {
 
 // ==================== APPLICATIONS ====================
 
-export const getApplications = async (filters = {}) => {
+export const getApplications = async (filters = {}, page = 1, pageSize = 10) => {
   let query = supabase
     .from('applications')
     .select(`
@@ -30,7 +30,7 @@ export const getApplications = async (filters = {}) => {
         color,
         icon
       )
-    `)
+    `, { count: 'exact' })
     .eq('is_active', true)
     .order('is_featured', { ascending: false })
     .order('download_count', { ascending: false })
@@ -52,8 +52,13 @@ export const getApplications = async (filters = {}) => {
     query = query.or(`name.ilike.%${filters.search}%,description.ilike.%${filters.search}%`)
   }
 
-  const { data, error } = await query
-  return { data, error }
+  // Apply pagination
+  const from = (page - 1) * pageSize
+  const to = from + pageSize - 1
+  query = query.range(from, to)
+
+  const { data, error, count } = await query
+  return { data, error, count }
 }
 
 export const getApplication = async (id) => {
