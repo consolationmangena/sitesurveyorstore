@@ -1,4 +1,4 @@
-import { Star, Download, ExternalLink, Github, Calendar, Tag, Heart, Sparkles, Crown, Zap, Shield, Clock } from "lucide-react";
+import { Star, Download, ExternalLink, Github, Calendar, Tag, Heart, Crown, Zap, Shield, Clock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";

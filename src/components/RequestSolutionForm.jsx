@@ -6,7 +6,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useState } from "react";
-import { Lightbulb, Send, Sparkles, CheckCircle } from "lucide-react";
+import { Lightbulb, Send, Star, CheckCircle } from "lucide-react";
 import * as db from "@/lib/database";
 
 export default function RequestSolutionForm() {
@@ -223,7 +223,7 @@ The more details you provide, the better we can help!"
       {/* Helpful Tips */}
       <div className="bg-gradient-to-r from-blue-50 to-purple-50 rounded-xl p-6 border border-blue-200">
         <h4 className="font-bold text-slate-800 mb-3 flex items-center gap-2">
-          <Sparkles className="w-5 h-5 text-purple-600" />
+          <Star className="w-5 h-5 text-purple-600" />
           Make Your Request Stand Out
         </h4>
         <div className="grid md:grid-cols-2 gap-4 text-sm">
@@ -273,7 +273,7 @@ The more details you provide, the better we can help!"
           <div className="flex items-center gap-3">
             <Send className="w-5 h-5" />
             <span>Share My Challenge</span>
-            <Sparkles className="w-5 h-5" />
+            <Star className="w-5 h-5" />
           </div>
         )}
       </Button>
