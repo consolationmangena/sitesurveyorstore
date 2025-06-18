@@ -276,22 +276,25 @@ export const getSolutionRequests = async (filters = {}) => {
 // ==================== STATISTICS ====================
 
 export const getAppStats = async () => {
+  // Use aggregate functions for efficiency
   const { data, error } = await supabase
     .from('applications')
-    .select('app_type, download_count, price')
+    .select(`
+      count:count,
+      openSource:count(app_type),
+      pro:count(app_type),
+      totalDownloads:sum(download_count)
+    `)
     .eq('is_active', true)
+    // Apply filters for counts
+    .eq('app_type', 'open_source', { foreignTable: 'openSource' })
+    .eq('app_type', 'pro', { foreignTable: 'pro' })
+    .single(); // Get a single result with the aggregates
 
   if (error) return { data: null, error }
 
-  const stats = {
-    total: data.length,
-    openSource: data.filter(app => app.app_type === 'open_source').length,
-    pro: data.filter(app => app.app_type === 'pro').length,
-    totalDownloads: data.reduce((sum, app) => sum + (app.download_count || 0), 0),
-    totalRevenue: data
-      .filter(app => app.app_type === 'pro')
-      .reduce((sum, app) => sum + (app.price * app.download_count), 0)
-  }
+  // Data directly contains the aggregated stats
+  const stats = data;
 
   return { data: stats, error: null }
 }

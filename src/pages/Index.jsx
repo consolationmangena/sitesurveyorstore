@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import AppGrid from "@/components/AppGrid";
+import AppGrid from "/src/components/AppGrid.jsx";
 import { ArrowRight, Code, Globe, Users, Crown, TrendingUp, Award, CheckCircle, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { getFeaturedApplications, getFrontendStats } from "@/lib/database";
@@ -17,9 +17,7 @@ const iconMap = {
 
 export default function Index() {
   const [featuredApps, setFeaturedApps] = useState([]);
-  const [frontendContent, setFrontendContent] = useState(null);
   const [loadingApps, setLoadingApps] = useState(true);
-  const [loadingContent, setLoadingContent] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
@@ -37,22 +35,8 @@ export default function Index() {
       }
     };
 
-    // Load frontend content
-    const loadContent = async () => {
-      try {
-        const statsResult = await getFrontendStats();
-        setFrontendContent(statsResult);
-      } catch (err) {
-        console.error('Error loading frontend content:', err);
-        setError('Failed to load page content');
-      } finally {
-        setLoadingContent(false);
-      }
-    };
-
     // Load both in parallel
     loadApps();
-    loadContent();
   }, []);
 
   const isLoading = loadingApps && loadingContent;
@@ -167,42 +151,48 @@ export default function Index() {
       {/* Features Grid */}
       <section className="py-16 px-4 md:px-8 bg-gray-50">
         <div className="max-w-7xl mx-auto">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold text-gray-900 mb-4">Powerful Features</h2>
+            <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+              Explore the core features that make our platform essential for modern geomatics professionals.
+            </p>
+          </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {frontendContent?.features.map((feature, index) => {
-              const IconComponent = iconMap[feature.icon] || Users;
-              return (
-                <div key={index} className="relative">
-                  <div className={`absolute inset-0 rounded-lg bg-gradient-to-br ${feature.color} opacity-10`} />
-                  <div className="relative p-6">
-                    <IconComponent className="w-10 h-10 text-gray-900 mb-4" />
-                    <h3 className="text-lg font-semibold text-gray-900 mb-2">{feature.title}</h3>
-                    <p className="text-gray-600">{feature.description}</p>
-                  </div>
-                </div>
-              );
-            })}
+            <div className="relative">
+              <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-blue-100 to-blue-200 opacity-10" />
+              <div className="relative p-6">
+                <Code className="w-10 h-10 text-gray-900 mb-4" />
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Open Source Foundation</h3>
+                <p className="text-gray-600">Leverage the power and transparency of open-source geomatics tools.</p>
+              </div>
+            </div>
+            <div className="relative">
+              <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-green-100 to-green-200 opacity-10" />
+              <div className="relative p-6">
+                <Globe className="w-10 h-10 text-gray-900 mb-4" />
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Global Reach</h3>
+                <p className="text-gray-600">Access and share applications with a worldwide community.</p>
+              </div>
+            </div>
+            <div className="relative">
+              <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-purple-100 to-purple-200 opacity-10" />
+              <div className="relative p-6">
+                <Users className="w-10 h-10 text-gray-900 mb-4" />
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Community Driven</h3>
+                <p className="text-gray-600">Benefit from contributions and support from a vibrant community.</p>
+              </div>
+            </div>
+            <div className="relative">
+              <div className="absolute inset-0 rounded-lg bg-gradient-to-br from-yellow-100 to-yellow-200 opacity-10" />
+              <div className="relative p-6">
+                <Crown className="w-10 h-10 text-gray-900 mb-4" />
+                <h3 className="text-lg font-semibold text-gray-900 mb-2">Professional Grade</h3>
+                <p className="text-gray-600">Access premium tools designed for demanding professional workflows.</p>
+              </div>
+            </div>
           </div>
         </div>
       </section>
-
-      {/* Statistics */}
-      <section className="py-16 px-4 md:px-8">
-        <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
-            {frontendContent?.stats.map((stat, index) => {
-              const IconComponent = iconMap[stat.icon] || Users;
-              return (
-                <div key={index} className="text-center">
-                  <IconComponent className={`w-8 h-8 mx-auto mb-4 ${stat.color}`} />
-                  <p className={`text-3xl font-bold ${stat.color} mb-2`}>{stat.value}</p>
-                  <p className="text-gray-600">{stat.label}</p>
-                </div>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
       {/* Benefits */}
       <section className="py-16 px-4 md:px-8 bg-gray-50">
         <div className="max-w-7xl mx-auto">
@@ -210,8 +200,8 @@ export default function Index() {
             {frontendContent?.benefits.map((benefit, index) => {
               const IconComponent = iconMap[benefit.icon] || CheckCircle;
               return (
-                <div key={index} className="flex items-start">
-                  <IconComponent className="w-6 h-6 text-blue-600 mt-1 mr-4 flex-shrink-0" />
+                <div key={index} className="flex items-start space-x-4">
+                  <IconComponent className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
                   <div>
                     <h3 className="text-lg font-semibold text-gray-900 mb-2">{benefit.title}</h3>
                     <p className="text-gray-600">{benefit.description}</p>
@@ -219,6 +209,22 @@ export default function Index() {
                 </div>
               );
             })}
+             <div className="flex items-start space-x-4">
+                <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Increased Productivity</h3>
+                  <p className="text-gray-600">Streamline your workflows with intuitive and efficient tools.</p>
+                </div>
+              </div>
+              <div className="flex items-start space-x-4">
+                <CheckCircle className="w-6 h-6 text-green-600 flex-shrink-0 mt-1" />
+                <div>
+                  <h3 className="text-lg font-semibold text-gray-900 mb-2">Cost-Effective Solutions</h3>
+                  <p className="text-gray-600">Access powerful tools without the burden of expensive licenses.</p>
+                </div>
+              </div>
+
+
           </div>
         </div>
       </section>
