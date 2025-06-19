@@ -177,6 +177,26 @@ export default function Header({ title, subtitle, showSearch = false, onSearch }
                       )}
                     </Link>
                   ))}
+                  <Button
+                    as="a"
+                    href="#"
+                    variant="outline"
+                    size="sm"
+                    className="ml-2"
+                  >
+                    Donate
+                  </Button>
+                  <Button
+                    as="a"
+                    href="https://sitesurveyor.co.zw/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    variant="outline"
+                    size="sm"
+                    className="ml-2"
+                  >
+                    Publications
+                  </Button>
                 </div>
               </nav>
 
@@ -240,7 +260,7 @@ export default function Header({ title, subtitle, showSearch = false, onSearch }
                   <div className="flex flex-col h-full">
                     <div className="flex-1 py-6">
                       <nav className="flex flex-col space-y-1">
-                        {navLinks.map((link) => (
+                      {navLinks.map((link) => (
                           <SheetClose asChild key={link.to}>
                             <Link
                               to={link.to}
@@ -254,6 +274,30 @@ export default function Header({ title, subtitle, showSearch = false, onSearch }
                             </Link>
                           </SheetClose>
                         ))}
+                      <SheetClose asChild>
+                        <Button
+                          as="a"
+                          href="#"
+                          variant="outline"
+                          size="sm"
+                          className="mt-2 w-full"
+                        >
+                          Donate
+                        </Button>
+                      </SheetClose>
+                      <SheetClose asChild>
+                        <Button
+                          as="a"
+                          href="https://sitesurveyor.co.zw/"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          variant="outline"
+                          size="sm"
+                          className="mt-2 w-full"
+                        >
+                          Publications
+                        </Button>
+                      </SheetClose>
                       </nav>
                       
                       {/* Mobile Auth */}

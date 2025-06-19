@@ -16,38 +16,12 @@ const iconMap = {
 };
 
 export default function Index() {
-  const [featuredApps, setFeaturedApps] = useState([
-    {
-      id: 1,
-      name: "Static App 1",
-      description: "A static featured app for fallback",
-      icon: "",
-      categories: [{ name: "Static" }],
-    },
-    {
-      id: 2,
-      name: "Static App 2",
-      description: "Another static featured app for fallback",
-      icon: "",
-      categories: [{ name: "Static" }],
-    },
-  ]);
-  const [loadingApps, setLoadingApps] = useState(false);
+  const [featuredApps, setFeaturedApps] = useState([]);
+  const [loadingApps, setLoadingApps] = useState(true);
   const [frontendContent, setFrontendContent] = useState({
-    benefits: [
-      {
-        icon: "CheckCircle",
-        title: "Static Benefit 1",
-        description: "Static benefit description 1",
-      },
-      {
-        icon: "CheckCircle",
-        title: "Static Benefit 2",
-        description: "Static benefit description 2",
-      },
-    ],
+    benefits: [],
   });
-  const [loadingContent, setLoadingContent] = useState(false);
+  const [loadingContent, setLoadingContent] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {

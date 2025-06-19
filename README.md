@@ -17,7 +17,7 @@
 
 **Vision:** To become Africa's leading Geomatics platform used by surveyors, GIS practitioners, and remote sensing professionals with accessible, innovative, and reliable digital tools that drive sustainable innovation.
 
-**Mission:** SiteSurveyor makes high-quality mapping technology available to everyone by creating and maintaining both free open-source tools and premium professional solutions. We focus on collaboration and local innovation to help professionals in Zimbabwe and across Africa use accurate and efficient surveying methods.
+**Mission:** SiteSurveyor makes high-quality `mapping technology available to everyone by creating and maintaining both free open-source tools and premium professional solutions. We focus on collaboration and local innovation to help professionals in Zimbabwe and across Africa use accurate and efficient surveying methods.
 
 ## 🚀 What is SiteSurveyor?
 

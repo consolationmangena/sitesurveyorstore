@@ -1,7 +1,7 @@
-import RequestSolutionForm from "components/RequestSolutionForm";
+import RequestSolutionForm from "@/components/RequestSolutionForm";
 import { Lightbulb, Users, Rocket, Target, CheckCircle, ArrowRight, Sparkles, Heart, Globe, Code, Zap, MessageSquare, TrendingUp, Award } from "lucide-react";
-import { Button } from "components/ui/button";
-import { Card, CardContent } from "components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 export default function RequestSolutionPage() {
   const challengeTypes = [
@@ -53,10 +53,10 @@ export default function RequestSolutionPage() {
   ];
 
   const communityStats = [
-    { label: "Problems Solved", value: "47+", icon: CheckCircle, color: "text-green-600" },
-    { label: "Apps Created", value: "23+", icon: Rocket, color: "text-blue-600" },
-    { label: "Countries Helped", value: "15+", icon: Globe, color: "text-purple-600" },
-    { label: "Active Contributors", value: "89+", icon: Users, color: "text-orange-600" }
+    { label: "Problems Solved", value: "0", icon: CheckCircle, color: "text-green-600" },
+    { label: "Apps Created", value: "0", icon: Rocket, color: "text-blue-600" },
+    { label: "Countries Helped", value: "0", icon: Globe, color: "text-purple-600" },
+    { label: "Active Contributors", value: "0", icon: Users, color: "text-orange-600" }
   ];
 
   return (
