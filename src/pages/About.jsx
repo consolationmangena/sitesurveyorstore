@@ -129,7 +129,7 @@ export default function About() {
                       <h3 className="text-3xl font-black text-slate-800 mb-2">EINEVA Incorporated</h3>
                       <p className="text-xl text-red-600 font-bold mb-4">Solutions Beyond Expectations</p>
                       <p className="text-slate-700 leading-relaxed">
-                        EINEVA Incorporated SiteSurveyor platform. 
+                        EINEVA Incorporated. 
                         We specialize in creating cutting-edge software solutions that exceed expectations and drive industry transformation.
                       </p>
                     </div>
@@ -241,15 +241,15 @@ export default function About() {
               
               <div className="grid md:grid-cols-3 gap-8 mb-8">
                 <div className="text-center">
-                  <div className="text-3xl font-black text-blue-400 mb-2">15+</div>
+                  <div className="text-3xl font-black text-blue-400 mb-2">0</div>
                   <div className="text-gray-300">Countries Reached</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-black text-indigo-400 mb-2">25K+</div>
+                  <div className="text-3xl font-black text-indigo-400 mb-2">0</div>
                   <div className="text-gray-300">Downloads</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-3xl font-black text-purple-400 mb-2">50+</div>
+                  <div className="text-3xl font-black text-purple-400 mb-2">0</div>
                   <div className="text-gray-300">Contributors</div>
                 </div>
               </div>

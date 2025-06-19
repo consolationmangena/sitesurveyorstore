@@ -163,91 +163,97 @@ export default function Header({ title, subtitle, showSearch = false, onSearch }
               {/* Desktop Navigation */}
               <nav className="hidden sm:flex">
                 <div className="flex items-center space-x-1">
-                  {navLinks.map((link) => (
-                    <Link
-                      key={link.to}
-                      to={link.to}
-                      className={`relative px-3 py-2 text-sm font-medium transition-colors hover:text-primary rounded-md ${
-                        isActive(link.to) ? "text-primary bg-accent" : "text-muted-foreground"
-                      }`}
-                    >
-                      {link.label}
-                      {isActive(link.to) && (
-                        <span className="absolute bottom-0 left-1/2 h-0.5 w-6 -translate-x-1/2 bg-primary rounded-full"></span>
-                      )}
-                    </Link>
-                  ))}
-                  <Button
-                    as="a"
-                    href="#"
-                    variant="outline"
-                    size="sm"
-                    className="ml-2"
-                  >
-                    Donate
-                  </Button>
-                  <Button
-                    as="a"
-                    href="https://sitesurveyor.co.zw/"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    variant="outline"
-                    size="sm"
-                    className="ml-2"
-                  >
-                    Publications
-                  </Button>
-                </div>
-              </nav>
+              {navLinks.map((link) => (
+                <Link
+                  key={link.to}
+                  to={link.to}
+                  className={`relative px-3 py-2 text-sm font-medium transition-colors hover:text-primary rounded-md ${
+                    isActive(link.to) ? "text-primary bg-accent" : "text-muted-foreground"
+                  }`}
+                >
+                  {link.label}
+                  {isActive(link.to) && (
+                    <span className="absolute bottom-0 left-1/2 h-0.5 w-6 -translate-x-1/2 bg-primary rounded-full"></span>
+                  )}
+                </Link>
+              ))}
+              <Button
+                asChild
+                variant="outline"
+                size="sm"
+                className="ml-2"
+              >
+                <a
+                  href="/donations"
+                >
+                  Donate
+                </a>
+              </Button>
+              <Button
+                asChild
+                variant="outline"
+                size="sm"
+                className="ml-2"
+              >
+                <a
+                  href="https://sitesurveyor.co.zw"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Publications
+                </a>
+              </Button>
+            </div>
+          </nav>
 
-              {/* Profile Section - Always Visible */}
-              <div className="flex items-center space-x-2">
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <ProfileAvatar size="small" />
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent className="w-56" align="end" forceMount>
-                    {user ? (
-                      <>
-                        <div className="flex items-center justify-start gap-2 p-2">
-                          <div className="flex flex-col space-y-1 leading-none">
-                            {profile?.full_name && (
-                              <p className="font-medium">{profile.full_name}</p>
-                            )}
-                            <p className="w-[200px] truncate text-sm text-muted-foreground">
-                              {user.email}
-                            </p>
-                          </div>
+            {/* Profile Section - Always Visible */}
+            <div className="flex items-center space-x-2">
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <ProfileAvatar size="small" />
+                </DropdownMenuTrigger>
+                <DropdownMenuContent className="w-56" align="end" forceMount>
+                  {user ? (
+                    <>
+                      <div className="flex items-center justify-start gap-2 p-2">
+                        <div className="flex flex-col space-y-1 leading-none">
+                          {profile?.full_name && (
+                            <p className="font-medium">{profile.full_name}</p>
+                          )}
+                          <p className="w-[200px] truncate text-sm text-muted-foreground">
+                            {user.email}
+                          </p>
                         </div>
-                        <DropdownMenuSeparator />
-                        <DropdownMenuItem onClick={() => navigate('/profile')}>
-                          <User className="mr-2 h-4 w-4" />
-                          <span>Profile</span>
-                        </DropdownMenuItem>
-                        <DropdownMenuItem className="relative">
-                          <Upload className="mr-2 h-4 w-4" />
-                          <span>Update Picture</span>
-                          <input
-                            type="file"
-                            className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
-                            accept="image/*"
-                            onChange={handleProfilePictureUpload}
-                          />
-                        </DropdownMenuItem>
-                        <DropdownMenuItem onClick={handleSignOut}>
-                          <LogOut className="mr-2 h-4 w-4" />
-                          <span>Sign out</span>
-                        </DropdownMenuItem>
-                      </>
-                    ) : (
-                      <DropdownMenuItem onClick={() => setShowAuthModal(true)}>
+                      </div>
+                      <DropdownMenuSeparator />
+                      <DropdownMenuItem onClick={() => navigate('/profile')}>
                         <User className="mr-2 h-4 w-4" />
-                        <span>Sign In</span>
+                        <span>Profile</span>
                       </DropdownMenuItem>
-                    )}
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
+                      <DropdownMenuItem className="relative">
+                        <Upload className="mr-2 h-4 w-4" />
+                        <span>Update Picture</span>
+                        <input
+                          type="file"
+                          className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
+                          accept="image/*"
+                          onChange={handleProfilePictureUpload}
+                        />
+                      </DropdownMenuItem>
+                      <DropdownMenuItem onClick={handleSignOut}>
+                        <LogOut className="mr-2 h-4 w-4" />
+                        <span>Sign out</span>
+                      </DropdownMenuItem>
+                    </>
+                  ) : (
+                    <DropdownMenuItem onClick={() => setShowAuthModal(true)}>
+                      <User className="mr-2 h-4 w-4" />
+                      <span>Sign In</span>
+                    </DropdownMenuItem>
+                  )}
+                </DropdownMenuContent>
+              </DropdownMenu>
+            </div>
 
               {/* Mobile Menu */}
               <Sheet>
@@ -274,31 +280,37 @@ export default function Header({ title, subtitle, showSearch = false, onSearch }
                             </Link>
                           </SheetClose>
                         ))}
-                      <SheetClose asChild>
-                        <Button
-                          as="a"
-                          href="#"
-                          variant="outline"
-                          size="sm"
-                          className="mt-2 w-full"
-                        >
-                          Donate
-                        </Button>
-                      </SheetClose>
-                      <SheetClose asChild>
-                        <Button
-                          as="a"
-                          href="https://sitesurveyor.co.zw/"
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          variant="outline"
-                          size="sm"
-                          className="mt-2 w-full"
-                        >
-                          Publications
-                        </Button>
-                      </SheetClose>
-                      </nav>
+              <SheetClose asChild>
+                <Button
+                  asChild
+                  variant="outline"
+                  size="sm"
+                  className="mt-2 w-full"
+                >
+                  <a
+                    href="/donations"
+                  >
+                    Donate
+                  </a>
+                </Button>
+              </SheetClose>
+              <SheetClose asChild>
+                <Button
+                  asChild
+                  variant="outline"
+                  size="sm"
+                  className="mt-2 w-full"
+                >
+                  <a
+                    href="https://sitesurveyor.co.zw/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Publications
+                  </a>
+                </Button>
+              </SheetClose>
+            </nav>
                       
                       {/* Mobile Auth */}
                       {!loading && (
