@@ -5,10 +5,10 @@
   
   **Empowering Africa's Geomatics Professionals with Innovative Digital Tools**
   
-  [![License: Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-  [![GitHub Stars](https://img.shields.io/github/stars/consolationmangena/sitesurveyor?style=social)](https://github.com/consolationmangena/sitesurveyor)
-  [![Live Demo](https://img.shields.io/badge/Live-Demo-green.svg)](https://sitesurveyor.store)
-  [![Contributors Welcome](https://img.shields.io/badge/Contributors-Welcome-orange.svg)](CONTRIBUTING.md)
+  [![License: Apache 2.0](public/images/readme/license-badge.svg)](https://opensource.org/licenses/Apache-2.0)
+  [![GitHub Stars](public/images/readme/github-stars-badge.svg)](https://github.com/consolationmangena/sitesurveyor)
+  [![Live Demo](public/images/readme/live-demo-badge.svg)](https://sitesurveyor.store)
+  [![Contributors Welcome](public/images/readme/contributors-badge.svg)](CONTRIBUTING.md)
 </div>
 
 ---
